@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": true,
+  "prettier.configPath": ".prettierrc",
+  "prettier.ignorePath": ".prettierignore",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.requireConfig": true,
+  "eslint.run": "onSave",
+  "typescript.preferences.importModuleSpecifier": "non-relative"
+}
