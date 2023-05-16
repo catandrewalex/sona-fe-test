@@ -47,7 +47,6 @@ type PageContainerProps = {
  * and loading screen. This will also handle global configuration
  * that will be load once for example: loading user data from
  * cookies and changing dark mode setting from local storage.
- * @link http://172.21.56.255:3333/
  * @since 1.0.0
  * @version 1.0.0
  * @author Joshua Lauwrich Nandy

@@ -87,7 +87,6 @@ const SnackContext = createContext<SnackContextType>(contextInitial);
  * Provide global snackbar component that taken from notistack (https://github.com/iamhosseindhv/notistack).
  * Snackbar provide brief messages about app processes for example
  * notification about logging process either successful or failed, etc.
- * @link http://172.21.56.255:3333/
  * @since 1.0.0
  * @version 1.0.0
  * @author Joshua Lauwrich Nandy
@@ -136,7 +135,6 @@ const SnackProvider = ({ children }: SnackProviderProps): JSX.Element => {
 
 /**
  * Hooks to get the snackbar context value.
- * @link http://172.21.56.255:3333/
  * @since 1.0.0
  * @version 1.0.0
  * @author Joshua Lauwrich Nandy
@@ -157,7 +155,7 @@ const SnackProvider = ({ children }: SnackProviderProps): JSX.Element => {
 export const useSnack = (): SnackContextType => {
   const context = useContext(SnackContext);
   if (context === undefined) {
-    throw new Error("useApp must be used within an SnackProvider component!");
+    throw new Error("useSnack must be used within an SnackProvider component!");
   }
   return context;
 };

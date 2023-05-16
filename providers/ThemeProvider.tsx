@@ -111,7 +111,6 @@ const darkTheme: Theme = createTheme({
 
 /**
  * Provide global theme component that used Material UI theme provider component (https://material-ui.com/customization/theming/).
- * @link http://172.21.56.255:3333/
  * @since 1.0.0
  * @version 1.0.0
  * @author Joshua Lauwrich Nandy

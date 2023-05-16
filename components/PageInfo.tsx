@@ -20,7 +20,6 @@ type PageInfoProps = {
 /**
  * Component for <head> element that can be used to provide external css, scripts, or other meta like keywords, description, etc.
  * This component is used internally by PageContainer (@see PageContainer).
- * @link http://172.21.56.255:3333/
  * @since 1.0.0
  * @version 1.0.0
  * @author Joshua Lauwrich Nandy
