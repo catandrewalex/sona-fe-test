@@ -21,6 +21,7 @@ interface SubmitButtonProps extends ButtonProps, Pick<GridProps, "xl" | "lg" | "
   regular?: boolean;
   loading?: boolean;
   testIdContext?: string;
+  align?: "center" | "left" | "right";
 }
 
 /**
@@ -43,12 +44,13 @@ const SubmitButton = ({
   md = 6,
   lg = 4,
   xl = 3,
+  align = "center",
   ...props
 }: SubmitButtonProps): JSX.Element => {
   const { sx, disabled } = props;
 
   return (
-    <Grid xs={xs} sm={sm} md={md} lg={lg} xl={xl} item>
+    <Grid xs={xs} sm={sm} md={md} lg={lg} xl={xl} item sx={{ textAlign: align }}>
       <Button
         {...props}
         type={regular ? "button" : "submit"}
