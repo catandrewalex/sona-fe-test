@@ -1,0 +1,45 @@
+$size: 8px;
+
+#app {
+  @for $i from 1 through 10 {
+    .m-#{$i} {
+      margin: $size * $i;
+    }
+
+    .ml-#{$i} {
+      margin-left: $size * $i;
+    }
+
+    .mb-#{$i} {
+      margin-bottom: $size * $i;
+    }
+
+    .mr-#{$i} {
+      margin-right: $size * $i;
+    }
+
+    .mt-#{$i} {
+      margin-top: $size * $i;
+    }
+
+    .p-#{$i} {
+      padding: $size * $i;
+    }
+
+    .pl-#{$i} {
+      padding-left: $size * $i;
+    }
+
+    .pb-#{$i} {
+      padding-bottom: $size * $i;
+    }
+
+    .pr-#{$i} {
+      padding-right: $size * $i;
+    }
+
+    .pt-#{$i} {
+      padding-top: $size * $i;
+    }
+  }
+}
