@@ -53,7 +53,7 @@ export class FailedResponse {
   public messages: Record<string, string>;
   public status: number;
 
-  constructor(messages = {}, status = 502) {
+  constructor(messages = {}, status = 500) {
     this.messages = messages;
     this.status = status;
   }
@@ -129,8 +129,8 @@ const API = {
         if (err.response.status === 401) {
           deleteCookie("SNMC");
           return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
-        } else if (err.response.status === 502) {
-          return new FailedResponse({ "non-field": "There is error on server!" });
+        } else if (err.response.status === 500) {
+          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
         }
         return new FailedResponse(err.response.data as Record<string, string>, err.response.status);
       }
@@ -178,8 +178,8 @@ const API = {
         if (err.response.status === 401) {
           deleteCookie("SNMC");
           return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
-        } else if (err.response.status === 502) {
-          return new FailedResponse({ "non-field": "There is error on server!" });
+        } else if (err.response.status === 500) {
+          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
         }
         return new FailedResponse(
           err.response.data.messages as Record<string, string>,
@@ -229,8 +229,8 @@ const API = {
         if (err.response.status === 401) {
           deleteCookie("SNMC");
           return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
-        } else if (err.response.status === 502) {
-          return new FailedResponse({ "non-field": "There is error on server!" });
+        } else if (err.response.status === 500) {
+          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
         }
         return new FailedResponse(err.response.data as Record<string, string>, err.response.status);
       }

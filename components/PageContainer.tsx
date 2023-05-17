@@ -9,6 +9,7 @@ import LoginForm from "@sonamusica-fe/components/LoginForm";
 import { getCookie, getLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { User } from "@sonamusica-fe/types";
+import Navigation from "@sonamusica-fe/components/Navigation";
 
 const LoginContainer = styled(Paper)(({ theme }) => ({
   width: "100vw",
@@ -31,7 +32,7 @@ const LoginContainer = styled(Paper)(({ theme }) => ({
  * @property {string} [navTitle] the page title that will appear on navigation bar
  */
 type PageContainerProps = {
-  children: JSX.Element | Array<JSX.Element | undefined | null>;
+  children: JSX.Element | Array<JSX.Element>;
   pageTitle?: string | undefined;
   pageDescription?: string | undefined;
   headElement?: JSX.Element | JSX.Element[];
@@ -84,8 +85,8 @@ const PageContainer = ({
       const authToken = getCookie("SNMC");
       const userId = getCookie("SNMC_ID");
 
-      if (authToken !== undefined && authToken !== "" && userId !== undefined && userId !== "") {
-        API.GetUserProfile(parseInt(userId)).then((response) => {
+      if (authToken && userId) {
+        API.GetUserData(parseInt(userId)).then((response) => {
           const loggedInUser = apiTransformer(response, false) as User;
           setUser(loggedInUser);
         });
@@ -140,7 +141,7 @@ const PageContainer = ({
         </LoginContainer>
       );
     } else {
-      content = <div>asdf</div>;
+      content = <Navigation title={navTitle}>{children}</Navigation>;
     }
   }
 

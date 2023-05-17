@@ -48,7 +48,8 @@ const ResetPassword = () => {
     }
 
     if (!required(confirmPassword)) setErrorConfirmPassword("Confirm New Password is required!");
-    else if (confirmPassword !== password) setErrorConfirmPassword("Password is not the same!");
+    else if (confirmPassword !== password)
+      setErrorConfirmPassword("Password & Confirmation Password do not match!");
     else {
       setErrorConfirmPassword("");
       passwordConfirmPassed = true;

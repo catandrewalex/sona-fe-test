@@ -62,7 +62,8 @@ const LoginButton = (): JSX.Element => {
                 const user = apiTransformer(responseLogin, true) as LoginResponse;
                 setUser(user.user);
                 const expired = new Date();
-                expired.setTime(expired.getTime() + 24 * 60 * 60 * 1000);
+                const time24Hour = 24 * 60 * 60 * 1000;
+                expired.setTime(expired.getTime() + time24Hour);
                 setCookie("SNMC", user.authToken, expired.toUTCString(), "");
                 setCookie("SNMC_ID", user.user.id.toString(), expired.toUTCString(), "");
               })
