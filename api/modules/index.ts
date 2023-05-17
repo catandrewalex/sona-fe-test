@@ -1,10 +1,12 @@
 import { useUser } from "@sonamusica-fe/providers/AppProvider";
 import { ManySnackbarConfig, useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { BasicResponse } from "api";
+import { FailedResponse, SuccessResponse } from "api";
 import authModule from "./auth";
+import userModule from "./user";
 
 export default {
-  ...authModule
+  ...authModule,
+  ...userModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -13,27 +15,33 @@ export const useApiTransformer = () => {
   const logout = useUser((state) => state.logout);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return <T extends any>(response: BasicResponse<T>, showSuccessMessage = true) => {
-    if (response.status === 401) logout();
-    else {
-      if (response.error.length > 0) {
-        if (response.error.length > 1) {
-          showSnackbarMany(
-            response.error.map((err) => ({
-              message: err,
-              variant: "error",
-              configs: {
-                autoHideDuration: 60000
-              }
-            })) as ManySnackbarConfig[]
-          );
-        } else {
-          showSnackbar(response.error[0], "error", { autoHideDuration: 60000 });
-        }
-      } else if (showSuccessMessage) {
+  return <T extends any>(
+    response: SuccessResponse<T> | FailedResponse,
+    showSuccessMessage = true
+  ) => {
+    if (response instanceof FailedResponse) {
+      if (response.status === 401) logout();
+
+      const errors = Object.entries(response.messages).map((val) => val[1]);
+
+      if (errors.length > 1) {
+        showSnackbarMany(
+          errors.map((err) => ({
+            message: err,
+            variant: "error",
+            configs: {
+              autoHideDuration: 60000
+            }
+          })) as ManySnackbarConfig[]
+        );
+      } else {
+        showSnackbar(errors[0], "error", { autoHideDuration: 60000 });
+      }
+    } else {
+      if (showSuccessMessage) {
         showSnackbar(response.message, "success");
       }
+      return response.data;
     }
-    return response.data;
   };
 };

@@ -15,6 +15,7 @@ type SubmitButtonContainerProps = {
   align?: "left" | "center" | "right" | "space-around";
   children: React.ReactNode;
   testIdContext?: string;
+  spacing?: number;
 };
 
 /**
@@ -27,7 +28,8 @@ type SubmitButtonContainerProps = {
 const SubmitButtonContainer = ({
   align,
   children,
-  testIdContext
+  testIdContext,
+  spacing = 3
 }: SubmitButtonContainerProps): JSX.Element => {
   let pos;
 
@@ -52,8 +54,8 @@ const SubmitButtonContainer = ({
     <Grid
       container
       justifyContent={pos}
-      spacing={4}
-      sx={{ mt: 0 }}
+      spacing={spacing}
+      sx={{ mt: 0, mb: 2 }}
       data-testid={`${testIdContext}-SubmitButtonContainer`}
     >
       {children}

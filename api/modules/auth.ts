@@ -1,8 +1,11 @@
-import { User } from "@sonamusica-fe/types";
-import API, { BasicResponse } from "api";
+import { LoginResponse } from "@sonamusica-fe/types";
+import API, { FailedResponse, SuccessResponse } from "api";
 
-const Login = (email: string, password: string): Promise<BasicResponse<User>> => {
-  return API.post({
+const Login = (
+  email: string,
+  password: string
+): Promise<FailedResponse | SuccessResponse<LoginResponse>> => {
+  return API.post<LoginResponse>({
     url: "/login",
     config: {
       data: {
@@ -13,4 +16,21 @@ const Login = (email: string, password: string): Promise<BasicResponse<User>> =>
   });
 };
 
-export default { Login };
+const ForgotPassword = (email: string): Promise<FailedResponse | SuccessResponse<undefined>> => {
+  return API.post<undefined>({
+    url: "/forgot-password",
+    config: { data: { email } }
+  });
+};
+
+const ResetPassword = (
+  resetToken: string,
+  newPassword: string
+): Promise<FailedResponse | SuccessResponse<undefined>> => {
+  return API.post<undefined>({
+    url: "/reset-password",
+    config: { data: { resetToken, newPassword } }
+  });
+};
+
+export default { Login, ForgotPassword, ResetPassword };

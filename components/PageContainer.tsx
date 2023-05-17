@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import Loader from "@sonamusica-fe/components/Loader";
 import PageInfo from "@sonamusica-fe/components/PageInfo";
@@ -6,12 +6,12 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import LoginForm from "@sonamusica-fe/components/LoginForm";
+import { getCookie, getLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
+import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { User } from "@sonamusica-fe/types";
+import Navigation from "@sonamusica-fe/components/Navigation";
 
 const LoginContainer = styled(Paper)(({ theme }) => ({
-  backgroundImage: "url('/asset/login_background.png')",
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
-  backgroundSize: "auto",
   width: "100vw",
   height: "100vh",
   display: "flex",
@@ -32,7 +32,7 @@ const LoginContainer = styled(Paper)(({ theme }) => ({
  * @property {string} [navTitle] the page title that will appear on navigation bar
  */
 type PageContainerProps = {
-  children: JSX.Element | Array<JSX.Element | undefined | null>;
+  children: JSX.Element | Array<JSX.Element>;
   pageTitle?: string | undefined;
   pageDescription?: string | undefined;
   headElement?: JSX.Element | JSX.Element[];
@@ -40,6 +40,7 @@ type PageContainerProps = {
   noNavigation?: boolean;
   page?: string | undefined;
   notFound?: boolean;
+  noAuth?: boolean;
 };
 
 /**
@@ -59,6 +60,7 @@ const PageContainer = ({
   headElement,
   navTitle,
   noNavigation,
+  noAuth,
   page = "",
   notFound
 }: PageContainerProps): JSX.Element => {
@@ -70,72 +72,78 @@ const PageContainer = ({
     turnOffDark: state.turnOffDarkMode
   }));
 
+  const apiTransformer = useApiTransformer();
+
   const { user, setUser } = useUser((state) => ({
     user: state.user,
     setUser: state.setUser
   }));
 
-  // useEffect(() => {
-  //   if (isAppLoading) {
-  //     // load the user information from cookie (if available)
-  //     const session = getCookie("SNMC");
+  useEffect(() => {
+    if (isAppLoading) {
+      // load the user information from cookie (if available)
+      const authToken = getCookie("SNMC");
+      const userId = getCookie("SNMC_ID");
 
-  //     if (session !== undefined && session !== "") {
-  //       const encodedUser = JSON.parse(atob(session));
-  //       const temp: LoginResponse = { status: 200, user: encodedUser.message };
-  //       if (temp.user) {
-  //         setUser(temp.user);
-  //         setRoles(temp.user.roles);
-  //         setTeams(temp.user.teams);
-  //         getRemoteConfig();
-  //       }
-  //     }
+      if (authToken && userId) {
+        API.GetUserData(parseInt(userId)).then((response) => {
+          const loggedInUser = apiTransformer(response, false) as User;
+          setUser(loggedInUser);
+        });
+      }
 
-  //     // restore the previous state of side navigation drawer
-  //     const drawerState = getLocalStorage("drawer");
-  //     if (drawerState == null) {
-  //       // if the user visit the site for the first time
-  //       // set side navigation drawer state from the device type
-  //       const isTabletOrMobile = window.matchMedia("(max-width: 960px)").matches;
-  //       if (isTabletOrMobile) closeDrawer();
-  //     } else {
-  //       if (drawerState != undefined && drawerState != "") {
-  //         if (drawerState == "true") openDrawer();
-  //         else closeDrawer();
-  //       }
-  //     }
+      // restore the previous state of side navigation drawer
+      const drawerState = getLocalStorage("drawer");
+      if (drawerState == null) {
+        // if the user visit the site for the first time
+        // set side navigation drawer state from the device type
+        const isTabletOrMobile = window.matchMedia("(max-width: 960px)").matches;
+        if (isTabletOrMobile) closeDrawer();
+      } else {
+        if (drawerState != undefined && drawerState != "") {
+          if (drawerState == "true") openDrawer();
+          else closeDrawer();
+        }
+      }
 
-  //     // restore the previous state of dark theme mode
-  //     const darkThemeState = getLocalStorage("dark");
-  //     if (darkThemeState !== undefined && darkThemeState !== null && darkThemeState !== "") {
-  //       if (darkThemeState === "true") {
-  //         turnOnDark();
-  //       } else turnOffDark();
-  //     }
-  //   }
-  // }, []);
+      // restore the previous state of dark theme mode
+      const darkThemeState = getLocalStorage("dark");
+      if (darkThemeState !== undefined && darkThemeState !== null && darkThemeState !== "") {
+        if (darkThemeState === "true") {
+          turnOnDark();
+        } else turnOffDark();
+      }
+    }
+  }, []);
 
   if (isAppLoading) {
     return <Loader animation />;
   }
-  if (!user) {
-    return (
-      <LoginContainer data-testid="LoginPageContainer">
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <LoginForm />
-        </Box>
-      </LoginContainer>
-    );
-  }
 
-  const content = null;
+  let content = undefined;
+
+  if (noAuth) {
+    content = children;
+  } else {
+    if (!user) {
+      return (
+        <LoginContainer data-testid="LoginPageContainer">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <LoginForm />
+          </Box>
+        </LoginContainer>
+      );
+    } else {
+      content = <Navigation title={navTitle}>{children}</Navigation>;
+    }
+  }
 
   // if (noNavigation) {
   //   content = (
@@ -178,8 +186,6 @@ const PageContainer = ({
   //     );
   //   }
   // }
-
-  console.log("isAppLoading", isAppLoading);
 
   return (
     <div className="container" data-testid={navTitle} style={{ height: "100vh" }}>
