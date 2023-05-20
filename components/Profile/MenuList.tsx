@@ -15,6 +15,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Link from "next/link";
+import { UserType } from "@sonamusica-fe/types";
 
 type MenuListProps = {
   anchorEl: Element | null;
@@ -27,6 +28,24 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
   const { user } = useUser((state) => ({
     user: state.user
   }));
+
+  let privilageString = "NONE";
+  if (user) {
+    switch (user.privilegeType) {
+      case UserType.ANONYMOUS:
+        privilageString = "Guest";
+        break;
+      case UserType.ADMIN:
+        privilageString = "Admin";
+        break;
+      case UserType.MEMBER:
+        privilageString = "Member";
+        break;
+      case UserType.STAFF:
+        privilageString = "Staff";
+        break;
+    }
+  }
 
   return (
     <Popover
@@ -62,7 +81,7 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
             {user?.email}
           </Typography>
           <Typography variant="body1" textAlign="center" mb={0.5}>
-            {user?.privilegeType.toString()}
+            {privilageString}
           </Typography>
           <Divider />
         </CardContent>

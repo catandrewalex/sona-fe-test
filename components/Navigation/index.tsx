@@ -67,7 +67,6 @@ const Navigation = ({ title = "", children }: NavigationProps): JSX.Element => {
       <TopBar title={title} />
       <SideBar />
       <Box component="main" id="main" sx={styles(theme).content}>
-        <Box sx={{ ...styles(theme).toolbar, minHeight: (theme) => theme.spacing(4) }} />
         {loading ? <Loader /> : children}
       </Box>
     </Box>

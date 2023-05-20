@@ -117,7 +117,7 @@ const PageContainer = ({
   }, []);
 
   if (isAppLoading) {
-    return <Loader animation />;
+    return <Loader animation testIdContext="App" />;
   }
 
   let content = undefined;

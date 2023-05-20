@@ -58,7 +58,7 @@ const SubmitButton = ({
         variant={variant}
         color={color}
         disabled={loading || disabled}
-        data-testid={`${testIdContext}-SubmitButton`}
+        data-testid={`${testIdContext}-${regular ? "Button" : "SubmitButton"}`}
         sx={merge({}, sx, { fontSize: "1rem", m: 0 })}
       >
         {loading ? (

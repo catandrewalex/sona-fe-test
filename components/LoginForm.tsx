@@ -42,7 +42,6 @@ const LoginButton = (): JSX.Element => {
       let emailPassed = false,
         passwordPassed = false;
       if (!required(email)) setErrorEmail("Email is required!");
-      else if (!validEmail(email)) setErrorEmail("Email is not valid!");
       else {
         setErrorEmail("");
         emailPassed = true;
@@ -55,23 +54,33 @@ const LoginButton = (): JSX.Element => {
             setErrorPassword("");
             passwordPassed = true;
           }
+
           if (emailPassed && passwordPassed) {
             setLoading(true);
             API.Login(email, password)
               .then((responseLogin) => {
-                const user = apiTransformer(responseLogin, true) as LoginResponse;
-                setUser(user.user);
-                const expired = new Date();
-                const time24Hour = 24 * 60 * 60 * 1000;
-                expired.setTime(expired.getTime() + time24Hour);
-                setCookie("SNMC", user.authToken, expired.toUTCString(), "");
-                setCookie("SNMC_ID", user.user.id.toString(), expired.toUTCString(), "");
+                const userTemp = apiTransformer(responseLogin, true);
+                if (userTemp) {
+                  const user = userTemp as LoginResponse;
+                  setUser(user.user);
+                  const expired = new Date();
+                  const time24Hour = 24 * 60 * 60 * 1000;
+                  expired.setTime(expired.getTime() + time24Hour);
+                  setCookie("SNMC", user.authToken, expired.toUTCString(), "");
+                  setCookie("SNMC_ID", user.user.id.toString(), expired.toUTCString(), "");
+                }
               })
               .finally(() => setLoading(false));
           }
           break;
         }
         case State.FORGOT_PASSWORD: {
+          if (!validEmail(email)) setErrorEmail("Email is not valid!");
+          else {
+            setErrorEmail("");
+            emailPassed = true;
+          }
+
           if (emailPassed) {
             setLoading(true);
             API.ForgotPassword(email)
@@ -96,7 +105,7 @@ const LoginButton = (): JSX.Element => {
         <Form
           onSubmit={submitHandler}
           formSubmit={
-            <SubmitButtonContainer spacing={2}>
+            <SubmitButtonContainer spacing={2} marginBottom={2}>
               <SubmitButton
                 align="center"
                 xs={12}
@@ -109,6 +118,7 @@ const LoginButton = (): JSX.Element => {
                 color="secondary"
                 disabled={loading}
                 onClick={() => setState(State.FORGOT_PASSWORD)}
+                testIdContext="Login-ForgotPassword"
               />
               <SubmitButton
                 xs={12}
@@ -118,15 +128,18 @@ const LoginButton = (): JSX.Element => {
                 loading={loading}
                 submitText="Login"
                 fullWidth
+                testIdContext="Login"
               />
             </SubmitButtonContainer>
           }
         >
           <FormField lg={12}>
             <TextInput
+              testIdContext="LoginEmail"
               label="Email"
               type="email"
               value={email}
+              required
               errorMsg={errorEmail}
               disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
@@ -134,8 +147,10 @@ const LoginButton = (): JSX.Element => {
           </FormField>
           <FormField lg={12} sx={{ pt: "0px !important" }}>
             <TextInput
+              testIdContext="LoginPassword"
               label="Password"
               type="password"
+              required
               value={password}
               errorMsg={errorPassword}
               disabled={loading}
@@ -155,7 +170,7 @@ const LoginButton = (): JSX.Element => {
           <Form
             onSubmit={submitHandler}
             formSubmit={
-              <SubmitButtonContainer spacing={2}>
+              <SubmitButtonContainer spacing={2} marginBottom={2}>
                 <SubmitButton
                   regular
                   xs={12}
@@ -168,6 +183,7 @@ const LoginButton = (): JSX.Element => {
                   startIcon={<ArrowBackOutlined />}
                   fullWidth
                   submitText="Back"
+                  testIdContext="ForgotPassword-Back"
                 />
                 <SubmitButton
                   xs={12}
@@ -177,6 +193,7 @@ const LoginButton = (): JSX.Element => {
                   loading={loading}
                   submitText="Send Confirmation Link"
                   fullWidth
+                  testIdContext="ForgotPassword"
                 />
               </SubmitButtonContainer>
             }
@@ -187,8 +204,10 @@ const LoginButton = (): JSX.Element => {
                 label="Email"
                 value={email}
                 errorMsg={errorEmail}
+                required
                 disabled={loading}
                 onChange={(e) => setEmail(e.target.value)}
+                testIdContext="ForgotPassword"
               />
             </FormField>
           </Form>
@@ -199,7 +218,12 @@ const LoginButton = (): JSX.Element => {
     case State.SUCCESS_FORGOT_PASSWORD: {
       content = (
         <>
-          <Typography align="center" sx={{ my: 2 }} variant="h4">
+          <Typography
+            align="center"
+            sx={{ my: 2 }}
+            variant="h4"
+            data-testid="ForgotPasswordSuccess-Title"
+          >
             Link was sent!
           </Typography>
           <Typography align="center" sx={{ mb: 2 }}>
@@ -210,6 +234,7 @@ const LoginButton = (): JSX.Element => {
             sx={{ mb: 2 }}
             variant="outlined"
             startIcon={<ArrowBackOutlined />}
+            data-testid="ForgotPasswordSuccess-BackButton"
           >
             Return to Login Page
           </Button>

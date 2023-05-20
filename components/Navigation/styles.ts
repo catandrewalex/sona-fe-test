@@ -5,10 +5,12 @@ export const drawerWidth = 300;
 const styles = (theme: Theme) =>
   ({
     content: {
-      p: 3,
+      // height: "calc(100vh - 24px)",
+      pt: 4.5,
+      px: 1.5,
       width: "100%",
       "& > *:last-child": {
-        pb: 3
+        pb: 1.5
       }
     },
     toolbar: {

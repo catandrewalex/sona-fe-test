@@ -29,11 +29,13 @@ const Providers = ({ children }: ProvidersProps): JSX.Element => {
       <LocalizationProvider dateAdapter={DateAdapter}>
         <SnackbarProvider
           ref={notistackRef}
+          maxSnack={1}
           action={(key: SnackbarKey) => (
             <IconButton sx={{ color: "white" }} onClick={onClickDismiss(key)}>
               <HighlightOffIcon />
             </IconButton>
-          )}>
+          )}
+        >
           <SnackProvider>
             <AlertDialogProvider>{children}</AlertDialogProvider>
           </SnackProvider>

@@ -8,4 +8,14 @@ const GetUserData = (id: number): Promise<FailedResponse | SuccessResponse<User>
   });
 };
 
-export default { GetUserData };
+const GetAllUser = (
+  page = 1,
+  resultsPerPage = 10000
+): Promise<FailedResponse | SuccessResponse<User>> => {
+  return API.post<User>({
+    url: "/get-users",
+    config: { data: { page, resultsPerPage } }
+  });
+};
+
+export default { GetUserData, GetAllUser };

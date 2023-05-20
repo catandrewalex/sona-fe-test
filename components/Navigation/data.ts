@@ -24,7 +24,7 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import LibraryAddCheckIcon from "@mui/icons-material/LibraryAddCheck";
 import AddchartIcon from "@mui/icons-material/Addchart";
 import EditNotificationsIcon from "@mui/icons-material/EditNotifications";
-import { People } from "@mui/icons-material";
+import { People, Hail } from "@mui/icons-material";
 
 export type SidebarItem = {
   text: string;
@@ -58,9 +58,27 @@ const data: Array<SidebarSection> = [
     items: [
       {
         icon: People,
-        text: "Users",
-        url: "/user-management",
-        permission: () => true
+        text: "User",
+        url: "/user",
+        permission: (userType?: UserType): boolean => {
+          return userType === UserType.ADMIN;
+        }
+      },
+      {
+        icon: Hail,
+        text: "Teacher",
+        url: "/teacher",
+        permission: (userType?: UserType): boolean => {
+          return userType === UserType.ADMIN;
+        }
+      },
+      {
+        icon: People,
+        text: "Student",
+        url: "/student",
+        permission: (userType?: UserType): boolean => {
+          return userType === UserType.ADMIN;
+        }
       }
     ]
   }

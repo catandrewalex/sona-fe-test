@@ -21,7 +21,6 @@ import { getLocalStorage, setLocalStorage } from "@sonamusica-fe/utils/BrowserUt
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { merge } from "lodash";
 import HomeIcon from "@mui/icons-material/Home";
-import { UserType } from "@sonamusica-fe/types";
 
 type DrawerItemContainerProps = {
   children: React.ReactNode;
@@ -69,8 +68,6 @@ const DrawerItem = (): JSX.Element => {
     isLoading: state.isLoading
   }));
   const { user } = useUser();
-  const isProduction = process.env.ENVIRONMENT !== "local";
-  const isAdmin = user?.privilegeType === UserType.ADMIN;
 
   const lists = data.map((section, idx) => {
     const innerItem = section.items.map(
@@ -177,12 +174,17 @@ const Container = ({ children, text, divider, disabled }: DrawerItemContainerPro
           <ListSubheader
             disableSticky
             className={clsx({
-              "hide-visual": !drawerOpen,
-              hide: disabled
+              // "hide-visual": !drawerOpen,
+              // hide: disabled
             })}
+            sx={
+              drawerOpen
+                ? undefined
+                : { display: "inline-block", height: "3px", width: "100%", px: 0 }
+            }
             component="span"
           >
-            {text}
+            {drawerOpen ? text : <Divider />}
           </ListSubheader>
         }
       >
@@ -237,7 +239,7 @@ const SingleLevel = ({
         disabled={disabled}
         className={hidden ? "hide" : ""}
         sx={merge(
-          { transition: "none", flexGrow: 0 },
+          { transition: "none", flex: 0 },
           router.route === url ? styles.active : styles.item,
           inset ? { pl: 4 } : {}
         )}
@@ -247,7 +249,11 @@ const SingleLevel = ({
             <Icon />
           </Box>
         </ListItemIcon>
-        {drawerOpen && <ListItemText sx={{ whiteSpace: "normal" }} primary={text} />}
+        {drawerOpen && (
+          <>
+            <ListItemText sx={{ whiteSpace: "normal" }} primary={text} />
+          </>
+        )}
       </ListItemButton>
     </Tooltip>
   );
@@ -291,7 +297,11 @@ const MultiLevel = ({
           <ListItemIcon>
             <Icon />
           </ListItemIcon>
-          {drawerOpen && <ListItemText sx={{ whiteSpace: "normal" }} primary={text} />}
+          {drawerOpen && (
+            <>
+              <ListItemText sx={{ whiteSpace: "normal" }} primary={text} />
+            </>
+          )}
           {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </ListItemButton>
       </Tooltip>

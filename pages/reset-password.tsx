@@ -59,8 +59,8 @@ const ResetPassword = () => {
       setLoading(true);
       API.ResetPassword(router.query.token as string, password)
         .then((responseResetPassword) => {
-          apiTransformer(responseResetPassword, true);
-          router.replace("/");
+          const result = apiTransformer(responseResetPassword, true);
+          if (result !== undefined) router.replace("/");
         })
         .finally(() => setLoading(false));
     }
@@ -88,8 +88,16 @@ const ResetPassword = () => {
             <Form
               onSubmit={submitHandler}
               formSubmit={
-                <SubmitButtonContainer>
-                  <SubmitButton xs={12} md={12} lg={12} xl={12} fullWidth loading={loading} />
+                <SubmitButtonContainer marginBottom={2}>
+                  <SubmitButton
+                    testIdContext="ResetPassword"
+                    xs={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                    fullWidth
+                    loading={loading}
+                  />
                 </SubmitButtonContainer>
               }
             >
@@ -97,20 +105,24 @@ const ResetPassword = () => {
                 <TextInput
                   label="New Password"
                   type="password"
+                  required
                   value={password}
                   errorMsg={errorPassword}
                   disabled={loading}
                   onChange={(e) => setPassword(e.target.value)}
+                  testIdContext="ResetPassword-Password"
                 />
               </FormField>
               <FormField lg={12} sx={{ pt: "0px !important" }}>
                 <TextInput
                   label="Confirm New Password"
                   type="password"
+                  required
                   value={confirmPassword}
                   errorMsg={errorConfirmPassword}
                   disabled={loading}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  testIdContext="ResetPassword-PasswordConfirm"
                 />
               </FormField>
             </Form>

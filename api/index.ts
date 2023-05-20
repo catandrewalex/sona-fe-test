@@ -32,7 +32,7 @@ axiosIntance.interceptors.request.use(async (req) => {
   return req;
 });
 
-type ResponseMany<T> = {
+export type ResponseMany<T> = {
   results: Array<T>;
   totalPages: number;
   totalResults: number;
@@ -123,7 +123,10 @@ const API = {
               ...apiVersionHeader
             }
           }));
-      return new SuccessResponse(result.data.data, result.data.message);
+      return new SuccessResponse(
+        result.data.data ? result.data.data : result.data.message,
+        result.data.message
+      );
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
@@ -172,7 +175,10 @@ const API = {
               ...apiVersionHeader
             }
           }));
-      return new SuccessResponse(result.data.data, result.data.message);
+      return new SuccessResponse(
+        result.data.data ? result.data.data : result.data.message,
+        result.data.message
+      );
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
@@ -223,7 +229,10 @@ const API = {
               ...apiVersionHeader
             }
           }));
-      return new SuccessResponse(result.data.data, result.data.message);
+      return new SuccessResponse(
+        result.data.data ? result.data.data : result.data.message,
+        result.data.message
+      );
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {

@@ -25,3 +25,13 @@ export enum UserType {
   STAFF = 300,
   ADMIN = 400
 }
+
+export interface Teacher {
+  teacherId: number;
+  user: User;
+}
+
+export interface Student {
+  studentId: number;
+  user: User;
+}

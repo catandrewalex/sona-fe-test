@@ -1,0 +1,361 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  DataGrid,
+  GridColDef,
+  GridInitialState,
+  GridRowParams,
+  GridRowsProp,
+  GridSlotsComponent,
+  GridSlotsComponentsProps,
+  GridCallbackDetails,
+  GridRowModel,
+  GridRowSelectionModel,
+  GridInputRowSelectionModel,
+  GridRowIdGetter
+} from "@mui/x-data-grid";
+import React, { useEffect, useState } from "react";
+import Grid, { GridSize } from "@mui/material/Grid";
+import TableMenu from "./TableMenu";
+import TextInputFilter from "./TableMenu/TextInputFilter";
+import { useDebouncedCallback } from "use-debounce";
+import SelectFilter from "./TableMenu/SelectFilter";
+import { CSSProperties } from "@mui/styles";
+import ErrorDataGridEmpty from "@sonamusica-fe/components/Error/ErrorDataGridEmpty";
+import { UncapitalizeObjectKeys } from "@mui/x-data-grid/internals";
+import Toolbar from "@sonamusica-fe/components/Table/Toolbar";
+interface DefaultFilterConfig {
+  xl?: GridSize;
+  lg?: GridSize;
+  md?: GridSize;
+  xs?: GridSize;
+  sx?: CSSProperties;
+}
+
+interface TextInputConfig extends DefaultFilterConfig {
+  type: "text-input";
+  field: string;
+  filterHandler?: (data: GridRowModel, value: any) => boolean;
+  columnLabel?: string;
+}
+
+interface SelectConfig extends DefaultFilterConfig {
+  type: "select";
+  field: string;
+  data: Array<any>;
+  limitTags?: number;
+  getOptionLabel: (option: any) => string;
+  filterHandler?: (data: GridRowModel, value: any) => boolean;
+}
+
+interface CustomConfig extends DefaultFilterConfig {
+  type: "custom";
+  style?: React.CSSProperties;
+  component: React.ReactNode;
+}
+
+type TableMenuConfig = TextInputConfig | SelectConfig | CustomConfig;
+
+type TableProps = {
+  tableMenu?: TableMenuConfig[];
+  className?: string;
+  columns: GridColDef[];
+  rows: GridRowsProp;
+  rowDisplayed?: number;
+  stripped?: boolean;
+  getRowClassName?: (params: GridRowParams) => string;
+  initialState?: GridInitialState;
+  isRowSelectable?: (params: GridRowParams) => boolean;
+  loading?: boolean;
+  style?: CSSProperties;
+  rowsPerPageOptions?: Array<number>;
+  disableFooter?: boolean;
+  checkboxSelection?: boolean;
+  disableSelectionOnClick?: boolean;
+  onSelectionModelChange?: (
+    rowSelectionModel: GridRowSelectionModel,
+    details: GridCallbackDetails<any>
+  ) => void;
+  ReplaceNoRowsOverlay?: () => JSX.Element;
+  rowHeightMultiplier?: number;
+  getRowClassNameAddition?: (params: GridRowParams) => string;
+  selectionModel?: GridInputRowSelectionModel;
+  components?: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> | undefined;
+  componentsProps?: GridSlotsComponentsProps;
+  onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
+  resetPageOnRowChange?: boolean;
+  keepFilterWhenDataChange?: boolean;
+  getRowId?: GridRowIdGetter<any>;
+  addItemToolbar?: boolean;
+  addItemToolbarHandler?: () => void;
+  name?: string;
+};
+
+const Table = ({
+  columns,
+  rows,
+  rowDisplayed,
+  stripped,
+  isRowSelectable,
+  initialState,
+  className,
+  tableMenu,
+  loading,
+  style,
+  disableFooter,
+  rowsPerPageOptions = [20, 50, 100],
+  checkboxSelection,
+  disableSelectionOnClick,
+  onSelectionModelChange,
+  ReplaceNoRowsOverlay,
+  rowHeightMultiplier,
+  getRowClassNameAddition,
+  selectionModel,
+  components,
+  onPageSizeChange,
+  componentsProps,
+  resetPageOnRowChange,
+  keepFilterWhenDataChange,
+  getRowId,
+  addItemToolbar,
+  addItemToolbarHandler,
+  name
+}: TableProps): JSX.Element => {
+  const [data, setData] = useState<GridRowsProp>(rows);
+  const [dataSize, setDataSize] = useState<number>(0);
+  const [columnsData, setColumnsData] = useState<GridColDef[]>(columns);
+  const [filterValue, setFilterValue] = useState<Record<string, any>>({});
+
+  const [pageSize, setPageSize] = useState<number>(
+    rowDisplayed ? rowDisplayed : rowsPerPageOptions[0]
+  );
+  const [page, setPage] = useState<number>(0);
+
+  function getRowClassNameFunction(params: GridRowParams) {
+    if (getRowClassNameAddition) return getRowClassNameAddition(params);
+    return `default`;
+  }
+
+  function CustomNoRowsOverlay() {
+    if (ReplaceNoRowsOverlay) return ReplaceNoRowsOverlay;
+    return ErrorDataGridEmpty;
+  }
+
+  useEffect(() => {
+    setData(rows);
+    if (!keepFilterWhenDataChange) setFilterValue({});
+    setPageSize(rowDisplayed || rowsPerPageOptions[0]);
+    if (resetPageOnRowChange) {
+      // 3 is threshold
+      if (Math.abs(dataSize - rows.length) > 3) setPage(0);
+      setDataSize(rows.length);
+    }
+  }, [rows]);
+
+  useEffect(() => {
+    if (stripped) {
+      columns.map((col, index) => {
+        col.filterable = false;
+        col.cellClassName = index % 2 === 0 ? "even" : "odd";
+      });
+    } else {
+      columns.map((col) => {
+        col.filterable = false;
+      });
+    }
+    setColumnsData(columns);
+  }, [columns]);
+
+  useEffect(() => {
+    setData(
+      rows.filter((item: GridRowModel) => {
+        let result = true;
+        for (const [key, value] of Object.entries(filterValue)) {
+          if (
+            (Array.isArray(value.value) && value.value.length > 0) ||
+            (typeof value.value === "string" && value.value !== "")
+          ) {
+            if (value.filterHandle) {
+              result = result && value.filterHandle(item, value.value);
+            } else {
+              result = result && item[key].toLowerCase().indexOf(value.value.toLowerCase()) !== -1;
+            }
+          }
+        }
+        return result;
+      })
+    );
+  }, [filterValue, rows]);
+
+  const tableMenuTextInputHandler = useDebouncedCallback(
+    (column: string, value: string, filterHandle?: (data: GridRowModel, value: any) => boolean) => {
+      setFilterValue({
+        ...filterValue,
+        [column]: { value, filterHandle }
+      });
+    },
+    500
+  );
+
+  const tableMenuSelectHandler = useDebouncedCallback(
+    (column: string, value: any[], filterHandle?: (data: GridRowModel, value: any) => boolean) => {
+      setFilterValue({
+        ...filterValue,
+        [column]: { value, filterHandle }
+      });
+    },
+    100
+  );
+
+  const tableMenuColumnInvisibilityHandler = useDebouncedCallback((value: string[]) => {
+    if (value.length === 0) setColumnsData(columns);
+    else {
+      let even = true;
+      setColumnsData(
+        columns.map((column) => {
+          for (let i = 0; i < value.length; i++) {
+            if (column.headerName === value[i]) {
+              if (even) {
+                even = false;
+                return {
+                  ...column,
+                  cellClassName: "even",
+                  hide: false
+                };
+              } else {
+                even = true;
+                return {
+                  ...column,
+                  cellClassName: "odd",
+                  hide: false
+                };
+              }
+            }
+          }
+          return { ...column, hide: true };
+        })
+      );
+
+      setFilterValue({
+        ...filterValue,
+        "_column-visibility": value
+      });
+    }
+  }, 100);
+
+  const tableMenuItem: JSX.Element[] = [];
+
+  if (tableMenu) {
+    tableMenu.forEach((item, index) => {
+      if (item.type === "text-input") {
+        tableMenuItem.push(
+          <TextInputFilter
+            keyChild={"text-filter" + index}
+            key={"text-filter" + index}
+            column={item.field}
+            columnLabel={item.columnLabel}
+            xs={item.xs}
+            md={item.md}
+            lg={item.lg}
+            xl={item.xl}
+            sx={item.sx}
+            onChange={(value) => tableMenuTextInputHandler(item.field, value, item.filterHandler)}
+            value={filterValue[item.field]?.value || []}
+          />
+        );
+      } else if (item.type === "select") {
+        tableMenuItem.push(
+          <SelectFilter
+            keyChild={"select-filter" + index}
+            key={"select-filter" + index}
+            column={item.field}
+            getOptionLabel={item.getOptionLabel}
+            data={item.data}
+            xs={item.xs}
+            md={item.md}
+            lg={item.lg}
+            xl={item.xl}
+            sx={item.sx}
+            limitTags={item.limitTags}
+            onChange={(value) => tableMenuSelectHandler(item.field, value, item.filterHandler)}
+            value={filterValue[item.field]?.value || []}
+          />
+        );
+      } else if (item.type === "custom") {
+        tableMenuItem.push(
+          <Grid
+            style={item.style}
+            item
+            xl={item.xl}
+            key={"custom-filter" + index}
+            lg={item.lg}
+            md={item.md}
+            xs={item.xs}
+            sx={{ pt: "0 !important", ...item.sx }}
+            alignSelf="flex-start"
+          >
+            {item.component}
+          </Grid>
+        );
+      }
+    });
+  }
+
+  return (
+    <>
+      {/* <TableMenu>{tableMenuItem}</TableMenu> */}
+      <DataGrid
+        disableRowSelectionOnClick={disableSelectionOnClick}
+        checkboxSelection={checkboxSelection}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay(),
+          toolbar: Toolbar,
+          ...components
+        }}
+        getRowId={getRowId}
+        slotProps={{
+          toolbar: {
+            name,
+            addItemToolbar,
+            addItemToolbarHandler,
+            filters: tableMenuItem
+          },
+          columnsPanel: {
+            getTogglableColumns: (columns) =>
+              columns.filter((column) => column.field !== "actions").map((column) => column.field)
+          },
+          ...componentsProps
+        }}
+        rowHeight={(rowHeightMultiplier || 1) * 52} //  52 is default value from MUI docs
+        columns={columnsData}
+        paginationModel={{ page, pageSize }}
+        pageSizeOptions={rowsPerPageOptions}
+        rows={data}
+        style={{
+          width: "100%",
+          ...style
+        }}
+        getRowClassName={(params) => getRowClassNameFunction(params)}
+        pagination
+        onPaginationModelChange={(model, details) => {
+          setPageSize(model.pageSize);
+          setPage(model.page);
+          if (onPageSizeChange) onPageSizeChange(model.pageSize, details);
+        }}
+        hideFooter={disableFooter}
+        disableColumnMenu
+        loading={loading}
+        className={
+          isRowSelectable === undefined
+            ? `${className ? className : ""} grid-disable-selection`
+            : className
+        }
+        initialState={initialState}
+        isRowSelectable={isRowSelectable || (() => false)}
+        onRowSelectionModelChange={onSelectionModelChange}
+        rowSelectionModel={selectionModel}
+      />
+    </>
+  );
+};
+
+export default Table;

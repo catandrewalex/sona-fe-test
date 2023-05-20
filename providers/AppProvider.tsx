@@ -30,8 +30,14 @@ export const useApp = create<AppState>((set, get) => ({
   isLoading: false,
   isDark: false,
   toggleDrawer: () => set({ drawerOpen: !get().drawerOpen }),
-  openDrawer: () => set({ drawerOpen: true }),
-  closeDrawer: () => set({ drawerOpen: false }),
+  openDrawer: () => {
+    set({ drawerOpen: true });
+    setLocalStorage("drawer", "true");
+  },
+  closeDrawer: () => {
+    set({ drawerOpen: false });
+    setLocalStorage("drawer", "false");
+  },
   appFinishLoading: () => set({ isAppLoading: false }),
   startLoading: () => set({ isLoading: true }),
   finishLoading: () => set({ isLoading: false }),

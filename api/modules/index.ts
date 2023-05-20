@@ -3,10 +3,14 @@ import { ManySnackbarConfig, useSnack } from "@sonamusica-fe/providers/SnackProv
 import { FailedResponse, SuccessResponse } from "api";
 import authModule from "./auth";
 import userModule from "./user";
+import teacherModule from "./teacher";
+import studentModule from "./student";
 
 export default {
   ...authModule,
-  ...userModule
+  ...userModule,
+  ...teacherModule,
+  ...studentModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -30,12 +34,12 @@ export const useApiTransformer = () => {
             message: err,
             variant: "error",
             configs: {
-              autoHideDuration: 60000
+              autoHideDuration: 10000
             }
           })) as ManySnackbarConfig[]
         );
       } else {
-        showSnackbar(errors[0], "error", { autoHideDuration: 60000 });
+        showSnackbar(errors[0], "error", { autoHideDuration: 10000 });
       }
     } else {
       if (showSuccessMessage) {
