@@ -35,3 +35,13 @@ export interface Student {
   studentId: number;
   user: User;
 }
+
+export interface Instrument {
+  id: number;
+  name: string;
+}
+
+export interface Grade {
+  id: number;
+  name: string;
+}

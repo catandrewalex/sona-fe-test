@@ -29,7 +29,7 @@ import TextInput from "@sonamusica-fe/components/Form/TextInput";
 import moment from "moment";
 import AddUserModal from "@sonamusica-fe/components/AddUserModal";
 
-const UserPage = (): JSX.Element => {
+const StudentPage = (): JSX.Element => {
   const [data, setData] = useState<Array<Student>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -48,7 +48,9 @@ const UserPage = (): JSX.Element => {
     });
   }, [user]);
 
-  const submitHandler = (data: User) => {};
+  const submitHandler = (newData: User, newId: number) => {
+    setData([...data, { studentId: newId, user: newData }]);
+  };
 
   /*
   Add new row to datagrid:apiRef.current.updateRows([createRandomRow()]);
@@ -163,4 +165,4 @@ const UserPage = (): JSX.Element => {
   );
 };
 
-export default UserPage;
+export default StudentPage;

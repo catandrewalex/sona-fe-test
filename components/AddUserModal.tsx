@@ -18,7 +18,7 @@ type AddUserModalProps = {
   title?: string;
   open?: boolean;
   onClose: () => void;
-  onSuccess: (newData: User) => void;
+  onSuccess: (newData: User, newId: number) => void;
   submitApi: (...data: any) => Promise<FailedResponse | SuccessResponse<any>>;
   data?: any;
 };
@@ -85,10 +85,32 @@ const AddUserModal = ({
     )
       return;
 
-    submitApi(1, 100).then((response) => {
-      apiTransformer(response, false);
-      console.log(response);
-    });
+    setLoading(true);
+    submitApi(1, 100)
+      .then((response) => {
+        apiTransformer(response, false);
+        console.log(response);
+        onSuccess(
+          {
+            email,
+            username,
+            userDetail: { firstName, lastName },
+            privilegeType: privilegeType || UserType.ANONYMOUS,
+            isDeactivated: data ? data.isDeactivated : false,
+            createdAt: data ? data.createdAt : new Date(),
+            id: data ? data.id : 100
+          },
+          data ? data.id : 100
+        );
+        onClose();
+        setEmail("");
+        setUsername(""), setPrivilegeType(null);
+        setFirstName("");
+        setLastName("");
+        setPassword("");
+        setConfirmPassword("");
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {

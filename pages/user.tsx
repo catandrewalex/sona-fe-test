@@ -49,7 +49,9 @@ const UserPage = (): JSX.Element => {
     });
   }, [user]);
 
-  const submitHandler = (data: User) => {};
+  const submitHandler = (newData: User, newId: number) => {
+    setData([...data, { ...newData, id: newId }]);
+  };
 
   /*
   Add new row to datagrid:apiRef.current.updateRows([createRandomRow()]);

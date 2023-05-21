@@ -79,6 +79,14 @@ const data: Array<SidebarSection> = [
         permission: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
+      },
+      {
+        icon: People,
+        text: "Instrument",
+        url: "/instrument",
+        permission: (userType?: UserType): boolean => {
+          return userType === UserType.ADMIN;
+        }
       }
     ]
   }
