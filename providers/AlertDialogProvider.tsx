@@ -104,7 +104,8 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
         PaperProps={{ sx: dialogState.style }}
         sx={dialogState.style}
         aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description">
+        aria-describedby="alert-dialog-slide-description"
+      >
         <DialogTitle id="alert-dialog-slide-title">{dialogState.title}</DialogTitle>
         <DialogContent>
           <DialogContentText component="div" id="alert-dialog-slide-description">
@@ -118,7 +119,8 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
               color: "success.dark",
               fontWeight: "fontWeightBold",
               fontSize: "1.25em"
-            }}>
+            }}
+          >
             {dialogState.informationDialog ? "Ok" : "Yes"}
           </Button>
 
@@ -129,7 +131,8 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
               fontWeight: "fontWeightBold",
               fontSize: "1.25em",
               display: dialogState.informationDialog ? "none" : "initial"
-            }}>
+            }}
+          >
             Cancel
           </Button>
         </DialogActions>

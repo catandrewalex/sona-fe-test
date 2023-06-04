@@ -1,6 +1,4 @@
-import { Button } from "@mui/material";
 import React from "react";
-import EditIcon from "@mui/icons-material/Edit";
 import { GridActionsCellItem, GridColDef, GridRowId } from "@mui/x-data-grid";
 import { Edit, Delete } from "@mui/icons-material";
 import Tooltip from "@sonamusica-fe/components/Tooltip";

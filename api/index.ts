@@ -22,7 +22,7 @@ axiosIntance.interceptors.request.use(async (req) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
   // add api version number to base url
-  const apiVersion = req.headers ? req.headers[API_CUSTOM_HEADER.apiVersion] : API_VERSION.v1;
+  // const apiVersion = req.headers ? req.headers[API_CUSTOM_HEADER.apiVersion] : API_VERSION.v1;
 
   // if (apiVersion) req.baseURL = `${req.baseURL}/api/${apiVersion}`;
   // else req.baseURL = `${req.baseURL}/auth`;
@@ -50,12 +50,14 @@ export class SuccessResponse<T> {
 }
 
 export class FailedResponse {
-  public messages: Record<string, string>;
+  public message?: string;
+  public errors: Record<string, string>;
   public status: number;
 
-  constructor(messages = {}, status = 500) {
-    this.messages = messages;
+  constructor(message?: string, status = 500, errors = {}) {
+    this.errors = errors;
     this.status = status;
+    this.message = message;
   }
 }
 
@@ -116,12 +118,14 @@ const API = {
             headers: {
               ...config.headers,
               ...apiVersionHeader
-            }
+            },
+            ...(config?.params ? config.params : {})
           })
         : axiosIntance.get(url, {
             headers: {
               ...apiVersionHeader
-            }
+            },
+            ...(config?.params ? config.params : {})
           }));
       return new SuccessResponse(
         result.data.data ? result.data.data : result.data.message,
@@ -131,15 +135,21 @@ const API = {
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
           deleteCookie("SNMC");
-          return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
+          return new FailedResponse("Authentication failed!", err.response.status);
         } else if (err.response.status === 500) {
-          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
+          return new FailedResponse("Sorry, something went wrong on our end.");
+        } else if (err.response.status === 405) {
+          return new FailedResponse("Wrong API call method! Please contact our admin.");
         }
-        return new FailedResponse(err.response.data as Record<string, string>, err.response.status);
+        return new FailedResponse(
+          err.response.data?.message,
+          err.response.status,
+          err.response.data?.errors as Record<string, string>
+        );
       }
-      return new FailedResponse({
-        "non-field": "Failed to send the request! Please check your internet connection."
-      });
+      return new FailedResponse(
+        "Failed to send the request! Please check your internet connection."
+      );
     }
   },
 
@@ -183,18 +193,21 @@ const API = {
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
           deleteCookie("SNMC");
-          return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
+          return new FailedResponse("Authentication failed!", err.response.status);
+        } else if (err.response.status === 405) {
+          return new FailedResponse("Wrong API call method! Please contact our admin.");
         } else if (err.response.status === 500) {
-          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
+          return new FailedResponse("Sorry, something went wrong on our end.");
         }
         return new FailedResponse(
-          err.response.data.messages as Record<string, string>,
-          err.response.status
+          err.response.data?.message,
+          err.response.status,
+          err.response.data?.errors as Record<string, string>
         );
       }
-      return new FailedResponse({
-        "non-field": "Failed to send the request! Please check your internet connection."
-      });
+      return new FailedResponse(
+        "Failed to send the request! Please check your internet connection."
+      );
     }
   },
   /**
@@ -237,15 +250,21 @@ const API = {
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
           deleteCookie("SNMC");
-          return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
+          return new FailedResponse("Authentication failed!", err.response.status);
+        } else if (err.response.status === 405) {
+          return new FailedResponse("Wrong API call method! Please contact our admin.");
         } else if (err.response.status === 500) {
-          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
+          return new FailedResponse("Sorry, something went wrong on our end.");
         }
-        return new FailedResponse(err.response.data as Record<string, string>, err.response.status);
+        return new FailedResponse(
+          err.response.data?.message,
+          err.response.status,
+          err.response.data?.errors as Record<string, string>
+        );
       }
-      return new FailedResponse({
-        "non-field": "Failed to send the request! Please check your internet connection."
-      });
+      return new FailedResponse(
+        "Failed to send the request! Please check your internet connection."
+      );
     }
   }
 };

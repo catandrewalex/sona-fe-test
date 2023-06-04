@@ -15,7 +15,6 @@ import { Theme } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import data from "./data";
-import clsx from "clsx";
 import { useRouter } from "next/router";
 import { getLocalStorage, setLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
@@ -164,7 +163,7 @@ const DrawerItem = (): JSX.Element => {
   return <>{lists}</>;
 };
 
-const Container = ({ children, text, divider, disabled }: DrawerItemContainerProps) => {
+const Container = ({ children, text, divider }: DrawerItemContainerProps) => {
   const drawerOpen = useApp((state) => state.drawerOpen);
 
   return (
@@ -173,10 +172,6 @@ const Container = ({ children, text, divider, disabled }: DrawerItemContainerPro
         subheader={
           <ListSubheader
             disableSticky
-            className={clsx({
-              // "hide-visual": !drawerOpen,
-              // hide: disabled
-            })}
             sx={
               drawerOpen
                 ? undefined

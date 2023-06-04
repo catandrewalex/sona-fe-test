@@ -1,19 +1,14 @@
 import {
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
   GridToolbarDensitySelector,
   GridToolbarExport,
-  GridToolbarQuickFilter,
-  GridRowModesModel,
-  GridRowModes
+  GridColumnIcon,
+  GridFilterListIcon
 } from "@mui/x-data-grid";
-import { Box, Button } from "@mui/material";
-import { Add, FilterList, Search } from "@mui/icons-material";
-import Grid from "@mui/system/Unstable_Grid/Grid";
-import TextInput from "@sonamusica-fe/components/Form/TextInput";
-import { GridApiCommunity } from "@mui/x-data-grid/internals";
-import { Dispatch, MutableRefObject, SetStateAction, useState } from "react";
+import { Box, Button, Divider, Grid } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import { useState } from "react";
 import TableMenu from "@sonamusica-fe/components/Table/TableMenu";
+import Switch from "@sonamusica-fe/components/Form/Switch";
 
 export interface AddItemToolbarButtonConfig<T> {
   name: string;
@@ -21,20 +16,27 @@ export interface AddItemToolbarButtonConfig<T> {
   fieldToFocus?: string;
 }
 
-type ToolbarProps<T> = {
+type ToolbarProps = {
   addItemToolbar?: boolean;
   addItemToolbarHandler?: () => void;
   name: string;
   filters?: JSX.Element[];
+  columns?: Array<{ name: string; text: string; value: boolean }>;
+  onVisibilityColumnsChange?: (column: string, value: boolean) => void;
+  onVisibilityAllColumnsChange?: (show: boolean) => void;
 };
 
-const Toolbar = <T extends { id: number }>({
+const Toolbar = ({
   addItemToolbar,
   addItemToolbarHandler,
   name,
-  filters
-}: ToolbarProps<T>): JSX.Element => {
+  filters,
+  onVisibilityColumnsChange,
+  onVisibilityAllColumnsChange,
+  columns
+}: ToolbarProps): JSX.Element => {
   const [showFilters, setShowFilters] = useState<boolean>(true);
+  const [showVisibilityColumn, setShowVisibilityColumn] = useState<boolean>(false);
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -42,14 +44,21 @@ const Toolbar = <T extends { id: number }>({
           <Button
             onClick={() => setShowFilters(!showFilters)}
             sx={{ py: 1, width: "120px" }}
-            startIcon={<FilterList />}
+            startIcon={<GridFilterListIcon />}
             variant={showFilters ? "contained" : "outlined"}
           >
             Filters
           </Button>
         </Box>
         <Box sx={{ m: 1 }}>
-          <GridToolbarColumnsButton variant="outlined" sx={{ py: 1, width: "120px" }} />
+          <Button
+            onClick={() => setShowVisibilityColumn(!showVisibilityColumn)}
+            sx={{ py: 1, width: "120px" }}
+            startIcon={<GridColumnIcon />}
+            variant={showVisibilityColumn ? "contained" : "outlined"}
+          >
+            Columns
+          </Button>
         </Box>
         <Box sx={{ m: 1 }}>
           <GridToolbarDensitySelector variant="outlined" sx={{ py: 1, width: "120px" }} />
@@ -65,7 +74,71 @@ const Toolbar = <T extends { id: number }>({
           </Box>
         )}
       </Box>
-      {showFilters && <TableMenu>{filters}</TableMenu>}
+      {showVisibilityColumn && (
+        <>
+          <TableMenu>
+            {columns?.map((column) => (
+              <Grid
+                item
+                key={"column-visibility-" + column.name}
+                xl={2}
+                md={3}
+                sm={4}
+                xs={6}
+                sx={{ pt: "0 !important", px: 1, py: 0.5 }}
+                alignSelf="flex-start"
+              >
+                <Switch
+                  label={column.text}
+                  checked={column.value}
+                  onChange={(_e, checked) =>
+                    onVisibilityColumnsChange
+                      ? onVisibilityColumnsChange(column.name, checked)
+                      : undefined
+                  }
+                />
+              </Grid>
+            ))}
+
+            <Grid
+              sm={12}
+              md={12}
+              lg={12}
+              sx={{ pt: "0 !important", px: 1, py: 0.5 }}
+              alignSelf="flex-start"
+              container
+            >
+              <Button
+                sx={{ mr: 2, width: "120px" }}
+                onClick={() =>
+                  onVisibilityAllColumnsChange ? onVisibilityAllColumnsChange(false) : undefined
+                }
+                variant="outlined"
+                color="secondary"
+              >
+                Hide All
+              </Button>
+              <Button
+                onClick={() =>
+                  onVisibilityAllColumnsChange ? onVisibilityAllColumnsChange(true) : undefined
+                }
+                sx={{ mr: 2, width: "120px" }}
+                variant="outlined"
+                color="secondary"
+              >
+                Show All
+              </Button>
+            </Grid>
+          </TableMenu>
+          <Divider />
+        </>
+      )}
+      {showFilters && (
+        <>
+          <TableMenu sx={{ mt: 0 }}>{filters}</TableMenu>
+          <Divider />
+        </>
+      )}
     </>
   );
 };

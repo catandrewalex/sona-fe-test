@@ -33,4 +33,14 @@ const ResetPassword = (
   });
 };
 
-export default { Login, ForgotPassword, ResetPassword };
+const ChangePassword = (
+  userId: number,
+  newPassword: string
+): Promise<FailedResponse | SuccessResponse<string>> => {
+  return API.put<string>({
+    url: `/user/${userId}/password`,
+    config: { data: { newPassword } }
+  });
+};
+
+export default { Login, ForgotPassword, ResetPassword, ChangePassword };

@@ -10,10 +10,11 @@ import FormField from "@sonamusica-fe/components/Form/FormField";
 import TextInput from "@sonamusica-fe/components/Form/TextInput";
 import SubmitButtonContainer from "@sonamusica-fe/components/Form/SubmitButtonContainer";
 import SubmitButton from "@sonamusica-fe/components/Form/SubmitButton";
-import { required } from "@sonamusica-fe/utils/ValidationUtil";
+import { useCheckMatch, useCheckRequired } from "@sonamusica-fe/utils/ValidationUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { FailedResponse } from "api";
 
-const ResetPassword = () => {
+const ResetPassword = (): JSX.Element => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
@@ -27,6 +28,16 @@ const ResetPassword = () => {
   const { showSnackbar } = useSnack();
   const apiTransformer = useApiTransformer();
 
+  const checkPassword = useCheckRequired(setErrorPassword, "Password");
+  const checkPasswordConfirmationRequired = useCheckRequired(
+    setErrorConfirmPassword,
+    "Confirmation Password"
+  );
+  const checkPasswordConfirmationMatch = useCheckMatch(
+    setErrorConfirmPassword,
+    "Password & Confirmation Password"
+  );
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (router.query.token === undefined || router.query.token === "") {
@@ -39,28 +50,21 @@ const ResetPassword = () => {
   }, [router]);
 
   const submitHandler = () => {
-    let passwordConfirmPassed = false,
-      passwordPassed = false;
-    if (!required(password)) setErrorPassword("New Password is required!");
-    else {
-      setErrorPassword("");
-      passwordPassed = true;
+    const finalCheckPassword = checkPassword(password);
+    let finalCheckPasswordConfirm = checkPasswordConfirmationRequired(confirmPassword);
+
+    if (finalCheckPasswordConfirm) {
+      finalCheckPasswordConfirm = checkPasswordConfirmationMatch(password, confirmPassword);
     }
 
-    if (!required(confirmPassword)) setErrorConfirmPassword("Confirm New Password is required!");
-    else if (confirmPassword !== password)
-      setErrorConfirmPassword("Password & Confirmation Password do not match!");
-    else {
-      setErrorConfirmPassword("");
-      passwordConfirmPassed = true;
-    }
-
-    if (passwordPassed && passwordConfirmPassed) {
+    if (finalCheckPassword && finalCheckPasswordConfirm) {
       setLoading(true);
       API.ResetPassword(router.query.token as string, password)
         .then((responseResetPassword) => {
           const result = apiTransformer(responseResetPassword, true);
-          if (result !== undefined) router.replace("/");
+          if (Object.getPrototypeOf(result) !== FailedResponse.prototype) {
+            router.replace("/");
+          }
         })
         .finally(() => setLoading(false));
     }
@@ -109,7 +113,10 @@ const ResetPassword = () => {
                   value={password}
                   errorMsg={errorPassword}
                   disabled={loading}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    checkPassword(e.target.value);
+                  }}
                   testIdContext="ResetPassword-Password"
                 />
               </FormField>
@@ -121,7 +128,12 @@ const ResetPassword = () => {
                   value={confirmPassword}
                   errorMsg={errorConfirmPassword}
                   disabled={loading}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (checkPasswordConfirmationRequired(e.target.value)) {
+                      checkPasswordConfirmationMatch(password, e.target.value);
+                    }
+                  }}
                   testIdContext="ResetPassword-PasswordConfirm"
                 />
               </FormField>

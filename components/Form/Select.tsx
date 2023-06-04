@@ -4,8 +4,6 @@ import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import React from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
-import { IconButton } from "@mui/material";
-import { Home } from "@mui/icons-material";
 
 /**
  * Select component prop types.

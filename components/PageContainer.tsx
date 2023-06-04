@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import Loader from "@sonamusica-fe/components/Loader";
 import PageInfo from "@sonamusica-fe/components/PageInfo";
@@ -59,10 +59,7 @@ const PageContainer = ({
   pageDescription,
   headElement,
   navTitle,
-  noNavigation,
-  noAuth,
-  page = "",
-  notFound
+  noAuth
 }: PageContainerProps): JSX.Element => {
   const { isAppLoading, closeDrawer, openDrawer, turnOnDark, turnOffDark } = useApp((state) => ({
     isAppLoading: state.isAppLoading,

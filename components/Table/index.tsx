@@ -11,11 +11,11 @@ import {
   GridRowModel,
   GridRowSelectionModel,
   GridInputRowSelectionModel,
-  GridRowIdGetter
+  GridRowIdGetter,
+  GridColumnVisibilityModel
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import Grid, { GridSize } from "@mui/material/Grid";
-import TableMenu from "./TableMenu";
 import TextInputFilter from "./TableMenu/TextInputFilter";
 import { useDebouncedCallback } from "use-debounce";
 import SelectFilter from "./TableMenu/SelectFilter";
@@ -124,6 +124,7 @@ const Table = ({
   const [dataSize, setDataSize] = useState<number>(0);
   const [columnsData, setColumnsData] = useState<GridColDef[]>(columns);
   const [filterValue, setFilterValue] = useState<Record<string, any>>({});
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>();
 
   const [pageSize, setPageSize] = useState<number>(
     rowDisplayed ? rowDisplayed : rowsPerPageOptions[0]
@@ -186,6 +187,18 @@ const Table = ({
     );
   }, [filterValue, rows]);
 
+  useEffect(() => {
+    const newVisibilityModel: GridColumnVisibilityModel = {};
+    for (const column of columns) {
+      if (column.field !== "id" && column.field !== "actions") {
+        if (columnVisibilityModel && columnVisibilityModel[column.field] !== undefined) {
+          newVisibilityModel[column.field] = columnVisibilityModel[column.field];
+        }
+      }
+    }
+    setColumnVisibilityModel(newVisibilityModel);
+  }, [columns]);
+
   const tableMenuTextInputHandler = useDebouncedCallback(
     (column: string, value: string, filterHandle?: (data: GridRowModel, value: any) => boolean) => {
       setFilterValue({
@@ -205,42 +218,6 @@ const Table = ({
     },
     100
   );
-
-  const tableMenuColumnInvisibilityHandler = useDebouncedCallback((value: string[]) => {
-    if (value.length === 0) setColumnsData(columns);
-    else {
-      let even = true;
-      setColumnsData(
-        columns.map((column) => {
-          for (let i = 0; i < value.length; i++) {
-            if (column.headerName === value[i]) {
-              if (even) {
-                even = false;
-                return {
-                  ...column,
-                  cellClassName: "even",
-                  hide: false
-                };
-              } else {
-                even = true;
-                return {
-                  ...column,
-                  cellClassName: "odd",
-                  hide: false
-                };
-              }
-            }
-          }
-          return { ...column, hide: true };
-        })
-      );
-
-      setFilterValue({
-        ...filterValue,
-        "_column-visibility": value
-      });
-    }
-  }, 100);
 
   const tableMenuItem: JSX.Element[] = [];
 
@@ -300,6 +277,17 @@ const Table = ({
     });
   }
 
+  const tableVisibilityItem = columns
+    .map((column) => ({
+      name: column.field,
+      text: column.headerName,
+      value:
+        columnVisibilityModel && columnVisibilityModel[column.field] !== undefined
+          ? columnVisibilityModel[column.field]
+          : true
+    }))
+    .filter((column) => column.text);
+
   return (
     <>
       {/* <TableMenu>{tableMenuItem}</TableMenu> */}
@@ -317,7 +305,22 @@ const Table = ({
             name,
             addItemToolbar,
             addItemToolbarHandler,
-            filters: tableMenuItem
+            filters: tableMenuItem,
+            columns: tableVisibilityItem,
+            onVisibilityColumnsChange: (column: string, value: boolean) => {
+              setColumnVisibilityModel({ ...columnVisibilityModel, [column]: value });
+            },
+            onVisibilityAllColumnsChange: (show: boolean) => {
+              if (columnVisibilityModel) {
+                const newColumnVisibilityModel: GridColumnVisibilityModel = {};
+                columns.forEach((column) => {
+                  if (column.field !== "id" && column.field !== "actions") {
+                    newColumnVisibilityModel[column.field] = show;
+                  }
+                });
+                setColumnVisibilityModel(newColumnVisibilityModel);
+              }
+            }
           },
           columnsPanel: {
             getTogglableColumns: (columns) =>
@@ -353,6 +356,7 @@ const Table = ({
         isRowSelectable={isRowSelectable || (() => false)}
         onRowSelectionModelChange={onSelectionModelChange}
         rowSelectionModel={selectionModel}
+        columnVisibilityModel={columnVisibilityModel}
       />
     </>
   );

@@ -1,5 +1,5 @@
 import { useUser } from "@sonamusica-fe/providers/AppProvider";
-import { ManySnackbarConfig, useSnack } from "@sonamusica-fe/providers/SnackProvider";
+import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { FailedResponse, SuccessResponse } from "api";
 import authModule from "./auth";
 import userModule from "./user";
@@ -15,7 +15,7 @@ export default {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useApiTransformer = () => {
-  const { showSnackbar, showSnackbarMany } = useSnack();
+  const { showSnackbar } = useSnack();
   const logout = useUser((state) => state.logout);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,21 +26,8 @@ export const useApiTransformer = () => {
     if (response instanceof FailedResponse) {
       if (response.status === 401) logout();
 
-      const errors = Object.entries(response.messages).map((val) => val[1]);
-
-      if (errors.length > 1) {
-        showSnackbarMany(
-          errors.map((err) => ({
-            message: err,
-            variant: "error",
-            configs: {
-              autoHideDuration: 10000
-            }
-          })) as ManySnackbarConfig[]
-        );
-      } else {
-        showSnackbar(errors[0], "error", { autoHideDuration: 10000 });
-      }
+      if (response.message) showSnackbar(response.message, "error", { autoHideDuration: 10000 });
+      return response;
     } else {
       if (showSuccessMessage) {
         showSnackbar(response.message, "success");

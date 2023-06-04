@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import DrawerItem from "@sonamusica-fe/components/Navigation/DrawerItem";
 import styles, { drawerWidth } from "./styles";
