@@ -1,16 +1,16 @@
 export interface User {
-  id: number;
+  userId: number;
   username: string;
   email: string;
   userDetail: UserDetail;
   privilegeType: UserType;
   isDeactivated: boolean;
-  createdAt: Date;
+  createdAt: string;
 }
 
 export interface UserDetail {
   firstName: string;
-  lastName: string;
+  lastName?: string;
 }
 
 export interface LoginResponse {

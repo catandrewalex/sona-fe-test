@@ -20,7 +20,7 @@ const ProfileView = ({ open, handleOpen }: ProfileViewProps): JSX.Element => {
     >
       <Avatar>
         {user?.userDetail.firstName.charAt(0) || user?.email.charAt(0).toUpperCase()}
-        {user?.userDetail.lastName.charAt(0)}
+        {user?.userDetail.lastName?.charAt(0)}
       </Avatar>
     </Box>
   );

@@ -96,7 +96,7 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
           <CardContent>
             <Avatar sx={{ m: "auto", width: 80, height: 80 }}>
               {user?.userDetail.firstName.charAt(0) || user?.email.charAt(0).toUpperCase()}
-              {user?.userDetail.lastName.charAt(0)}
+              {user?.userDetail.lastName?.charAt(0)}
             </Avatar>
             <Typography mt={1} textAlign="center" variant="h6">
               {user?.userDetail.firstName}
@@ -163,7 +163,7 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
 
             if (user && finalCheckPassword && finalCheckPasswordConfirm) {
               setLoading(true);
-              API.ChangePassword(user.id, newPassword)
+              API.ChangePassword(user.userId, newPassword)
                 .then((response) => {
                   const result = apiTransformer(response, true);
                   if (Object.getPrototypeOf(result) !== FailedResponse.prototype) {

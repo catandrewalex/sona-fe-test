@@ -206,7 +206,7 @@ const Table = ({
         [column]: { value, filterHandle }
       });
     },
-    500
+    250
   );
 
   const tableMenuSelectHandler = useDebouncedCallback(

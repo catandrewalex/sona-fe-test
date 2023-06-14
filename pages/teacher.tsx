@@ -184,7 +184,7 @@ const TeacherPage = (): JSX.Element => {
       let request: Promise<FailedResponse | SuccessResponse<Teacher>>;
 
       if (selectedData) {
-        request = API.InsertTeacher([{ userId: selectedData.id }]);
+        request = API.InsertTeacher([{ userId: selectedData.userId }]);
       } else {
         request = API.InsertTeacherNewUser([
           {
@@ -273,7 +273,7 @@ const TeacherPage = (): JSX.Element => {
               headerName: "Type",
               valueGetter: (params) =>
                 Object.entries(UserType).filter(
-                  (type) => type[1] === params.row.privilegeType
+                  (type) => type[1] === params.row.user.privilegeType
                 )[0][0] as string,
               flex: 1
             },
@@ -364,7 +364,7 @@ const TeacherPage = (): JSX.Element => {
         >
           <FormField lg={12} md={12}>
             <Select
-              isOptionEqualToValue={(option, value) => option?.id === value?.id}
+              isOptionEqualToValue={(option, value) => option?.userId === value?.userId}
               options={users}
               getOptionLabel={(option) =>
                 `${option.userDetail.firstName} ${option.userDetail.lastName} - ${option.email}`

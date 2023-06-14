@@ -9,6 +9,29 @@ const validEmail = (value: string): boolean => {
   return EmailValidator.validate(value);
 };
 
+interface BaseValidationConfig {
+  name: string;
+  pattern: string;
+}
+
+interface RequiredValidation extends BaseValidationConfig {
+  name: "required";
+  pattern: "%s is required!";
+}
+
+interface EmailValidation extends BaseValidationConfig {
+  name: "email";
+  pattern: "%s is not valid!";
+}
+
+interface MatchValidation extends BaseValidationConfig {
+  name: "match";
+  pattern: "%s is not valid!";
+  matcher: string;
+}
+
+export type ValidationConfig = RequiredValidation | EmailValidation | MatchValidation;
+
 export const useCheckRequired = (
   onError: (error: string) => void,
   field?: string
