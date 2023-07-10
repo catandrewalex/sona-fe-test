@@ -1,4 +1,9 @@
-import { Teacher, User } from "@sonamusica-fe/types";
+import {
+  Teacher,
+  TeacherDeleteRequest,
+  TeacherInsertFormRequest,
+  TeacherInsertNewUserFormRequest
+} from "@sonamusica-fe/types";
 import API, { FailedResponse, SuccessResponse } from "api";
 
 const GetAllTeacher = (
@@ -11,7 +16,7 @@ const GetAllTeacher = (
 };
 
 const InsertTeacher = (
-  data: Array<{ userId: number }>
+  data: TeacherInsertFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Teacher>> => {
   return API.post<Teacher>({
     url: "/teachers",
@@ -20,7 +25,7 @@ const InsertTeacher = (
 };
 
 const InsertTeacherNewUser = (
-  data: Array<Partial<User> & { password?: string }>
+  data: TeacherInsertNewUserFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Teacher>> => {
   return API.post<Teacher>({
     url: "/teachers/new-users",
@@ -28,4 +33,13 @@ const InsertTeacherNewUser = (
   });
 };
 
-export default { GetAllTeacher, InsertTeacher, InsertTeacherNewUser };
+const DeleteTeacher = (
+  data: TeacherDeleteRequest[]
+): Promise<FailedResponse | SuccessResponse<undefined>> => {
+  return API.delete<undefined>({
+    url: "/teachers",
+    config: { data: { data: { data } } }
+  });
+};
+
+export default { GetAllTeacher, InsertTeacher, InsertTeacherNewUser, DeleteTeacher };

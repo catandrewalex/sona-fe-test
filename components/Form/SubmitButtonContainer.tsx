@@ -11,7 +11,7 @@ import React from "react";
  * @property {string|undefined} align to adjust position of the buttons inside this component.
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  */
-type SubmitButtonContainerProps = {
+export type SubmitButtonContainerProps = {
   align?: "left" | "center" | "right" | "space-around" | "space-between";
   children: React.ReactNode;
   testIdContext?: string;

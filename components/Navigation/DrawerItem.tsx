@@ -70,7 +70,7 @@ const DrawerItem = (): JSX.Element => {
 
   const lists = data.map((section, idx) => {
     const innerItem = section.items.map(
-      ({ text, icon: Icon, url, permission, subMenu }, innerIdx) => {
+      ({ text, icon: Icon, url, userHasAccess, subMenu }, innerIdx) => {
         if (subMenu) {
           const subMenuItem = subMenu.map(
             (
@@ -78,7 +78,7 @@ const DrawerItem = (): JSX.Element => {
                 text: subMenuText,
                 icon: subMenuIcon,
                 url: subMenuUrl,
-                permission: subMenuPermission
+                userHasAccess: subMenuPermission
               },
               subMenuIdx
             ) => {
@@ -102,7 +102,7 @@ const DrawerItem = (): JSX.Element => {
             <MultiLevel
               key={`sidebar-item-${innerIdx}`}
               disabled={isLoading}
-              hidden={!permission(user?.privilegeType)}
+              hidden={!userHasAccess(user?.privilegeType)}
               icon={Icon}
               testIdContext={text.replaceAll(" ", "")}
               text={text}
@@ -120,7 +120,7 @@ const DrawerItem = (): JSX.Element => {
             testIdContext={text.replaceAll(" ", "")}
             url={url}
             disabled={isLoading}
-            hidden={!permission(user?.privilegeType)}
+            hidden={!userHasAccess(user?.privilegeType)}
           />
         );
       }
@@ -131,9 +131,9 @@ const DrawerItem = (): JSX.Element => {
       return (
         <Container
           disabled={
-            typeof section.permission === "function"
-              ? !section.permission(user?.privilegeType)
-              : !section.permission
+            typeof section.userHasAccess === "function"
+              ? !section.userHasAccess(user?.privilegeType)
+              : !section.userHasAccess
           }
           key={`sidebar-item-section-${idx}`}
           text={section.name}
@@ -152,9 +152,9 @@ const DrawerItem = (): JSX.Element => {
           url={section.url}
           disabled={isLoading}
           hidden={
-            (typeof section.permission === "function" &&
-              !section.permission(user?.privilegeType)) ||
-            section.permission === false
+            (typeof section.userHasAccess === "function" &&
+              !section.userHasAccess(user?.privilegeType)) ||
+            section.userHasAccess === false
           }
         />
       );

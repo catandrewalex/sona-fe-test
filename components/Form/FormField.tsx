@@ -11,7 +11,7 @@ import React from "react";
  * @property {React.ReactNode} children the children of this component
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  */
-interface FormFieldTypes extends GridProps {
+export interface FormFieldTypes extends GridProps {
   children?: React.ReactNode;
   testIdContext?: string;
 }
@@ -23,11 +23,7 @@ interface FormFieldTypes extends GridProps {
  * @author Joshua Lauwrich Nandy
  * @props FormFieldProps
  */
-const FormField = ({
-  children,
-  testIdContext,
-  ...props
-}: FormFieldTypes & GridProps): JSX.Element => {
+const FormField = ({ children, testIdContext, ...props }: FormFieldTypes): JSX.Element => {
   const { lg, md } = props;
 
   return (

@@ -23,6 +23,7 @@ import { CSSProperties } from "@mui/styles";
 import ErrorDataGridEmpty from "@sonamusica-fe/components/Error/ErrorDataGridEmpty";
 import { UncapitalizeObjectKeys } from "@mui/x-data-grid/internals";
 import Toolbar from "@sonamusica-fe/components/Table/Toolbar";
+import { titleCase } from "@sonamusica-fe/utils/StringUtil";
 interface DefaultFilterConfig {
   xl?: GridSize;
   lg?: GridSize;
@@ -88,6 +89,7 @@ type TableProps = {
   addItemToolbar?: boolean;
   addItemToolbarHandler?: () => void;
   name?: string;
+  testIdContext?: string;
 };
 
 const Table = ({
@@ -118,6 +120,7 @@ const Table = ({
   getRowId,
   addItemToolbar,
   addItemToolbarHandler,
+  testIdContext,
   name
 }: TableProps): JSX.Element => {
   const [data, setData] = useState<GridRowsProp>(rows);
@@ -206,7 +209,7 @@ const Table = ({
         [column]: { value, filterHandle }
       });
     },
-    500
+    250
   );
 
   const tableMenuSelectHandler = useDebouncedCallback(
@@ -235,6 +238,7 @@ const Table = ({
             lg={item.lg}
             xl={item.xl}
             sx={item.sx}
+            testIdContext={testIdContext + "-" + titleCase(item.field)}
             onChange={(value) => tableMenuTextInputHandler(item.field, value, item.filterHandler)}
             value={filterValue[item.field]?.value || []}
           />
@@ -253,6 +257,7 @@ const Table = ({
             xl={item.xl}
             sx={item.sx}
             limitTags={item.limitTags}
+            testIdContext={testIdContext + "-" + titleCase(item.field)}
             onChange={(value) => tableMenuSelectHandler(item.field, value, item.filterHandler)}
             value={filterValue[item.field]?.value || []}
           />
@@ -269,6 +274,7 @@ const Table = ({
             xs={item.xs}
             sx={{ pt: "0 !important", ...item.sx }}
             alignSelf="flex-start"
+            data-testid={testIdContext + "-TableCustomFilter"}
           >
             {item.component}
           </Grid>
@@ -320,7 +326,8 @@ const Table = ({
                 });
                 setColumnVisibilityModel(newColumnVisibilityModel);
               }
-            }
+            },
+            testIdContext: testIdContext
           },
           columnsPanel: {
             getTogglableColumns: (columns) =>

@@ -8,14 +8,14 @@ export type SidebarItem = {
   text: string;
   icon: OverridableComponent<SvgIconTypeMap<Record<string, never>, "svg">>;
   url?: string;
-  permission: (userType?: UserType) => boolean;
+  userHasAccess: (userType?: UserType) => boolean;
   subMenu?: SidebarItem[];
 };
 
 export type SidebarSection = {
   name: string;
   items: Array<SidebarItem>;
-  permission: ((userType?: UserType) => boolean) | boolean;
+  userHasAccess: ((userType?: UserType) => boolean) | boolean;
   icon?: OverridableComponent<SvgIconTypeMap<Record<string, never>, "svg">>;
   url?: string;
 };
@@ -26,11 +26,11 @@ const data: Array<SidebarSection> = [
     items: [],
     icon: HomeIcon,
     url: "/",
-    permission: true
+    userHasAccess: true
   },
   {
     name: "CRUD",
-    permission: (userType?: UserType): boolean => {
+    userHasAccess: (userType?: UserType): boolean => {
       return userType === UserType.ADMIN;
     },
     items: [
@@ -38,7 +38,7 @@ const data: Array<SidebarSection> = [
         icon: People,
         text: "User",
         url: "/user",
-        permission: (userType?: UserType): boolean => {
+        userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
       },
@@ -46,7 +46,7 @@ const data: Array<SidebarSection> = [
         icon: Hail,
         text: "Teacher",
         url: "/teacher",
-        permission: (userType?: UserType): boolean => {
+        userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
       },
@@ -54,7 +54,7 @@ const data: Array<SidebarSection> = [
         icon: People,
         text: "Student",
         url: "/student",
-        permission: (userType?: UserType): boolean => {
+        userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
       },
@@ -62,7 +62,7 @@ const data: Array<SidebarSection> = [
         icon: People,
         text: "Instrument",
         url: "/instrument",
-        permission: (userType?: UserType): boolean => {
+        userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
       }

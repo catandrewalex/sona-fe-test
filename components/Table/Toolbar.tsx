@@ -24,6 +24,7 @@ type ToolbarProps = {
   columns?: Array<{ name: string; text: string; value: boolean }>;
   onVisibilityColumnsChange?: (column: string, value: boolean) => void;
   onVisibilityAllColumnsChange?: (show: boolean) => void;
+  testIdContext?: string;
 };
 
 const Toolbar = ({
@@ -33,7 +34,8 @@ const Toolbar = ({
   filters,
   onVisibilityColumnsChange,
   onVisibilityAllColumnsChange,
-  columns
+  columns,
+  testIdContext
 }: ToolbarProps): JSX.Element => {
   const [showFilters, setShowFilters] = useState<boolean>(true);
   const [showVisibilityColumn, setShowVisibilityColumn] = useState<boolean>(false);
@@ -46,6 +48,7 @@ const Toolbar = ({
             sx={{ py: 1, width: "120px" }}
             startIcon={<GridFilterListIcon />}
             variant={showFilters ? "contained" : "outlined"}
+            data-testid={testIdContext + "-TableFilterButton"}
           >
             Filters
           </Button>
@@ -56,19 +59,33 @@ const Toolbar = ({
             sx={{ py: 1, width: "120px" }}
             startIcon={<GridColumnIcon />}
             variant={showVisibilityColumn ? "contained" : "outlined"}
+            data-testid={testIdContext + "-TableColumnToggleButton"}
           >
             Columns
           </Button>
         </Box>
         <Box sx={{ m: 1 }}>
-          <GridToolbarDensitySelector variant="outlined" sx={{ py: 1, width: "120px" }} />
+          <GridToolbarDensitySelector
+            data-testid={testIdContext + "-TableDensityButton"}
+            variant="outlined"
+            sx={{ py: 1, width: "120px" }}
+          />
         </Box>
         <Box sx={{ m: 1 }}>
-          <GridToolbarExport variant="outlined" sx={{ py: 1, width: "120px" }} />
+          <GridToolbarExport
+            data-testid={testIdContext + "-TableExportButton"}
+            variant="outlined"
+            sx={{ py: 1, width: "120px" }}
+          />
         </Box>
         {addItemToolbar && addItemToolbarHandler && (
           <Box sx={{ m: 1, flex: 1, textAlign: "right" }}>
-            <Button variant="contained" startIcon={<Add />} onClick={addItemToolbarHandler}>
+            <Button
+              data-testid={testIdContext + "-TableAddButton"}
+              variant="contained"
+              startIcon={<Add />}
+              onClick={addItemToolbarHandler}
+            >
               Add {name || ""}
             </Button>
           </Box>

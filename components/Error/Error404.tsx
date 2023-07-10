@@ -9,8 +9,8 @@ const Error404 = (): JSX.Element => {
           <Image src="/404.png" alt="not found" height={250} width={250} />
         </div>
         <div>
-          <h1 style={{ textAlign: "center" }}>Halaman Tidak Ditemukan</h1>
-          <p style={{ textAlign: "center" }}>Maaf, halaman yang anda tuju tidak ditemukan</p>
+          <h1 style={{ textAlign: "center" }}>Page Not Found</h1>
+          <p style={{ textAlign: "center" }}>Sorry, you may have entered wrong URL.</p>
         </div>
       </div>
     </Box>

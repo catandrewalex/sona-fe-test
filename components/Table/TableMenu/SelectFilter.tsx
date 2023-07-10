@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import Grid, { GridSize } from "@mui/material/Grid";
-import Select from "@sonamusica-fe/components/Form/Select";
-import { capitalizeWord } from "@sonamusica-fe/utils/StringUtil";
+import { titleCase } from "@sonamusica-fe/utils/StringUtil";
 import { CSSProperties } from "@mui/styles";
+import StandardSelect from "@sonamusica-fe/components/Form/StandardSelect";
 
 type SelectFilterProps = {
   column: string;
@@ -18,6 +18,7 @@ type SelectFilterProps = {
   value: any[];
   getOptionLabel: (option: any) => string;
   keyChild?: string;
+  testIdContext?: string;
 };
 
 const SelectFilter = ({
@@ -32,7 +33,8 @@ const SelectFilter = ({
   onChange,
   getOptionLabel,
   limitTags,
-  keyChild
+  keyChild,
+  testIdContext
 }: SelectFilterProps): JSX.Element => {
   const [innerValue, setValue] = useState<any[]>([]);
 
@@ -51,13 +53,14 @@ const SelectFilter = ({
       sx={{ pt: "0 !important", px: 1, py: 0.5 }}
       alignSelf="flex-start"
     >
-      <Select<any, true>
+      <StandardSelect<any, true>
         multiple
         limitTags={limitTags}
-        inputProps={{ label: capitalizeWord(column) + " Filter", margin: "dense" }}
+        inputProps={{ label: titleCase(column) + " Filter", margin: "dense" }}
         options={data}
         value={innerValue}
         sx={sx}
+        testIdContext={testIdContext + "-TableSelectFilter"}
         getOptionLabel={getOptionLabel}
         onChange={(_e, value) => {
           setValue(value);

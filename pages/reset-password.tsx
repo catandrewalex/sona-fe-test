@@ -2,40 +2,61 @@ import PageContainer from "@sonamusica-fe/components/PageContainer";
 import Image from "next/image";
 import { Box, Paper, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import Form from "@sonamusica-fe/components/Form";
-import FormField from "@sonamusica-fe/components/Form/FormField";
-import TextInput from "@sonamusica-fe/components/Form/TextInput";
-import SubmitButtonContainer from "@sonamusica-fe/components/Form/SubmitButtonContainer";
-import SubmitButton from "@sonamusica-fe/components/Form/SubmitButton";
-import { useCheckMatch, useCheckRequired } from "@sonamusica-fe/utils/ValidationUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { FailedResponse } from "api";
+import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
 
 const ResetPassword = (): JSX.Element => {
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-
-  const [errorPassword, setErrorPassword] = useState<string>("");
-  const [errorConfirmPassword, setErrorConfirmPassword] = useState<string>("");
-
-  const [loading, setLoading] = useState<boolean>(false);
-
   const router = useRouter();
   const appFinishLoading = useApp((state) => state.appFinishLoading);
   const { showSnackbar } = useSnack();
   const apiTransformer = useApiTransformer();
 
-  const checkPassword = useCheckRequired(setErrorPassword, "Password");
-  const checkPasswordConfirmationRequired = useCheckRequired(
-    setErrorConfirmPassword,
-    "Confirmation Password"
-  );
-  const checkPasswordConfirmationMatch = useCheckMatch(
-    setErrorConfirmPassword,
-    "Password & Confirmation Password"
+  const { formRenderer } = useFormRenderer<{ password: string; confirmPassword: string }>(
+    {
+      submitContainerProps: { marginBottom: 2 },
+      promptCancelButtonDialog: true,
+      submitButtonProps: { testIdContext: "ResetPassword", xs: 12, md: 12, lg: 12, xl: 12 },
+      fields: [
+        {
+          type: "text",
+          name: "password",
+          label: "New Password",
+          formFieldProps: { lg: 12 },
+          inputProps: { testIdContext: "ResetPassword-Password", type: "password" },
+          validations: [{ name: "required" }]
+        },
+        {
+          type: "text",
+          name: "confirmPassword",
+          label: "Confirm New Password",
+          formFieldProps: { lg: 12, sx: { pt: "0px !important" } },
+          inputProps: { testIdContext: "ResetPassword-PasswordConfirm", type: "password" },
+          validations: [
+            { name: "required" },
+            { name: "match", parameters: { matcherField: "password", matcherLabel: "Password" } }
+          ]
+        }
+      ],
+      errorResponseMapping: {
+        password: "newPassword"
+      },
+      submitHandler: async (formData, error) => {
+        if (error.confirmPassword || error.password) return Promise.reject();
+
+        const response = await API.ResetPassword(router.query.token as string, formData.password);
+        const parsedResponse = apiTransformer(response, true);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        } else {
+          router.replace("/");
+        }
+      }
+    },
+    { confirmPassword: "", password: "" }
   );
 
   useEffect(() => {
@@ -48,27 +69,6 @@ const ResetPassword = (): JSX.Element => {
     }, 3000);
     return () => clearTimeout(timeout);
   }, [router]);
-
-  const submitHandler = () => {
-    const finalCheckPassword = checkPassword(password);
-    let finalCheckPasswordConfirm = checkPasswordConfirmationRequired(confirmPassword);
-
-    if (finalCheckPasswordConfirm) {
-      finalCheckPasswordConfirm = checkPasswordConfirmationMatch(password, confirmPassword);
-    }
-
-    if (finalCheckPassword && finalCheckPasswordConfirm) {
-      setLoading(true);
-      API.ResetPassword(router.query.token as string, password)
-        .then((responseResetPassword) => {
-          const result = apiTransformer(responseResetPassword, true);
-          if (Object.getPrototypeOf(result) !== FailedResponse.prototype) {
-            router.replace("/");
-          }
-        })
-        .finally(() => setLoading(false));
-    }
-  };
 
   return (
     <PageContainer noAuth noNavigation>
@@ -89,55 +89,7 @@ const ResetPassword = (): JSX.Element => {
             <Typography variant="h4" align="center">
               Reset Password
             </Typography>
-            <Form
-              onSubmit={submitHandler}
-              formSubmit={
-                <SubmitButtonContainer marginBottom={2}>
-                  <SubmitButton
-                    testIdContext="ResetPassword"
-                    xs={12}
-                    md={12}
-                    lg={12}
-                    xl={12}
-                    fullWidth
-                    loading={loading}
-                  />
-                </SubmitButtonContainer>
-              }
-            >
-              <FormField lg={12}>
-                <TextInput
-                  label="New Password"
-                  type="password"
-                  required
-                  value={password}
-                  errorMsg={errorPassword}
-                  disabled={loading}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    checkPassword(e.target.value);
-                  }}
-                  testIdContext="ResetPassword-Password"
-                />
-              </FormField>
-              <FormField lg={12} sx={{ pt: "0px !important" }}>
-                <TextInput
-                  label="Confirm New Password"
-                  type="password"
-                  required
-                  value={confirmPassword}
-                  errorMsg={errorConfirmPassword}
-                  disabled={loading}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    if (checkPasswordConfirmationRequired(e.target.value)) {
-                      checkPasswordConfirmationMatch(password, e.target.value);
-                    }
-                  }}
-                  testIdContext="ResetPassword-PasswordConfirm"
-                />
-              </FormField>
-            </Form>
+            {formRenderer()}
           </Box>
         </Paper>
       </>

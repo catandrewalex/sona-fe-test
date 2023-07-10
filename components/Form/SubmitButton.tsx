@@ -16,7 +16,9 @@ import React from "react";
  * @property {boolean|undefined} loading if true, the loading animation will showed instead of submit text.
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  */
-interface SubmitButtonProps extends ButtonProps, Pick<GridProps, "xl" | "lg" | "md" | "xs" | "sm"> {
+export interface SubmitButtonProps
+  extends ButtonProps,
+    Pick<GridProps, "xl" | "lg" | "md" | "xs" | "sm"> {
   submitText?: string;
   regular?: boolean;
   loading?: boolean;

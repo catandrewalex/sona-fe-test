@@ -1,9 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TextField, { TextFieldProps } from "@mui/material/TextField";
-import Autocomplete, { AutocompleteProps } from "@mui/material/Autocomplete";
+import Autocomplete, {
+  AutocompleteChangeReason,
+  AutocompleteProps
+} from "@mui/material/Autocomplete";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
+import { ValidationConfig, useCheckNotNull } from "@sonamusica-fe/utils/ValidationUtil";
+import { AutocompleteValue } from "@mui/material";
 
 /**
  * Select component prop types.
@@ -11,19 +17,34 @@ import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
  * @extends AutoCompleteProps
  * @since 1.0.0
  * @version 1.0.0
- * @property {string|undefined} errorMsg the validation error message
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  * @property {TextFieldProps} inputProps the props that will be passed to input component
  */
-interface SelectProps<
+export interface SelectProps<
   T,
+  K,
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
   FreeSolo extends boolean | undefined = undefined
-> extends Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> {
+> extends Omit<
+    AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
+    "renderInput" | "onChange"
+  > {
   testIdContext?: string;
-  errorMsg?: string;
   inputProps?: TextFieldProps;
+  initialValue?: T | null;
+  validations?: Array<ValidationConfig<K>>;
+  field: keyof K;
+  label: string;
+  valueRef: React.MutableRefObject<K>;
+  errorRef: React.MutableRefObject<Record<keyof K, string>>;
+  onChange?: (
+    valueRef: React.MutableRefObject<K>,
+    errorRef: React.MutableRefObject<Record<keyof K, string>>,
+    event: React.SyntheticEvent<Element, Event>,
+    value: AutocompleteValue<T, Multiple, DisableClearable, FreeSolo>,
+    reason: AutocompleteChangeReason
+  ) => void | undefined;
 }
 
 /**
@@ -34,30 +55,87 @@ interface SelectProps<
  */
 const Select = <
   T,
+  K = any,
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
   FreeSolo extends boolean | undefined = undefined
 >({
   inputProps,
-  errorMsg,
   testIdContext,
+  initialValue = null,
+  validations,
+  field,
+  label,
+  valueRef,
+  errorRef,
+  onChange,
   ...props
-}: SelectProps<T, Multiple, DisableClearable, FreeSolo>): JSX.Element => {
+}: SelectProps<T, K, Multiple, DisableClearable, FreeSolo>): JSX.Element => {
   const { getOptionLabel } = props;
+  const [internalValue, setInternalValue] = useState<T | null>(initialValue);
+  const [internalErrorMsg, setInternalErrorMsg] = useState<string>("");
+
+  const requiredCheck = useCheckNotNull(label);
+
+  const validationHandler = useCallback(
+    (value: T | null) => {
+      if (validations) {
+        for (const validation of validations) {
+          let temp = "";
+          switch (validation.name) {
+            case "required":
+              temp = requiredCheck(value);
+              break;
+          }
+          if (temp) {
+            setInternalErrorMsg(temp);
+            return temp;
+          }
+        }
+      }
+      setInternalErrorMsg("");
+      return "";
+    },
+    [validations]
+  );
+
+  useEffect(() => {
+    if (errorRef.current[field] && errorRef.current[field] !== internalErrorMsg) {
+      setInternalErrorMsg(errorRef.current[field]);
+    }
+  }, [errorRef.current[field]]);
+
+  useEffect(() => {
+    setInternalValue(initialValue || null);
+  }, [initialValue]);
+
+  useEffect(() => {
+    setInternalValue(valueRef.current[field] as any);
+  }, [valueRef.current[field]]);
+
   return (
     <>
-      <Autocomplete<T, Multiple, DisableClearable, FreeSolo>
+      <Autocomplete
         {...props}
         className="MuiAutocomplete-hasClearIcon"
         filterSelectedOptions
+        value={internalValue as AutocompleteValue<T, Multiple, DisableClearable, FreeSolo>}
+        onChange={(e, value, reason) => {
+          setInternalValue(value as T | null);
+          errorRef.current[field] = validationHandler(value as any);
+          if (onChange) onChange(valueRef, errorRef, e, value, reason);
+          valueRef.current[field] = value as any;
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
             variant="outlined"
             margin="normal"
             fullWidth
+            value={internalValue}
+            label={label}
             data-testid={`${testIdContext}-Select`}
-            error={errorMsg !== "" && errorMsg !== undefined}
+            error={internalErrorMsg !== "" && internalErrorMsg !== undefined}
             {...inputProps}
           />
         )}
@@ -81,8 +159,8 @@ const Select = <
           );
         }}
       />
-      {errorMsg !== undefined && errorMsg !== "" && (
-        <FormFeedback message={errorMsg} error testIdContext={testIdContext} />
+      {internalErrorMsg !== undefined && internalErrorMsg !== "" && (
+        <FormFeedback message={internalErrorMsg} error testIdContext={testIdContext} />
       )}
     </>
   );

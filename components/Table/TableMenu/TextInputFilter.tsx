@@ -1,9 +1,9 @@
 import { SearchOutlined } from "@mui/icons-material";
 import Grid, { GridSize } from "@mui/material/Grid";
-import TextInput from "@sonamusica-fe/components/Form/TextInput";
 import React, { useEffect, useState } from "react";
 import { CSSProperties } from "@mui/styles";
 import { useGridApiContext } from "@mui/x-data-grid";
+import StandardTextInput from "@sonamusica-fe/components/Form/StandardTextInput";
 
 type TextInputFilterProps = {
   column: string;
@@ -16,6 +16,7 @@ type TextInputFilterProps = {
   value: string;
   onChange?: (value: string) => void;
   keyChild?: string;
+  testIdContext?: string;
 };
 
 const TextInputFilter = ({
@@ -28,7 +29,8 @@ const TextInputFilter = ({
   sx,
   onChange,
   value,
-  keyChild
+  keyChild,
+  testIdContext
 }: TextInputFilterProps): JSX.Element => {
   const [innerValue, setValue] = useState<string>("");
 
@@ -49,7 +51,7 @@ const TextInputFilter = ({
       sx={{ pt: "0 !important", px: 1, py: 0.5 }}
       alignSelf="flex-start"
     >
-      <TextInput
+      <StandardTextInput
         label={
           columnLabel
             ? `Search for ${columnLabel}`
@@ -61,6 +63,7 @@ const TextInputFilter = ({
         type="text"
         value={innerValue}
         sx={sx}
+        testIdContext={testIdContext + "-TableInputFilter"}
         onChange={(e) => {
           setValue(e.target.value);
           onChange ? onChange(e.target.value) : undefined;

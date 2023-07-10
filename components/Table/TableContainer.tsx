@@ -9,6 +9,7 @@ type TableContainerProps = {
   width?: number | string;
   sx?: SxProps<Theme>;
   children: React.ReactNode;
+  testIdContext?: string;
 };
 
 const TableContainer = ({
@@ -16,7 +17,8 @@ const TableContainer = ({
   height,
   sx,
   component: ContainerComponent,
-  children
+  children,
+  testIdContext
 }: TableContainerProps): JSX.Element => {
   const containerStyle = {
     width: width ? width : "100%",
@@ -32,6 +34,7 @@ const TableContainer = ({
       mt={1}
       style={containerStyle}
       className="flex flex-full-percent flex-column align-center"
+      data-testid={"TableContainer-" + testIdContext}
       sx={sx}
     >
       {children}

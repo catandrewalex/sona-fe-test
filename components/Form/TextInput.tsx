@@ -1,8 +1,14 @@
 /* eslint-disable react/destructuring-assignment */
 import TextField, { TextFieldProps } from "@mui/material/TextField";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
 import { InputAdornment } from "@mui/material";
+import {
+  ValidationConfig,
+  useCheckEmail,
+  useCheckMatch,
+  useCheckRequired
+} from "@sonamusica-fe/utils/ValidationUtil";
 
 /**
  * Text Input prop types.
@@ -16,12 +22,17 @@ import { InputAdornment } from "@mui/material";
  * @property {React.ReactNode|undefined} endAdornment any react component that will appear after the input
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  */
-type TextInputProps = {
-  errorMsg?: string;
+export type TextInputProps<T> = {
   testIdContext?: string;
   startAdornment?: React.ReactNode;
   endAdornment?: React.ReactNode;
-};
+  initialValue?: string;
+  validations?: Array<ValidationConfig<T>>;
+  field: keyof T;
+  label: string;
+  valueRef: React.MutableRefObject<T>;
+  errorRef: React.MutableRefObject<Record<keyof T, string>>;
+} & Exclude<TextFieldProps, "value">;
 
 /**
  * Input component for text.
@@ -30,25 +41,94 @@ type TextInputProps = {
  * @author Joshua Lauwrich Nandy
  * @props TextInputProps
  */
-const TextInput = ({
-  errorMsg,
+const TextInput = <T extends unknown>({
   testIdContext,
   startAdornment,
   endAdornment,
   inputProps,
+  initialValue,
+  validations,
+  field,
+  label,
+  valueRef,
+  errorRef,
+  onChange,
   ...props
-}: TextFieldProps & TextInputProps): JSX.Element => {
+}: TextInputProps<T>): JSX.Element => {
   const finalInputProps = {
     ...inputProps,
     "data-testid": `${testIdContext}-TextInput`
   };
+
+  const [internalValue, setInternalValue] = useState<string>(initialValue || "");
+  const [internalErrorMsg, setInternalErrorMsg] = useState<string>("");
+
+  const requiredCheck = useCheckRequired(label);
+  const emailCheck = useCheckEmail(label);
+  const matchCheck = useCheckMatch(label);
+
+  const validationHandler = useCallback(
+    (value: string) => {
+      if (validations) {
+        for (const validation of validations) {
+          let temp = "";
+          switch (validation.name) {
+            case "required":
+              temp = requiredCheck(value);
+              break;
+            case "email":
+              temp = emailCheck(value);
+              break;
+            case "match":
+              temp = matchCheck(
+                value,
+                valueRef.current[validation.parameters.matcherField],
+                validation.parameters.matcherLabel
+                  ? validation.parameters.matcherLabel
+                  : (validation.parameters.matcherField as string)
+              );
+              break;
+          }
+          if (temp) {
+            setInternalErrorMsg(temp);
+            return temp;
+          }
+        }
+      }
+      setInternalErrorMsg("");
+      return "";
+    },
+    [validations]
+  );
+
+  useEffect(() => {
+    setInternalValue(initialValue || "");
+  }, [initialValue]);
+
+  useEffect(() => {
+    setInternalValue(valueRef.current[field] || "");
+  }, [valueRef.current[field]]);
+
+  useEffect(() => {
+    if (errorRef.current[field] !== undefined && errorRef.current[field] !== internalErrorMsg) {
+      setInternalErrorMsg(errorRef.current[field]);
+    }
+  }, [errorRef.current[field]]);
 
   return (
     <>
       <TextField
         margin="normal"
         fullWidth
-        error={errorMsg !== undefined && errorMsg !== ""}
+        value={internalValue}
+        label={label}
+        onChange={(e) => {
+          setInternalValue(e.target.value);
+          errorRef.current[field] = validationHandler(e.target.value);
+          if (onChange) onChange(e);
+          valueRef.current[field] = e.target.value as T[keyof T];
+        }}
+        error={internalErrorMsg !== ""}
         inputProps={finalInputProps}
         InputProps={{
           startAdornment: startAdornment ? (
@@ -60,8 +140,8 @@ const TextInput = ({
         }}
         {...props}
       />
-      {errorMsg !== undefined && errorMsg !== "" && (
-        <FormFeedback message={errorMsg} error testIdContext={testIdContext} />
+      {internalErrorMsg !== "" && (
+        <FormFeedback message={internalErrorMsg} error testIdContext={testIdContext} />
       )}
     </>
   );

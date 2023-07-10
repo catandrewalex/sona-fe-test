@@ -1,55 +1,73 @@
 import { useCallback } from "react";
 import * as EmailValidator from "email-validator";
 
+export type ValidationConfig<T = undefined> =
+  | RequiredValidationConfig
+  | EmailValidationConfig
+  | MatchValidationConfig<T>;
+
+interface RequiredValidationConfig {
+  name: "required";
+}
+
+interface EmailValidationConfig {
+  name: "email";
+}
+
+interface MatchValidationConfig<T> {
+  name: "match";
+  parameters: {
+    matcherField: keyof T;
+    matcherLabel?: string;
+  };
+}
+
+const notNull = (value: unknown): boolean => {
+  return value !== null;
+};
+
 const required = (value: string | undefined | null): boolean => {
   return Boolean(value);
 };
 
 const validEmail = (value: string): boolean => {
-  return EmailValidator.validate(value);
+  return value === "" || EmailValidator.validate(value);
 };
 
-export const useCheckRequired = (
-  onError: (error: string) => void,
-  field?: string
-): ((value: string) => boolean) => {
-  return useCallback((value: string) => {
-    if (!required(value)) {
-      onError(`${field || "This field"} is required!`);
-      return false;
-    } else {
-      onError("");
-      return true;
+export const useCheckNotNull = (field: string): ((value: unknown) => string) => {
+  return useCallback((value: unknown) => {
+    if (!notNull(value)) {
+      return `${field} is required!`;
     }
+    return "";
   }, []);
 };
 
-export const useCheckEmail = (
-  onError: (error: string) => void,
-  field?: string
-): ((value: string) => boolean) => {
+export const useCheckRequired = (field: string): ((value: string) => string) => {
+  return useCallback((value: string) => {
+    if (!required(value)) {
+      return `${field} is required!`;
+    }
+    return "";
+  }, []);
+};
+
+export const useCheckEmail = (field: string): ((value: string) => string) => {
   return useCallback((value: string) => {
     if (!validEmail(value)) {
-      onError(`${field || "This field"} is not valid!`);
-      return false;
-    } else {
-      onError("");
-      return true;
+      return `${field} is not valid!`;
     }
+    return "";
   }, []);
 };
 
 export const useCheckMatch = (
-  onError: (error: string) => void,
-  field?: string
-): ((value: string, confirmation: string) => boolean) => {
-  return useCallback((value: string, confirmation: string) => {
-    if (value !== confirmation) {
-      onError(`${field || "This field"} do not match!`);
-      return false;
-    } else {
-      onError("");
-      return true;
+  field: string
+): ((value: string, matcher: string, matcherField: string) => string) => {
+  return useCallback((value: string, matcher: string, matcherField: string) => {
+    if (value !== matcher) {
+      return `${field} and ${matcherField} do not match!`;
     }
+    return "";
   }, []);
 };

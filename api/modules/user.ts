@@ -1,4 +1,4 @@
-import { User } from "@sonamusica-fe/types";
+import { User, UserInsertFormRequest, UserUpdateFormRequest } from "@sonamusica-fe/types";
 import API, { FailedResponse, SuccessResponse } from "api";
 
 const GetUserData = (id: number): Promise<FailedResponse | SuccessResponse<User>> => {
@@ -16,14 +16,18 @@ const GetAllUser = (
   });
 };
 
-const UpdateUser = (user: Partial<User>[]): Promise<FailedResponse | SuccessResponse<User>> => {
+const UpdateUser = (
+  user: UserUpdateFormRequest[]
+): Promise<FailedResponse | SuccessResponse<User>> => {
   return API.put<User>({
     url: "/users",
     config: { data: { data: user } }
   });
 };
 
-const CreateUser = (user: Partial<User>[]): Promise<FailedResponse | SuccessResponse<User>> => {
+const CreateUser = (
+  user: UserInsertFormRequest[]
+): Promise<FailedResponse | SuccessResponse<User>> => {
   return API.post<User>({
     url: "/users",
     config: { data: { data: user } }
