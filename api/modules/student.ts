@@ -1,9 +1,9 @@
+import { Student } from "@sonamusica-fe/types";
 import {
-  Student,
-  StudentDeleteRequest,
   StudentInsertFormRequest,
-  StudentInsertNewUserFormRequest
-} from "@sonamusica-fe/types";
+  StudentInsertNewUserFormRequest,
+  StudentDeleteRequest
+} from "@sonamusica-fe/types/form/student";
 import API, { FailedResponse, SuccessResponse } from "api";
 
 const GetAllStudent = (

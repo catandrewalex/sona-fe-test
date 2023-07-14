@@ -14,8 +14,10 @@ import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 import { FailedResponse } from "api";
 import React, { useMemo, useRef, useState } from "react";
 
+type FormFieldType = "text" | "select";
+
 interface BaseFormField<T> {
-  type: string;
+  type: FormFieldType;
   name: keyof T;
   label: string;
   validations: Array<ValidationConfig<T>>;

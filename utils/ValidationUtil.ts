@@ -6,15 +6,21 @@ export type ValidationConfig<T = undefined> =
   | EmailValidationConfig
   | MatchValidationConfig<T>;
 
-interface RequiredValidationConfig {
+type ValidationName = "required" | "email" | "match";
+
+interface BaseValidationConfig {
+  name: ValidationName;
+}
+
+interface RequiredValidationConfig extends BaseValidationConfig {
   name: "required";
 }
 
-interface EmailValidationConfig {
+interface EmailValidationConfig extends BaseValidationConfig {
   name: "email";
 }
 
-interface MatchValidationConfig<T> {
+interface MatchValidationConfig<T> extends BaseValidationConfig {
   name: "match";
   parameters: {
     matcherField: keyof T;

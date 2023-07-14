@@ -5,7 +5,8 @@ import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
-import { Teacher, UserType, TeacherInsertFormData, User } from "@sonamusica-fe/types";
+import { Teacher, UserType, User } from "@sonamusica-fe/types";
+import { TeacherInsertFormData } from "@sonamusica-fe/types/form/teacher";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -35,7 +36,7 @@ const PageAdminTeacherForm = ({
   const apiTransformer = useApiTransformer();
 
   useEffect(() => {
-    API.GetAllUser().then((response) => {
+    API.GetAllUser({ filter: "NOT_TEACHER" }).then((response) => {
       const parsedResponse = apiTransformer(response, false);
       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
         setUsers((parsedResponse as ResponseMany<User>).results);

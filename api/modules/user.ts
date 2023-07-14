@@ -1,5 +1,13 @@
-import { User, UserInsertFormRequest, UserUpdateFormRequest } from "@sonamusica-fe/types";
+import { User } from "@sonamusica-fe/types";
+import { UserUpdateFormRequest, UserInsertFormRequest } from "@sonamusica-fe/types/form/user";
 import API, { FailedResponse, SuccessResponse } from "api";
+
+type UserFilter = "NOT_TEACHER" | "NOT_STUDENT";
+type GetAllUserConfig = {
+  page?: number;
+  resultsPerPage?: number;
+  filter?: UserFilter;
+};
 
 const GetUserData = (id: number): Promise<FailedResponse | SuccessResponse<User>> => {
   return API.get<User>({
@@ -7,12 +15,11 @@ const GetUserData = (id: number): Promise<FailedResponse | SuccessResponse<User>
   });
 };
 
-const GetAllUser = (
-  page = 1,
-  resultsPerPage = 10000
-): Promise<FailedResponse | SuccessResponse<User>> => {
+const GetAllUser = ({ page = 1, resultsPerPage = 10000, filter }: GetAllUserConfig = {}): Promise<
+  FailedResponse | SuccessResponse<User>
+> => {
   return API.get<User>({
-    url: `/users?page=${page}&resultsPerPage=${resultsPerPage}`
+    url: `/users?page=${page}&resultsPerPage=${resultsPerPage}${filter ? "&filter=" + filter : ""}`
   });
 };
 

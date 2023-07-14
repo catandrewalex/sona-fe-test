@@ -5,14 +5,13 @@ import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
+import { User, UserType } from "@sonamusica-fe/types";
 import {
-  User,
   UserInsertFormData,
-  UserInsertFormRequest,
-  UserType,
   UserUpdateFormData,
-  UserUpdateFormRequest
-} from "@sonamusica-fe/types";
+  UserUpdateFormRequest,
+  UserInsertFormRequest
+} from "@sonamusica-fe/types/form/user";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
