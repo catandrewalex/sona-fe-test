@@ -71,16 +71,16 @@ const TextInput = <T extends unknown>({
     (value: string) => {
       if (validations) {
         for (const validation of validations) {
-          let temp = "";
+          let errorMsg = "";
           switch (validation.name) {
             case "required":
-              temp = requiredCheck(value);
+              errorMsg = requiredCheck(value);
               break;
             case "email":
-              temp = emailCheck(value);
+              errorMsg = emailCheck(value);
               break;
             case "match":
-              temp = matchCheck(
+              errorMsg = matchCheck(
                 value,
                 valueRef.current[validation.parameters.matcherField],
                 validation.parameters.matcherLabel
@@ -89,9 +89,9 @@ const TextInput = <T extends unknown>({
               );
               break;
           }
-          if (temp) {
-            setInternalErrorMsg(temp);
-            return temp;
+          if (errorMsg) {
+            setInternalErrorMsg(errorMsg);
+            return errorMsg;
           }
         }
       }

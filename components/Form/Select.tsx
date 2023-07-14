@@ -81,15 +81,15 @@ const Select = <
     (value: T | null) => {
       if (validations) {
         for (const validation of validations) {
-          let temp = "";
+          let errorMsg = "";
           switch (validation.name) {
             case "required":
-              temp = requiredCheck(value);
+              errorMsg = requiredCheck(value);
               break;
           }
-          if (temp) {
-            setInternalErrorMsg(temp);
-            return temp;
+          if (errorMsg) {
+            setInternalErrorMsg(errorMsg);
+            return errorMsg;
           }
         }
       }

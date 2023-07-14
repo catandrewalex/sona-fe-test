@@ -2,13 +2,13 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { deleteCookie, getCookie } from "@sonamusica-fe/utils/BrowserUtil";
 
 // create new axios intance
-const axiosIntance = axios.create({
+const axiosInstance = axios.create({
   // change default base url
   baseURL: `${process.env.API_PROTOCOL}://${process.env.API_HOST}`
 });
 
 // create new request interceptor
-axiosIntance.interceptors.request.use(async (req) => {
+axiosInstance.interceptors.request.use(async (req) => {
   // include the authentication token on every request only if it available in the cookies
   if (getCookie("SNMC")) {
     if (req.headers) {
@@ -138,20 +138,14 @@ const API = {
     version = API_VERSION.v1
   }: APIHttpMethod): Promise<SuccessResponse<T> | FailedResponse> => {
     const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
-    const request = config?.headers
-      ? axiosIntance.get(url, {
-          headers: {
-            ...config.headers,
-            ...apiVersionHeader
-          },
-          ...(config?.params ? config.params : {})
-        })
-      : axiosIntance.get(url, {
-          headers: {
-            ...apiVersionHeader
-          },
-          ...(config?.params ? config.params : {})
-        });
+    const headers = config?.headers ?? {};
+    const request = axiosInstance.get(url, {
+      headers: {
+        ...headers,
+        ...apiVersionHeader
+      },
+      ...(config?.params ? config.params : {})
+    });
     return httpResponseHandler(request);
   },
 
@@ -174,18 +168,13 @@ const API = {
     version = API_VERSION.v1
   }: APIHttpMethod): Promise<SuccessResponse<T> | FailedResponse> => {
     const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
-    const request = config?.headers
-      ? axiosIntance.post(url, config?.data, {
-          headers: {
-            ...config.headers,
-            ...apiVersionHeader
-          }
-        })
-      : axiosIntance.post(url, config?.data, {
-          headers: {
-            ...apiVersionHeader
-          }
-        });
+    const headers = config?.headers ?? {};
+    const request = axiosInstance.post(url, config?.data, {
+      headers: {
+        ...headers,
+        ...apiVersionHeader
+      }
+    });
     return httpResponseHandler(request);
   },
   /**
@@ -207,18 +196,13 @@ const API = {
     version = API_VERSION.v1
   }: APIHttpMethod): Promise<SuccessResponse<T> | FailedResponse> => {
     const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
-    const request = config?.headers
-      ? axiosIntance.put(url, config?.data, {
-          headers: {
-            ...config.headers,
-            ...apiVersionHeader
-          }
-        })
-      : axiosIntance.put(url, config?.data, {
-          headers: {
-            ...apiVersionHeader
-          }
-        });
+    const headers = config?.headers ?? {};
+    const request = axiosInstance.put(url, config?.data, {
+      headers: {
+        ...headers,
+        ...apiVersionHeader
+      }
+    });
     return httpResponseHandler(request);
   },
   delete: async <T extends unknown>({
@@ -228,22 +212,17 @@ const API = {
     version = API_VERSION.v1
   }: APIHttpMethod): Promise<SuccessResponse<T> | FailedResponse> => {
     const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
-    const request = config?.headers
-      ? axiosIntance.delete(url, {
-          headers: {
-            ...config.headers,
-            ...apiVersionHeader
-          },
-          ...(config?.params ? config.params : {}),
-          ...(config?.data ? config.data : undefined)
-        })
-      : axiosIntance.delete(url, {
-          headers: {
-            ...apiVersionHeader
-          },
-          ...(config?.params ? config.params : {}),
-          ...(config?.data ? config.data : undefined)
-        });
+    const headers = config?.headers ?? {};
+    const params = config?.params ?? {};
+    const data = config?.data;
+    const request = axiosInstance.delete(url, {
+      headers: {
+        ...headers,
+        ...apiVersionHeader
+      },
+      ...params,
+      data
+    });
     return httpResponseHandler(request);
   }
 };

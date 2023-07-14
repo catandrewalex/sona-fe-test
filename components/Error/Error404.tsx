@@ -10,7 +10,7 @@ const Error404 = (): JSX.Element => {
         </div>
         <div>
           <h1 style={{ textAlign: "center" }}>Page Not Found</h1>
-          <p style={{ textAlign: "center" }}>Sorry, you may have entered wrong URL.</p>
+          <p style={{ textAlign: "center" }}>Sorry, we cannot find any pages with that URL.</p>
         </div>
       </div>
     </Box>

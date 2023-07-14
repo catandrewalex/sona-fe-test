@@ -205,18 +205,8 @@ const PageAdminUserForm = ({
               return parsedResponse as FailedResponse;
             } else {
               const responseData = (parsedResponse as ResponseMany<User>).results[0];
-              let found = false;
-              const newData = data.map((val) => {
-                if (val.userId === responseData.userId) {
-                  found = true;
-                  return responseData;
-                }
-                return val;
-              });
-              if (!found) newData.push(responseData);
-              setData(
-                newData.sort((a, b) => (a.userId < b.userId ? -1 : a.userId === b.userId ? 0 : 1))
-              );
+              const newData = [responseData, ...data];
+              setData(newData);
               onClose();
             }
           }

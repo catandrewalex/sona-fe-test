@@ -14,11 +14,6 @@ import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 import { FailedResponse } from "api";
 import React, { useMemo, useRef, useState } from "react";
 
-export enum FormDirtyStatus {
-  CLEAN,
-  DIRTY
-}
-
 interface BaseFormField<T> {
   type: string;
   name: keyof T;
@@ -54,7 +49,7 @@ export interface FormConfig<T> {
 export interface FormProperties<T> {
   valueRef: React.MutableRefObject<T>;
   errorRef: React.MutableRefObject<Record<keyof T, string>>;
-  dirtyRef: React.MutableRefObject<FormDirtyStatus>;
+  hasUnsavedChangesRef: React.MutableRefObject<boolean>;
 }
 
 const useFormRenderer = <T extends unknown>(
@@ -63,7 +58,7 @@ const useFormRenderer = <T extends unknown>(
 ): { formProperties: FormProperties<T>; formRenderer: () => JSX.Element } => {
   const valueRef = useRef<T>({} as T);
   const errorRef = useRef<Record<keyof T, string>>({} as Record<keyof T, string>);
-  const dirtyRef = useRef<FormDirtyStatus>(FormDirtyStatus.CLEAN);
+  const hasUnsavedChangesRef = useRef<boolean>(false);
 
   const formRenderer = (): JSX.Element => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -114,10 +109,7 @@ const useFormRenderer = <T extends unknown>(
                 disabled={loading}
                 {...config.cancelButtonProps}
                 onClick={(e) => {
-                  if (
-                    config.promptCancelButtonDialog &&
-                    dirtyRef.current !== FormDirtyStatus.CLEAN
-                  ) {
+                  if (config.promptCancelButtonDialog && hasUnsavedChangesRef.current) {
                     showDialog(
                       {
                         title: "Unsaved Changes",
@@ -125,14 +117,14 @@ const useFormRenderer = <T extends unknown>(
                       },
                       () => {
                         if (config.cancelButtonProps?.onClick) config.cancelButtonProps?.onClick(e);
-                        dirtyRef.current = FormDirtyStatus.CLEAN;
+                        hasUnsavedChangesRef.current = false;
                         valueRef.current = emptyValue;
                         errorRef.current = {} as Record<keyof T, string>;
                       }
                     );
                   } else {
                     if (config.cancelButtonProps?.onClick) config.cancelButtonProps?.onClick(e);
-                    dirtyRef.current = FormDirtyStatus.CLEAN;
+                    hasUnsavedChangesRef.current = false;
                     valueRef.current = emptyValue;
                     errorRef.current = {} as Record<keyof T, string>;
                   }
@@ -163,7 +155,7 @@ const useFormRenderer = <T extends unknown>(
                     initialValue={valueRef.current[field.name]}
                     {...field.inputProps}
                     onChange={(e) => {
-                      dirtyRef.current = FormDirtyStatus.DIRTY;
+                      hasUnsavedChangesRef.current = true;
                       if (field.inputProps?.onChange) field.inputProps.onChange(e);
                     }}
                   />
@@ -183,7 +175,7 @@ const useFormRenderer = <T extends unknown>(
                     initialValue={valueRef.current[field.name]}
                     {...field.selectProps}
                     onChange={(_valuRefIgnored, _errorRefIgnored, e, value, reason) => {
-                      dirtyRef.current = FormDirtyStatus.DIRTY;
+                      hasUnsavedChangesRef.current = true;
                       if (field.selectProps?.onChange)
                         field.selectProps.onChange(valueRef, errorRef, e, value, reason);
                     }}
@@ -196,7 +188,7 @@ const useFormRenderer = <T extends unknown>(
     );
   };
   return {
-    formProperties: { valueRef, errorRef, dirtyRef },
+    formProperties: { valueRef, errorRef, hasUnsavedChangesRef },
     formRenderer
   };
 };

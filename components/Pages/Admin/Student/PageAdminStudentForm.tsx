@@ -2,7 +2,6 @@ import { Cancel, Save } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
-  FormDirtyStatus,
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
@@ -96,7 +95,7 @@ const PageAdminStudentForm = ({
               lastName: "",
               privilegeType: UserType.MEMBER
             };
-            formProperties.dirtyRef.current = FormDirtyStatus.CLEAN;
+            formProperties.hasUnsavedChangesRef.current = false;
           }
 
           errorRef.current = {
@@ -241,20 +240,8 @@ const PageAdminStudentForm = ({
           return parsedResponse as FailedResponse;
         } else {
           const responseData = (parsedResponse as ResponseMany<Student>).results[0];
-          let found = false;
-          let newData = data.map((val) => {
-            if (val.studentId === responseData.studentId) {
-              found = true;
-              return responseData;
-            }
-            return val;
-          });
-          if (!found) newData = [responseData, ...newData];
-          setData(
-            newData.sort((a, b) =>
-              a.studentId < b.studentId ? -1 : a.studentId === b.studentId ? 0 : 1
-            )
-          );
+          const newData = [responseData, ...data];
+          setData(newData);
           onClose();
         }
       }
