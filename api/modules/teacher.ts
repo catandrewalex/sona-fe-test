@@ -6,7 +6,7 @@ import {
 } from "@sonamusica-fe/types/form/teacher";
 import API, { FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
-const GetAllTeacher = ({ page, resultsPerPage }: GetRequestConfig = {}): Promise<
+const GetAllTeacher = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<
   FailedResponse | SuccessResponse<Teacher>
 > => {
   return API.get<Teacher>({
@@ -37,7 +37,7 @@ const DeleteTeacher = (
 ): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.delete<undefined>({
     url: "/teachers",
-    config: { data: { data: { data } } }
+    config: { data: { data } }
   });
 };
 

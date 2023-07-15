@@ -24,10 +24,7 @@ const PageAdminStudentTable = ({
   setLoading
 }: PageAdminStudentTableProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
-  const showDialog = useMemo(() => {
-    const temp = useAlertDialog();
-    return temp.showDialog;
-  }, []);
+  const { showDialog } = useAlertDialog();
 
   return (
     <TableContainer>

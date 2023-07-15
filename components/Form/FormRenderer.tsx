@@ -64,11 +64,7 @@ const useFormRenderer = <T extends unknown>(
 
   const formRenderer = (): JSX.Element => {
     const [loading, setLoading] = useState<boolean>(false);
-
-    const showDialog = useMemo(() => {
-      const temp = useAlertDialog();
-      return temp.showDialog;
-    }, []);
+    const { showDialog } = useAlertDialog();
 
     return (
       <Form
@@ -146,7 +142,7 @@ const useFormRenderer = <T extends unknown>(
           switch (field.type) {
             case "text":
               return (
-                <FormField {...field.formFieldProps}>
+                <FormField key={field.name as string} {...field.formFieldProps}>
                   <TextInput
                     field={field.name}
                     validations={field.validations}
@@ -165,7 +161,7 @@ const useFormRenderer = <T extends unknown>(
               );
             case "select":
               return (
-                <FormField {...field.formFieldProps}>
+                <FormField key={field.name as string} {...field.formFieldProps}>
                   <Select
                     disabled={loading}
                     valueRef={valueRef}

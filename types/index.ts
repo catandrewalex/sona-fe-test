@@ -37,11 +37,11 @@ export interface Student {
 }
 
 export interface Instrument {
-  id: number;
+  gradeId: number;
   name: string;
 }
 
 export interface Grade {
-  id: number;
+  gradeId: number;
   name: string;
 }
