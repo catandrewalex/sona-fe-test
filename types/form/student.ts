@@ -12,5 +12,5 @@ export type StudentInsertFormRequest = {
 export type StudentInsertNewUserFormRequest = UserInsertFormRequest;
 
 export type StudentDeleteRequest = {
-  studentID: number;
+  studentId: number;
 };

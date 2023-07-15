@@ -52,7 +52,7 @@ const PageAdminStudentTable = ({
                 },
                 () => {
                   setLoading(true);
-                  API.DeleteStudent([{ studentID: id as number }])
+                  API.DeleteStudent([{ studentId: id as number }])
                     .then((response) => {
                       const parsedResponse = apiTransformer(response, true);
                       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype)
