@@ -241,7 +241,7 @@ const PageAdminTeacherForm = ({
           return parsedResponse as FailedResponse;
         } else {
           const responseData = (parsedResponse as ResponseMany<Teacher>).results[0];
-          const newData = [responseData, ...data];
+          const newData = [...data, responseData];
           setData(newData);
           onClose();
         }
