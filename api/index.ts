@@ -61,6 +61,11 @@ export class FailedResponse {
   }
 }
 
+export interface GetRequestConfig {
+  page?: number;
+  resultsPerPage?: number;
+}
+
 /**
  * Parameter that will be received on API object.
  * @typedef {Object} APIHttpMethod

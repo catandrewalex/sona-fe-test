@@ -4,12 +4,11 @@ import {
   TeacherInsertNewUserFormRequest,
   TeacherDeleteRequest
 } from "@sonamusica-fe/types/form/teacher";
-import API, { FailedResponse, SuccessResponse } from "api";
+import API, { FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
-const GetAllTeacher = (
-  page = 1,
-  resultsPerPage = 10000
-): Promise<FailedResponse | SuccessResponse<Teacher>> => {
+const GetAllTeacher = ({ page, resultsPerPage }: GetRequestConfig = {}): Promise<
+  FailedResponse | SuccessResponse<Teacher>
+> => {
   return API.get<Teacher>({
     url: `/teachers?page=${page}&resultsPerPage=${resultsPerPage}`
   });
