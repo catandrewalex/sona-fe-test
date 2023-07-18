@@ -1,14 +1,14 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { deleteCookie, getCookie } from "@sonamusica-fe/utils/BrowserUtil";
 
 // create new axios intance
-const axiosIntance = axios.create({
+const axiosInstance = axios.create({
   // change default base url
   baseURL: `${process.env.API_PROTOCOL}://${process.env.API_HOST}`
 });
 
 // create new request interceptor
-axiosIntance.interceptors.request.use(async (req) => {
+axiosInstance.interceptors.request.use(async (req) => {
   // include the authentication token on every request only if it available in the cookies
   if (getCookie("SNMC")) {
     if (req.headers) {
@@ -22,7 +22,7 @@ axiosIntance.interceptors.request.use(async (req) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
   // add api version number to base url
-  const apiVersion = req.headers ? req.headers[API_CUSTOM_HEADER.apiVersion] : API_VERSION.v1;
+  // const apiVersion = req.headers ? req.headers[API_CUSTOM_HEADER.apiVersion] : API_VERSION.v1;
 
   // if (apiVersion) req.baseURL = `${req.baseURL}/api/${apiVersion}`;
   // else req.baseURL = `${req.baseURL}/auth`;
@@ -32,7 +32,7 @@ axiosIntance.interceptors.request.use(async (req) => {
   return req;
 });
 
-type ResponseMany<T> = {
+export type ResponseMany<T> = {
   results: Array<T>;
   totalPages: number;
   totalResults: number;
@@ -50,13 +50,20 @@ export class SuccessResponse<T> {
 }
 
 export class FailedResponse {
-  public messages: Record<string, string>;
+  public message?: string;
+  public errors: Record<string, string>;
   public status: number;
 
-  constructor(messages = {}, status = 500) {
-    this.messages = messages;
+  constructor(message?: string, status = 500, errors = {}) {
+    this.errors = errors;
     this.status = status;
+    this.message = message;
   }
+}
+
+export interface GetRequestConfig {
+  page?: number;
+  resultsPerPage?: number;
 }
 
 /**
@@ -87,6 +94,32 @@ export const API_CUSTOM_HEADER = {
   apiVersion: "X-API-VERSION"
 };
 
+async function httpResponseHandler(request: Promise<AxiosResponse<any, any>>) {
+  try {
+    const response = await request;
+    return new SuccessResponse(
+      response.data.data ? response.data.data : response.data.message,
+      response.data.message
+    );
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      if (err.response.status === 401) {
+        deleteCookie("SNMC");
+        return new FailedResponse("Authentication failed!", err.response.status);
+      } else if (err.response.status === 500) {
+        return new FailedResponse("Sorry, something went wrong on our end.");
+      } else if (err.response.status === 405) {
+        return new FailedResponse("Wrong API call method! Please contact our admin.");
+      }
+      return new FailedResponse(
+        err.response.data?.message,
+        err.response.status,
+        err.response.data?.errors as Record<string, string>
+      );
+    }
+    return new FailedResponse("Failed to send the request! Please check your internet connection.");
+  }
+}
 /**
  * Wrapper for axios request call
  */
@@ -109,35 +142,16 @@ const API = {
     auth,
     version = API_VERSION.v1
   }: APIHttpMethod): Promise<SuccessResponse<T> | FailedResponse> => {
-    try {
-      const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
-      const result = await (config?.headers
-        ? axiosIntance.get(url, {
-            headers: {
-              ...config.headers,
-              ...apiVersionHeader
-            }
-          })
-        : axiosIntance.get(url, {
-            headers: {
-              ...apiVersionHeader
-            }
-          }));
-      return new SuccessResponse(result.data.data, result.data.message);
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
-        if (err.response.status === 401) {
-          deleteCookie("SNMC");
-          return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
-        } else if (err.response.status === 500) {
-          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
-        }
-        return new FailedResponse(err.response.data as Record<string, string>, err.response.status);
-      }
-      return new FailedResponse({
-        "non-field": "Failed to send the request! Please check your internet connection."
-      });
-    }
+    const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
+    const headers = config?.headers ?? {};
+    const request = axiosInstance.get(url, {
+      headers: {
+        ...headers,
+        ...apiVersionHeader
+      },
+      ...(config?.params ? config.params : {})
+    });
+    return httpResponseHandler(request);
   },
 
   /**
@@ -158,38 +172,15 @@ const API = {
     auth,
     version = API_VERSION.v1
   }: APIHttpMethod): Promise<SuccessResponse<T> | FailedResponse> => {
-    try {
-      const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
-      const result = await (config?.headers
-        ? axiosIntance.post(url, config?.data, {
-            headers: {
-              ...config.headers,
-              ...apiVersionHeader
-            }
-          })
-        : axiosIntance.post(url, config?.data, {
-            headers: {
-              ...apiVersionHeader
-            }
-          }));
-      return new SuccessResponse(result.data.data, result.data.message);
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
-        if (err.response.status === 401) {
-          deleteCookie("SNMC");
-          return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
-        } else if (err.response.status === 500) {
-          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
-        }
-        return new FailedResponse(
-          err.response.data.messages as Record<string, string>,
-          err.response.status
-        );
+    const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
+    const headers = config?.headers ?? {};
+    const request = axiosInstance.post(url, config?.data, {
+      headers: {
+        ...headers,
+        ...apiVersionHeader
       }
-      return new FailedResponse({
-        "non-field": "Failed to send the request! Please check your internet connection."
-      });
-    }
+    });
+    return httpResponseHandler(request);
   },
   /**
    * Perform put request to backend server.
@@ -209,35 +200,35 @@ const API = {
     auth,
     version = API_VERSION.v1
   }: APIHttpMethod): Promise<SuccessResponse<T> | FailedResponse> => {
-    try {
-      const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
-      const result = await (config?.headers
-        ? axiosIntance.put(url, config?.data, {
-            headers: {
-              ...config.headers,
-              ...apiVersionHeader
-            }
-          })
-        : axiosIntance.put(url, config?.data, {
-            headers: {
-              ...apiVersionHeader
-            }
-          }));
-      return new SuccessResponse(result.data.data, result.data.message);
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
-        if (err.response.status === 401) {
-          deleteCookie("SNMC");
-          return new FailedResponse({ "non-field": "Authentication failed!" }, err.response.status);
-        } else if (err.response.status === 500) {
-          return new FailedResponse({ "non-field": "Sorry, something went wrong on our end." });
-        }
-        return new FailedResponse(err.response.data as Record<string, string>, err.response.status);
+    const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
+    const headers = config?.headers ?? {};
+    const request = axiosInstance.put(url, config?.data, {
+      headers: {
+        ...headers,
+        ...apiVersionHeader
       }
-      return new FailedResponse({
-        "non-field": "Failed to send the request! Please check your internet connection."
-      });
-    }
+    });
+    return httpResponseHandler(request);
+  },
+  delete: async <T extends unknown>({
+    url,
+    config,
+    auth,
+    version = API_VERSION.v1
+  }: APIHttpMethod): Promise<SuccessResponse<T> | FailedResponse> => {
+    const apiVersionHeader = auth ? {} : { [API_CUSTOM_HEADER.apiVersion]: version };
+    const headers = config?.headers ?? {};
+    const params = config?.params ?? {};
+    const data = config?.data;
+    const request = axiosInstance.delete(url, {
+      headers: {
+        ...headers,
+        ...apiVersionHeader
+      },
+      ...params,
+      data
+    });
+    return httpResponseHandler(request);
   }
 };
 

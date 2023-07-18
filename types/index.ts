@@ -1,5 +1,5 @@
 export interface User {
-  id: number;
+  userId: number;
   username: string;
   email: string;
   userDetail: UserDetail;
@@ -10,7 +10,7 @@ export interface User {
 
 export interface UserDetail {
   firstName: string;
-  lastName: string;
+  lastName?: string;
 }
 
 export interface LoginResponse {
@@ -24,4 +24,24 @@ export enum UserType {
   MEMBER = 200,
   STAFF = 300,
   ADMIN = 400
+}
+
+export interface Teacher {
+  teacherId: number;
+  user: User;
+}
+
+export interface Student {
+  studentId: number;
+  user: User;
+}
+
+export interface Instrument {
+  gradeId: number;
+  name: string;
+}
+
+export interface Grade {
+  gradeId: number;
+  name: string;
 }

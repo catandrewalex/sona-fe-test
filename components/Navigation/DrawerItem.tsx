@@ -15,13 +15,11 @@ import { Theme } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import data from "./data";
-import clsx from "clsx";
 import { useRouter } from "next/router";
 import { getLocalStorage, setLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { merge } from "lodash";
 import HomeIcon from "@mui/icons-material/Home";
-import { UserType } from "@sonamusica-fe/types";
 
 type DrawerItemContainerProps = {
   children: React.ReactNode;
@@ -69,12 +67,10 @@ const DrawerItem = (): JSX.Element => {
     isLoading: state.isLoading
   }));
   const { user } = useUser();
-  const isProduction = process.env.ENVIRONMENT !== "local";
-  const isAdmin = user?.privilegeType === UserType.ADMIN;
 
   const lists = data.map((section, idx) => {
     const innerItem = section.items.map(
-      ({ text, icon: Icon, url, permission, subMenu }, innerIdx) => {
+      ({ text, icon: Icon, url, userHasAccess, subMenu }, innerIdx) => {
         if (subMenu) {
           const subMenuItem = subMenu.map(
             (
@@ -82,7 +78,7 @@ const DrawerItem = (): JSX.Element => {
                 text: subMenuText,
                 icon: subMenuIcon,
                 url: subMenuUrl,
-                permission: subMenuPermission
+                userHasAccess: subMenuPermission
               },
               subMenuIdx
             ) => {
@@ -106,7 +102,7 @@ const DrawerItem = (): JSX.Element => {
             <MultiLevel
               key={`sidebar-item-${innerIdx}`}
               disabled={isLoading}
-              hidden={!permission(user?.privilegeType)}
+              hidden={!userHasAccess(user?.privilegeType)}
               icon={Icon}
               testIdContext={text.replaceAll(" ", "")}
               text={text}
@@ -124,7 +120,7 @@ const DrawerItem = (): JSX.Element => {
             testIdContext={text.replaceAll(" ", "")}
             url={url}
             disabled={isLoading}
-            hidden={!permission(user?.privilegeType)}
+            hidden={!userHasAccess(user?.privilegeType)}
           />
         );
       }
@@ -135,9 +131,9 @@ const DrawerItem = (): JSX.Element => {
       return (
         <Container
           disabled={
-            typeof section.permission === "function"
-              ? !section.permission(user?.privilegeType)
-              : !section.permission
+            typeof section.userHasAccess === "function"
+              ? !section.userHasAccess(user?.privilegeType)
+              : !section.userHasAccess
           }
           key={`sidebar-item-section-${idx}`}
           text={section.name}
@@ -156,9 +152,9 @@ const DrawerItem = (): JSX.Element => {
           url={section.url}
           disabled={isLoading}
           hidden={
-            (typeof section.permission === "function" &&
-              !section.permission(user?.privilegeType)) ||
-            section.permission === false
+            (typeof section.userHasAccess === "function" &&
+              !section.userHasAccess(user?.privilegeType)) ||
+            section.userHasAccess === false
           }
         />
       );
@@ -167,7 +163,7 @@ const DrawerItem = (): JSX.Element => {
   return <>{lists}</>;
 };
 
-const Container = ({ children, text, divider, disabled }: DrawerItemContainerProps) => {
+const Container = ({ children, text, divider }: DrawerItemContainerProps) => {
   const drawerOpen = useApp((state) => state.drawerOpen);
 
   return (
@@ -176,13 +172,14 @@ const Container = ({ children, text, divider, disabled }: DrawerItemContainerPro
         subheader={
           <ListSubheader
             disableSticky
-            className={clsx({
-              "hide-visual": !drawerOpen,
-              hide: disabled
-            })}
+            sx={
+              drawerOpen
+                ? undefined
+                : { display: "inline-block", height: "3px", width: "100%", px: 0 }
+            }
             component="span"
           >
-            {text}
+            {drawerOpen ? text : <Divider />}
           </ListSubheader>
         }
       >
@@ -237,7 +234,7 @@ const SingleLevel = ({
         disabled={disabled}
         className={hidden ? "hide" : ""}
         sx={merge(
-          { transition: "none", flexGrow: 0 },
+          { transition: "none", flex: 0 },
           router.route === url ? styles.active : styles.item,
           inset ? { pl: 4 } : {}
         )}
@@ -247,7 +244,11 @@ const SingleLevel = ({
             <Icon />
           </Box>
         </ListItemIcon>
-        {drawerOpen && <ListItemText sx={{ whiteSpace: "normal" }} primary={text} />}
+        {drawerOpen && (
+          <>
+            <ListItemText sx={{ whiteSpace: "normal" }} primary={text} />
+          </>
+        )}
       </ListItemButton>
     </Tooltip>
   );
@@ -291,7 +292,11 @@ const MultiLevel = ({
           <ListItemIcon>
             <Icon />
           </ListItemIcon>
-          {drawerOpen && <ListItemText sx={{ whiteSpace: "normal" }} primary={text} />}
+          {drawerOpen && (
+            <>
+              <ListItemText sx={{ whiteSpace: "normal" }} primary={text} />
+            </>
+          )}
           {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </ListItemButton>
       </Tooltip>

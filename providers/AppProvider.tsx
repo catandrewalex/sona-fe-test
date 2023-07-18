@@ -1,5 +1,5 @@
 import { User } from "@sonamusica-fe/types";
-import { setLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
+import { deleteCookie, setLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
 import create from "zustand";
 
 type AppState = {
@@ -30,8 +30,14 @@ export const useApp = create<AppState>((set, get) => ({
   isLoading: false,
   isDark: false,
   toggleDrawer: () => set({ drawerOpen: !get().drawerOpen }),
-  openDrawer: () => set({ drawerOpen: true }),
-  closeDrawer: () => set({ drawerOpen: false }),
+  openDrawer: () => {
+    set({ drawerOpen: true });
+    setLocalStorage("drawer", "true");
+  },
+  closeDrawer: () => {
+    set({ drawerOpen: false });
+    setLocalStorage("drawer", "false");
+  },
   appFinishLoading: () => set({ isAppLoading: false }),
   startLoading: () => set({ isLoading: true }),
   finishLoading: () => set({ isLoading: false }),
@@ -56,5 +62,9 @@ export const useApp = create<AppState>((set, get) => ({
 export const useUser = create<UserState>((set) => ({
   user: undefined,
   setUser: (newUser?: User) => set({ user: newUser }),
-  logout: () => set({ user: undefined })
+  logout: () => {
+    set({ user: undefined });
+    deleteCookie("SNMC");
+    deleteCookie("SNMC_ID");
+  }
 }));

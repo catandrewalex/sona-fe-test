@@ -2,22 +2,22 @@ import { LoginResponse } from "@sonamusica-fe/types";
 import API, { FailedResponse, SuccessResponse } from "api";
 
 const Login = (
-  email: string,
+  usernameOrEmail: string,
   password: string
 ): Promise<FailedResponse | SuccessResponse<LoginResponse>> => {
   return API.post<LoginResponse>({
     url: "/login",
     config: {
       data: {
-        email,
+        usernameOrEmail,
         password
       }
     }
   });
 };
 
-const ForgotPassword = (email: string): Promise<FailedResponse | SuccessResponse<undefined>> => {
-  return API.post<undefined>({
+const ForgotPassword = (email: string): Promise<FailedResponse | SuccessResponse<string>> => {
+  return API.post<string>({
     url: "/forgot-password",
     config: { data: { email } }
   });
@@ -26,11 +26,21 @@ const ForgotPassword = (email: string): Promise<FailedResponse | SuccessResponse
 const ResetPassword = (
   resetToken: string,
   newPassword: string
-): Promise<FailedResponse | SuccessResponse<undefined>> => {
-  return API.post<undefined>({
+): Promise<FailedResponse | SuccessResponse<string>> => {
+  return API.post<string>({
     url: "/reset-password",
     config: { data: { resetToken, newPassword } }
   });
 };
 
-export default { Login, ForgotPassword, ResetPassword };
+const ChangePassword = (
+  userId: number,
+  newPassword: string
+): Promise<FailedResponse | SuccessResponse<string>> => {
+  return API.put<string>({
+    url: `/user/${userId}/password`,
+    config: { data: { newPassword } }
+  });
+};
+
+export default { Login, ForgotPassword, ResetPassword, ChangePassword };

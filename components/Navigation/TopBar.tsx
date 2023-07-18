@@ -4,13 +4,12 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
-import React from "react";
+import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import MenuList from "@sonamusica-fe/components/Profile/MenuList";
 import Profile from "@sonamusica-fe/components/Profile";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import API from "@sonamusica-fe/api";
 import { drawerWidth } from "./styles";
 import { styled, useTheme } from "@mui/material/styles";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -73,7 +72,7 @@ const TopBar = ({ title }: TopBarProps): JSX.Element => {
   const { user, logout } = useUser((state) => ({ user: state.user, logout: state.logout }));
   const { showSnackbar } = useSnack();
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState<(EventTarget & Element) | null>(null);
+  const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null);
 
   const handleOpen = (event: React.SyntheticEvent): void => {
     setAnchorEl(event.currentTarget);

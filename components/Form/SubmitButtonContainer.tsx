@@ -11,11 +11,12 @@ import React from "react";
  * @property {string|undefined} align to adjust position of the buttons inside this component.
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  */
-type SubmitButtonContainerProps = {
-  align?: "left" | "center" | "right" | "space-around";
+export type SubmitButtonContainerProps = {
+  align?: "left" | "center" | "right" | "space-around" | "space-between";
   children: React.ReactNode;
   testIdContext?: string;
   spacing?: number;
+  marginBottom?: number;
 };
 
 /**
@@ -29,7 +30,8 @@ const SubmitButtonContainer = ({
   align,
   children,
   testIdContext,
-  spacing = 3
+  spacing = 3,
+  marginBottom
 }: SubmitButtonContainerProps): JSX.Element => {
   let pos;
 
@@ -46,6 +48,9 @@ const SubmitButtonContainer = ({
     case "space-around":
       pos = "space-around";
       break;
+    case "space-between":
+      pos = "space-between";
+      break;
     default:
       pos = "flex-end";
   }
@@ -55,7 +60,7 @@ const SubmitButtonContainer = ({
       container
       justifyContent={pos}
       spacing={spacing}
-      sx={{ mt: 0, mb: 2 }}
+      sx={{ mt: 0, mb: marginBottom || 0 }}
       data-testid={`${testIdContext}-SubmitButtonContainer`}
     >
       {children}

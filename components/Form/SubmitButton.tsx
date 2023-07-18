@@ -16,7 +16,9 @@ import React from "react";
  * @property {boolean|undefined} loading if true, the loading animation will showed instead of submit text.
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  */
-interface SubmitButtonProps extends ButtonProps, Pick<GridProps, "xl" | "lg" | "md" | "xs" | "sm"> {
+export interface SubmitButtonProps
+  extends ButtonProps,
+    Pick<GridProps, "xl" | "lg" | "md" | "xs" | "sm"> {
   submitText?: string;
   regular?: boolean;
   loading?: boolean;
@@ -58,7 +60,7 @@ const SubmitButton = ({
         variant={variant}
         color={color}
         disabled={loading || disabled}
-        data-testid={`${testIdContext}-SubmitButton`}
+        data-testid={`${testIdContext}-${regular ? "Button" : "SubmitButton"}`}
         sx={merge({}, sx, { fontSize: "1rem", m: 0 })}
       >
         {loading ? (
