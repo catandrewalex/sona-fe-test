@@ -97,9 +97,17 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
   }
 ];
 
-const updateFields: FormFieldType<UserInsertFormData>[] = insertFields.filter(
+const updateFields: FormFieldType<UserUpdateFormData>[] = insertFields.filter(
   (field) => field.name !== "password" && field.name !== "passwordConfirm"
 );
+updateFields.push({
+  type: "switch",
+  name: "isActive",
+  label: "Active?",
+  inputProps: { testIdContext: "UserUpsertIsDeactivated" },
+  formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+  validations: [{ name: "required" }]
+});
 
 const PageAdminUserForm = ({
   data,
@@ -145,7 +153,8 @@ const PageAdminUserForm = ({
               userDetail: {
                 firstName: formData.firstName,
                 lastName: formData.lastName
-              }
+              },
+              isDeactivated: !formData.isActive
             };
             const response = await API.UpdateUser([payload]);
             const parsedResponse = apiTransformer(response, true);
@@ -163,7 +172,7 @@ const PageAdminUserForm = ({
             }
           }
         },
-        defaultFieldValue
+        { ...defaultFieldValue, isActive: false }
       )
     : useFormRenderer<UserInsertFormData>(
         {
@@ -206,7 +215,6 @@ const PageAdminUserForm = ({
               const responseData = (parsedResponse as ResponseMany<User>).results[0];
               const newData = [...data, responseData];
               setData(newData);
-              onClose();
             }
           }
         },
@@ -220,7 +228,8 @@ const PageAdminUserForm = ({
         lastName: selectedData.userDetail.lastName,
         email: selectedData.email,
         username: selectedData.username,
-        privilegeType: selectedData.privilegeType
+        privilegeType: selectedData.privilegeType,
+        isActive: !selectedData.isDeactivated
       };
       formProperties.errorRef.current = {} as Record<keyof UserUpdateFormData, string>;
     }

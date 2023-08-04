@@ -243,7 +243,6 @@ const PageAdminTeacherForm = ({
           const responseData = (parsedResponse as ResponseMany<Teacher>).results[0];
           const newData = [...data, responseData];
           setData(newData);
-          onClose();
         }
       }
     },

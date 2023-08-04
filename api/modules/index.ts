@@ -5,12 +5,18 @@ import authModule from "./auth";
 import userModule from "./user";
 import teacherModule from "./teacher";
 import studentModule from "./student";
+import gradeModule from "./grade";
+import courseModule from "./course";
+import instrumentModule from "./instrument";
 
 export default {
   ...authModule,
   ...userModule,
   ...teacherModule,
-  ...studentModule
+  ...studentModule,
+  ...gradeModule,
+  ...courseModule,
+  ...instrumentModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

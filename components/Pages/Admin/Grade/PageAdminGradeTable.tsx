@@ -1,0 +1,93 @@
+import Table from "@sonamusica-fe/components/Table";
+import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
+import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
+import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
+import { Grade } from "@sonamusica-fe/types";
+import API, { useApiTransformer } from "@sonamusica-fe/api";
+import moment from "moment";
+import React, { useMemo } from "react";
+import { FailedResponse } from "api";
+
+type PageAdminGradeTableProps = {
+  data: Grade[];
+  setSelectedData: (newSelectedData?: Grade) => void;
+  openModal: () => void;
+  loading: boolean;
+  setLoading: (newData: boolean) => void;
+  setData: (newData: Grade[]) => void;
+};
+
+const PageAdminGradeTable = ({
+  data,
+  setSelectedData,
+  openModal,
+  loading,
+  setLoading,
+  setData
+}: PageAdminGradeTableProps): JSX.Element => {
+  const apiTransformer = useApiTransformer();
+  const { showDialog } = useAlertDialog();
+
+  return (
+    <TableContainer testIdContext="AdminGrade">
+      <Table
+        name="Grade"
+        testIdContext="AdminGrade"
+        loading={loading}
+        getRowId={(row) => row.gradeId}
+        disableSelectionOnClick
+        addItemToolbar
+        addItemToolbarHandler={openModal}
+        rows={data}
+        columns={[
+          useTableActions({
+            editHandler: ({ id }) => {
+              setSelectedData(data.filter((val) => val.gradeId === id)[0]);
+              openModal();
+            },
+            deleteHandler: ({ id, row }) => {
+              showDialog(
+                {
+                  title: "Delete Grade",
+                  content: `Are you sure want to delete ${row.name}?`
+                },
+                () => {
+                  setLoading(true);
+                  API.DeleteGrade([{ gradeId: id as number }])
+                    .then((response) => {
+                      const parsedResponse = apiTransformer(response, true);
+                      if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype)
+                        setData(data.filter((value) => value.gradeId !== id));
+                    })
+                    .finally(() => setLoading(false));
+                }
+              );
+            }
+          }),
+          {
+            field: "gradeId",
+            headerName: "ID",
+            width: 100,
+            align: "center",
+            headerAlign: "center"
+          },
+          {
+            field: "name",
+            headerName: "Grade Name",
+            flex: 1
+          }
+        ]}
+        tableMenu={[
+          {
+            type: "text-input",
+            field: "name",
+            md: 12,
+            lg: 12
+          }
+        ]}
+      />
+    </TableContainer>
+  );
+};
+
+export default PageAdminGradeTable;

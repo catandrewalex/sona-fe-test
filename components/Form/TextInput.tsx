@@ -126,7 +126,10 @@ const TextInput = <T extends unknown>({
           setInternalValue(e.target.value);
           errorRef.current[field] = validationHandler(e.target.value);
           if (onChange) onChange(e);
-          valueRef.current[field] = e.target.value as T[keyof T];
+          valueRef.current[field] =
+            props.type === "number"
+              ? (parseInt(e.target.value) as T[keyof T])
+              : (e.target.value as T[keyof T]);
         }}
         error={internalErrorMsg !== ""}
         inputProps={finalInputProps}

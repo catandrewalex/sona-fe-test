@@ -5,6 +5,7 @@ import API, { FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 type UserFilter = "NOT_TEACHER" | "NOT_STUDENT";
 interface GetUserConfig extends GetRequestConfig {
   filter?: UserFilter;
+  includeDeactivated?: boolean;
 }
 
 const GetUserData = (id: number): Promise<FailedResponse | SuccessResponse<User>> => {
@@ -13,11 +14,16 @@ const GetUserData = (id: number): Promise<FailedResponse | SuccessResponse<User>
   });
 };
 
-const GetAllUser = ({ page = 1, resultsPerPage = 10000, filter }: GetUserConfig = {}): Promise<
-  FailedResponse | SuccessResponse<User>
-> => {
+const GetAllUser = ({
+  page = 1,
+  resultsPerPage = 10000,
+  filter,
+  includeDeactivated = true
+}: GetUserConfig = {}): Promise<FailedResponse | SuccessResponse<User>> => {
   return API.get<User>({
-    url: `/users?page=${page}&resultsPerPage=${resultsPerPage}${filter ? "&filter=" + filter : ""}`
+    url: `/users?page=${page}&resultsPerPage=${resultsPerPage}${
+      filter ? "&filter=" + filter : ""
+    }&includeDeactivated=${includeDeactivated ? "true" : "false"}`
   });
 };
 

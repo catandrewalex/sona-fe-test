@@ -3,15 +3,15 @@ import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
-import { Instrument } from "@sonamusica-fe/types";
-import PageAdminInstrumentTable from "@sonamusica-fe/components/Pages/Admin/Instrument/PageAdminInstrumentTable";
-import PageAdminInstrumentForm from "@sonamusica-fe/components/Pages/Admin/Instrument/PageAdminInstrumentForm";
+import { Grade } from "@sonamusica-fe/types";
+import PageAdminGradeTable from "@sonamusica-fe/components/Pages/Admin/Grade/PageAdminGradeTable";
+import PageAdminGradeForm from "@sonamusica-fe/components/Pages/Admin/Grade/PageAdminGradeForm";
 
-const InstrumentPage = (): JSX.Element => {
-  const [data, setData] = useState<Array<Instrument>>([]);
+const GradePage = (): JSX.Element => {
+  const [data, setData] = useState<Array<Grade>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedData, setSelectedData] = useState<Instrument>();
+  const [selectedData, setSelectedData] = useState<Grade>();
 
   const finishLoading = useApp((state) => state.finishLoading);
   const user = useUser((state) => state.user);
@@ -19,11 +19,11 @@ const InstrumentPage = (): JSX.Element => {
 
   useEffect(() => {
     if (user) {
-      API.GetAllInstrument()
+      API.GetAllGrade()
         .then((response) => {
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setData((parsedResponse as ResponseMany<Instrument>).results);
+            setData((parsedResponse as ResponseMany<Grade>).results);
           }
         })
         .finally(() => {
@@ -34,8 +34,8 @@ const InstrumentPage = (): JSX.Element => {
   }, [user]);
 
   return (
-    <PageContainer navTitle="Instrument">
-      <PageAdminInstrumentTable
+    <PageContainer navTitle="Grade">
+      <PageAdminGradeTable
         data={data}
         openModal={() => setOpen(true)}
         loading={loading}
@@ -43,7 +43,7 @@ const InstrumentPage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminInstrumentForm
+      <PageAdminGradeForm
         selectedData={selectedData}
         data={data}
         open={open}
@@ -57,4 +57,4 @@ const InstrumentPage = (): JSX.Element => {
   );
 };
 
-export default InstrumentPage;
+export default GradePage;

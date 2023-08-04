@@ -37,6 +37,7 @@ interface TextInputConfig extends DefaultFilterConfig {
   field: string;
   filterHandler?: (data: GridRowModel, value: any) => boolean;
   columnLabel?: string;
+  helperText?: string;
 }
 
 interface SelectConfig extends DefaultFilterConfig {
@@ -233,6 +234,7 @@ const Table = ({
             key={"text-filter" + index}
             column={item.field}
             columnLabel={item.columnLabel}
+            helperText={item.helperText}
             xs={item.xs}
             md={item.md}
             lg={item.lg}

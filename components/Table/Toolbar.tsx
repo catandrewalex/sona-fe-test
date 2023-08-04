@@ -8,7 +8,7 @@ import { Box, Button, Divider, Grid } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useState } from "react";
 import TableMenu from "@sonamusica-fe/components/Table/TableMenu";
-import Switch from "@sonamusica-fe/components/Form/Switch";
+import Switch from "@sonamusica-fe/components/Form/StandardSwitch";
 
 export interface AddItemToolbarButtonConfig<T> {
   name: string;

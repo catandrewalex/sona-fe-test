@@ -7,6 +7,7 @@ import SubmitButton, { SubmitButtonProps } from "@sonamusica-fe/components/Form/
 import SubmitButtonContainer, {
   SubmitButtonContainerProps
 } from "@sonamusica-fe/components/Form/SubmitButtonContainer";
+import Switch, { SwitchProps } from "@sonamusica-fe/components/Form/Switch";
 import TextInput, { TextInputProps } from "@sonamusica-fe/components/Form/TextInput";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { capitalizeFirstLetter } from "@sonamusica-fe/utils/StringUtil";
@@ -14,7 +15,7 @@ import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 import { FailedResponse } from "api";
 import React, { useMemo, useRef, useState } from "react";
 
-type FormFieldType = "text" | "select";
+type FormFieldType = "text" | "select" | "switch";
 
 interface BaseFormField<T> {
   type: FormFieldType;
@@ -36,7 +37,12 @@ interface FormFieldSelect<T> extends BaseFormField<T> {
   inputProps?: TextFieldProps;
 }
 
-export type FormField<T> = FormFieldText<T> | FormFieldSelect<T>;
+interface FormFieldSwitch<T> extends BaseFormField<T> {
+  type: "switch";
+  inputProps?: Omit<SwitchProps<T>, "valueRef" | "errorRef" | "field" | "label" | "validations">;
+}
+
+export type FormField<T> = FormFieldText<T> | FormFieldSelect<T> | FormFieldSwitch<T>;
 
 export interface FormConfig<T> {
   fields: Array<FormField<T>>;
@@ -68,7 +74,7 @@ const useFormRenderer = <T extends unknown>(
 
     return (
       <Form
-        onSubmit={() => {
+        onSubmit={(e) => {
           setLoading(true);
 
           config
@@ -76,6 +82,7 @@ const useFormRenderer = <T extends unknown>(
             .then((response) => {
               if (
                 config.errorResponseMapping &&
+                response &&
                 Object.getPrototypeOf(response) === FailedResponse.prototype
               ) {
                 Object.entries((response as FailedResponse).errors).forEach((error) => {
@@ -89,9 +96,17 @@ const useFormRenderer = <T extends unknown>(
                       capitalizeFirstLetter(errorText);
                   }
                 });
+              } else {
+                if (config.cancelButtonProps?.onClick)
+                  config.cancelButtonProps?.onClick(
+                    e as unknown as React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  );
+                hasUnsavedChangesRef.current = false;
+                valueRef.current = emptyValue;
+                errorRef.current = {} as Record<keyof T, string>;
               }
             })
-            .catch(() => null)
+            .catch(console.log)
             .finally(() => setLoading(false));
         }}
         formSubmit={
@@ -176,6 +191,23 @@ const useFormRenderer = <T extends unknown>(
                       hasUnsavedChangesRef.current = true;
                       if (field.selectProps?.onChange)
                         field.selectProps.onChange(valueRef, errorRef, e, value, reason);
+                    }}
+                  />
+                </FormField>
+              );
+            case "switch":
+              return (
+                <FormField key={field.name as string} {...field.formFieldProps}>
+                  <Switch
+                    valueRef={valueRef}
+                    errorRef={errorRef}
+                    label={field.label}
+                    field={field.name}
+                    validations={field.validations}
+                    {...field.inputProps}
+                    onChange={(e, checked) => {
+                      hasUnsavedChangesRef.current = true;
+                      if (field.inputProps?.onChange) field.inputProps.onChange(e, checked);
                     }}
                   />
                 </FormField>

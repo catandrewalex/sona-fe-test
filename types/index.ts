@@ -37,11 +37,19 @@ export interface Student {
 }
 
 export interface Instrument {
-  gradeId: number;
+  instrumentId: number;
   name: string;
 }
 
 export interface Grade {
   gradeId: number;
   name: string;
+}
+
+export interface Course {
+  courseId: number;
+  instrument: Instrument;
+  grade: Grade;
+  defaultFee: number;
+  defaultDurationMinute: number;
 }

@@ -61,10 +61,17 @@ const PageAdminStudentTable = ({
             }
           }),
           {
+            field: "studentId",
+            headerName: "ID",
+            width: 70,
+            align: "center",
+            headerAlign: "center"
+          },
+          {
             field: "username",
             headerName: "Username",
             valueGetter: (params) => params.row.user.username,
-            flex: 1
+            flex: 2
           },
           {
             field: "name",
@@ -79,7 +86,7 @@ const PageAdminStudentTable = ({
             field: "email",
             headerName: "Email",
             valueGetter: (params) => params.row.user.email,
-            flex: 2
+            flex: 3
           },
           {
             field: "privilegeType",
@@ -88,12 +95,16 @@ const PageAdminStudentTable = ({
               Object.entries(UserType).filter(
                 (type) => type[1] === params.row.user.privilegeType
               )[0][0] as string,
-            flex: 1
+            align: "center",
+            headerAlign: "center",
+            width: 90
           },
           {
             field: "createdAt",
             headerName: "Created At",
-            flex: 1,
+            align: "center",
+            headerAlign: "center",
+            width: 125,
             valueGetter: (params) => moment(params.row.user.createdAt).format("DD MMMM YYYY")
           }
         ]}

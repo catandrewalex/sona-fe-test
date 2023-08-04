@@ -16,6 +16,7 @@ type TextInputFilterProps = {
   value: string;
   onChange?: (value: string) => void;
   keyChild?: string;
+  helperText?: string;
   testIdContext?: string;
 };
 
@@ -30,6 +31,7 @@ const TextInputFilter = ({
   onChange,
   value,
   keyChild,
+  helperText,
   testIdContext
 }: TextInputFilterProps): JSX.Element => {
   const [innerValue, setValue] = useState<string>("");
@@ -62,6 +64,7 @@ const TextInputFilter = ({
         margin="dense"
         type="text"
         value={innerValue}
+        helperText={helperText}
         sx={sx}
         testIdContext={testIdContext + "-TableInputFilter"}
         onChange={(e) => {

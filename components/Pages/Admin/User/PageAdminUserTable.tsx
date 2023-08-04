@@ -25,6 +25,9 @@ const PageAdminUserTable = ({
         testIdContext="AdminUser"
         loading={loading}
         getRowId={(row) => row.userId}
+        getRowClassNameAddition={(params) =>
+          params.row.isDeactivated ? "deactivated-row" : "default"
+        }
         disableSelectionOnClick
         addItemToolbar
         addItemToolbarHandler={openModal}
@@ -38,9 +41,16 @@ const PageAdminUserTable = ({
             deleteDisableMessage: "This feature is not available yet."
           }),
           {
+            field: "userId",
+            headerName: "ID",
+            width: 70,
+            align: "center",
+            headerAlign: "center"
+          },
+          {
             field: "username",
             headerName: "Username",
-            flex: 1
+            flex: 2
           },
           {
             field: "name",
@@ -52,7 +62,7 @@ const PageAdminUserTable = ({
           {
             field: "email",
             headerName: "Email",
-            flex: 2
+            flex: 3
           },
           {
             field: "privilegeType",
@@ -61,12 +71,16 @@ const PageAdminUserTable = ({
               Object.entries(UserType).filter(
                 (type) => type[1] === params.row.privilegeType
               )[0][0] as string,
-            flex: 1
+            align: "center",
+            headerAlign: "center",
+            width: 90
           },
           {
             field: "createdAt",
             headerName: "Created At",
-            flex: 1,
+            align: "center",
+            headerAlign: "center",
+            width: 125,
             valueGetter: (params) => moment(params.row.createdAt).format("DD MMMM YYYY")
           }
         ]}
