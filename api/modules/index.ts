@@ -9,6 +9,7 @@ import gradeModule from "./grade";
 import courseModule from "./course";
 import instrumentModule from "./instrument";
 import classModule from "./class";
+import teacherSpecialFeeModule from "./teacher-special-fee";
 
 export default {
   ...authModule,
@@ -18,7 +19,8 @@ export default {
   ...gradeModule,
   ...courseModule,
   ...instrumentModule,
-  ...classModule
+  ...classModule,
+  ...teacherSpecialFeeModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

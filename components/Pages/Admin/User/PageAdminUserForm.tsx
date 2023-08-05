@@ -97,7 +97,15 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
 
 const updateFields: FormFieldType<UserUpdateFormData>[] = insertFields.filter(
   (field) => field.name !== "password" && field.name !== "passwordConfirm"
-);
+) as FormFieldType<UserUpdateFormData>[];
+
+updateFields.push({
+  type: "switch",
+  name: "isActive",
+  label: "Active?",
+  formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+  validations: [{ name: "required" }]
+});
 
 updateFields.push({
   type: "switch",

@@ -14,7 +14,7 @@ import {
 import LogoutIcon from "@mui/icons-material/Logout";
 import { UserType } from "@sonamusica-fe/types";
 import Modal from "@sonamusica-fe/components/Modal";
-import { PasswordOutlined } from "@mui/icons-material";
+import { Cancel, PasswordOutlined, Save } from "@mui/icons-material";
 import Form from "@sonamusica-fe/components/Form";
 import FormField from "@sonamusica-fe/components/Form/FormField";
 import TextInput from "@sonamusica-fe/components/Form/TextInput";
@@ -23,6 +23,7 @@ import API, { useApiTransformer } from "@sonamusica-fe/api";
 import SubmitButtonContainer from "@sonamusica-fe/components/Form/SubmitButtonContainer";
 import SubmitButton from "@sonamusica-fe/components/Form/SubmitButton";
 import { FailedResponse } from "api";
+import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
 
 type MenuListProps = {
   anchorEl: Element | null;
@@ -40,24 +41,6 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
 
   const [showChangePassword, setShowChangePassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-  // ==================== For Form in Change Password ==================== //
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>("");
-
-  const [errorNewPassword, setErrorNewPassword] = useState<string>("");
-  const [errorNewPasswordConfirm, setErrorNewPasswordConfirm] = useState<string>("");
-
-  // ==================== For Field Validation ==================== //
-  const checkPassword = useCheckRequired(setErrorNewPassword, "Password");
-  const checkPasswordConfirmationRequired = useCheckRequired(
-    setErrorNewPasswordConfirm,
-    "Confirmation Password"
-  );
-  const checkPasswordConfirmationMatch = useCheckMatch(
-    setErrorNewPasswordConfirm,
-    "Password & Confirmation Password"
-  );
 
   let privilegeString = "NONE";
   if (user) {
@@ -77,6 +60,52 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
     }
   }
 
+  const { formRenderer } = useFormRenderer<{ password: string; confirmPassword: string }>(
+    {
+      testIdContext: "ChangePassword",
+      submitContainerProps: { align: "space-between", spacing: 3 },
+      cancelButtonProps: {
+        startIcon: <Cancel />,
+        onClick: () => setShowChangePassword(false)
+      },
+      promptCancelButtonDialog: true,
+      submitButtonProps: { endIcon: <Save /> },
+      fields: [
+        {
+          type: "text",
+          name: "password",
+          label: "Password",
+          formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+          inputProps: { type: "password" },
+          validations: []
+        },
+        {
+          type: "text",
+          name: "confirmPassword",
+          label: "Confirm Password",
+          formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+          inputProps: { type: "password" },
+          validations: [
+            { name: "match", parameters: { matcherField: "password", matcherLabel: "Password" } }
+          ]
+        }
+      ],
+      errorResponseMapping: {
+        password: "newPassword"
+      },
+      submitHandler: async ({ password }, error) => {
+        if (error.password || error.confirmPassword) return Promise.reject();
+
+        const response = await API.ChangePassword(user?.userId || 0, password);
+        const parsedResponse = apiTransformer(response, true);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        }
+      }
+    },
+    { password: "", confirmPassword: "" }
+  );
+
   return (
     <>
       <Popover
@@ -95,7 +124,7 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
         <Card sx={{ width: 275 }}>
           <CardContent>
             <Avatar sx={{ m: "auto", width: 80, height: 80 }}>
-              {user?.userDetail.firstName.charAt(0) || user?.email.charAt(0).toUpperCase()}
+              {user?.userDetail.firstName.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || ""}
               {user?.userDetail.lastName?.charAt(0)}
             </Avatar>
             <Typography mt={1} textAlign="center" variant="h6">
@@ -143,73 +172,10 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
       </Popover>
 
       <Modal closeIcon open={showChangePassword} onClose={() => setShowChangePassword(false)}>
-        <Typography align="center" variant="h5">
+        <Typography align="center" variant="h5" sx={{ mb: 2 }}>
           Change Password
         </Typography>
-        <Form
-          formSubmit={
-            <SubmitButtonContainer>
-              <SubmitButton fullWidth loading={loading} />
-            </SubmitButtonContainer>
-          }
-          onSubmit={() => {
-            const finalCheckPassword = checkPassword(newPassword);
-            let finalCheckPasswordConfirm = checkPasswordConfirmationRequired(newPasswordConfirm);
-            if (finalCheckPasswordConfirm)
-              finalCheckPasswordConfirm = checkPasswordConfirmationMatch(
-                newPassword,
-                newPasswordConfirm
-              );
-
-            if (user && finalCheckPassword && finalCheckPasswordConfirm) {
-              setLoading(true);
-              API.ChangePassword(user.userId, newPassword)
-                .then((response) => {
-                  const result = apiTransformer(response, true);
-                  if (Object.getPrototypeOf(result) !== FailedResponse.prototype) {
-                    setShowChangePassword(false);
-                    setNewPassword("");
-                    setNewPasswordConfirm("");
-                    setErrorNewPassword("");
-                    setNewPasswordConfirm("");
-                  }
-                })
-                .finally(() => setLoading(false));
-            }
-          }}
-        >
-          <FormField>
-            <TextInput
-              testIdContext="UserUpsertPassword"
-              label="Password"
-              type="password"
-              required
-              value={newPassword}
-              errorMsg={errorNewPassword}
-              disabled={loading}
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-                checkPassword(e.target.value);
-              }}
-            />
-          </FormField>
-          <FormField>
-            <TextInput
-              label="Confirm Password"
-              type="password"
-              required
-              value={newPasswordConfirm}
-              errorMsg={errorNewPasswordConfirm}
-              disabled={loading}
-              onChange={(e) => {
-                setNewPasswordConfirm(e.target.value);
-                if (checkPasswordConfirmationRequired(e.target.value))
-                  checkPasswordConfirmationMatch(newPassword, e.target.value);
-              }}
-              testIdContext="UserUpsertConfirmPassword"
-            />
-          </FormField>
-        </Form>
+        {formRenderer()}
       </Modal>
     </>
   );

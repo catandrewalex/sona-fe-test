@@ -62,3 +62,10 @@ export interface Class {
   transportFee: number;
   isDeactivated: boolean;
 }
+
+export interface TeacherSpecialFee {
+  teacherSpecialFeeId: number;
+  teacher: Teacher;
+  course: Course;
+  fee: number;
+}

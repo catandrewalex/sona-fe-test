@@ -109,7 +109,6 @@ const PageAdminClassForm = ({
     ...defaultInsertFieldValue,
     isActive: true
   };
-
   const { formProperties: formPropertiesUpdate, formRenderer: formRendererUpdate } =
     useFormRenderer<ClassUpdateFormData>(
       {

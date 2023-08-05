@@ -72,7 +72,7 @@ const PageAdminClassTable = ({
               headerName: "Teacher",
               flex: 2,
               valueGetter: (params) =>
-                params.row.teacher?.user?.userDetail?.lastName
+                params.row.teacher?.user?.userDetail?.firstName
                   ? (params.row.teacher?.user?.userDetail?.firstName || "") +
                     " " +
                     (params.row.teacher?.user?.userDetail?.lastName || "")
