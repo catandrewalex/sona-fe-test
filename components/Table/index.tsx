@@ -91,6 +91,7 @@ type TableProps = {
   addItemToolbarHandler?: () => void;
   name?: string;
   testIdContext?: string;
+  columnVisibilityModelDefault?: GridColumnVisibilityModel;
 };
 
 const Table = ({
@@ -122,13 +123,16 @@ const Table = ({
   addItemToolbar,
   addItemToolbarHandler,
   testIdContext,
-  name
+  name,
+  columnVisibilityModelDefault
 }: TableProps): JSX.Element => {
   const [data, setData] = useState<GridRowsProp>(rows);
   const [dataSize, setDataSize] = useState<number>(0);
   const [columnsData, setColumnsData] = useState<GridColDef[]>(columns);
   const [filterValue, setFilterValue] = useState<Record<string, any>>({});
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>();
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<
+    GridColumnVisibilityModel | undefined
+  >(columnVisibilityModelDefault);
 
   const [pageSize, setPageSize] = useState<number>(
     rowDisplayed ? rowDisplayed : rowsPerPageOptions[0]

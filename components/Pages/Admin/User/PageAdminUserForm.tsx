@@ -37,7 +37,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     name: "email",
     label: "Email",
     formFieldProps: { lg: 6, md: 6 },
-    inputProps: { testIdContext: "UserUpsertUsername", type: "email" },
+    inputProps: { type: "email" },
     validations: [{ name: "email" }]
   },
   {
@@ -45,7 +45,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     name: "username",
     label: "Username",
     formFieldProps: { lg: 6, md: 6 },
-    inputProps: { required: true, testIdContext: "UserUpsertUsername" },
+    inputProps: { required: true },
     validations: [{ name: "required" }]
   },
   {
@@ -53,7 +53,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     name: "password",
     label: "Password",
     formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
-    inputProps: { testIdContext: "UserUpsertPassword", type: "password" },
+    inputProps: { type: "password" },
     validations: []
   },
   {
@@ -61,7 +61,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     name: "passwordConfirm",
     label: "Confirm Password",
     formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
-    inputProps: { testIdContext: "UserUpsertPassword", type: "password" },
+    inputProps: { type: "password" },
     validations: [
       { name: "match", parameters: { matcherField: "password", matcherLabel: "Password" } }
     ]
@@ -71,7 +71,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     name: "firstName",
     label: "First Name",
     formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
-    inputProps: { required: true, testIdContext: "UserUpsertFirstName" },
+    inputProps: { required: true },
     validations: [{ name: "required" }]
   },
   {
@@ -79,7 +79,6 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     name: "lastName",
     label: "Last Name",
     formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
-    inputProps: { testIdContext: "UserUpsertLastName" },
     validations: []
   },
   {
@@ -90,8 +89,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     inputProps: { required: true },
     selectProps: {
       options,
-      getOptionLabel: (option) => UserType[option],
-      testIdContext: "UserUpsertPrivilegeType"
+      getOptionLabel: (option) => UserType[option]
     },
     validations: [{ name: "required" }]
   }
@@ -100,11 +98,11 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
 const updateFields: FormFieldType<UserUpdateFormData>[] = insertFields.filter(
   (field) => field.name !== "password" && field.name !== "passwordConfirm"
 );
+
 updateFields.push({
   type: "switch",
   name: "isActive",
   label: "Active?",
-  inputProps: { testIdContext: "UserUpsertIsDeactivated" },
   formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
   validations: [{ name: "required" }]
 });
@@ -131,14 +129,14 @@ const PageAdminUserForm = ({
   const { formProperties, formRenderer } = selectedData
     ? useFormRenderer<UserUpdateFormData>(
         {
+          testIdContext: "UserUpsert",
           submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            testIdContext: "UserUpsertCancel",
             startIcon: <Cancel />,
             onClick: onClose
           },
           promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save />, testIdContext: "UserUpsertSubmit" },
+          submitButtonProps: { endIcon: <Save /> },
           fields: updateFields,
           errorResponseMapping,
           submitHandler: async (formData, error) => {
@@ -176,14 +174,14 @@ const PageAdminUserForm = ({
       )
     : useFormRenderer<UserInsertFormData>(
         {
+          testIdContext: "UserUpsert",
           submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            testIdContext: "UserUpsertCancel",
             startIcon: <Cancel />,
             onClick: onClose
           },
           promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save />, testIdContext: "UserUpsertSubmit" },
+          submitButtonProps: { endIcon: <Save /> },
           fields: insertFields,
           errorResponseMapping,
           submitHandler: async (formData, error) => {
@@ -236,7 +234,7 @@ const PageAdminUserForm = ({
   }, [selectedData]);
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} disableEscape>
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} User
       </Typography>

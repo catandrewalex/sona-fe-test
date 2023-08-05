@@ -10,12 +10,12 @@ import SubmitButtonContainer, {
 import Switch, { SwitchProps } from "@sonamusica-fe/components/Form/Switch";
 import TextInput, { TextInputProps } from "@sonamusica-fe/components/Form/TextInput";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
-import { capitalizeFirstLetter } from "@sonamusica-fe/utils/StringUtil";
+import { capitalizeFirstLetter, titleCase } from "@sonamusica-fe/utils/StringUtil";
 import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 import { FailedResponse } from "api";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
-type FormFieldType = "text" | "select" | "switch";
+type FormFieldType = "text" | "select" | "switch" | "custom";
 
 interface BaseFormField<T> {
   type: FormFieldType;
@@ -42,7 +42,24 @@ interface FormFieldSwitch<T> extends BaseFormField<T> {
   inputProps?: Omit<SwitchProps<T>, "valueRef" | "errorRef" | "field" | "label" | "validations">;
 }
 
-export type FormField<T> = FormFieldText<T> | FormFieldSelect<T> | FormFieldSwitch<T>;
+export type FormFieldCustomProps<T> = {
+  validations?: Array<ValidationConfig<T>>;
+  field: keyof T;
+  label: string;
+  valueRef: React.MutableRefObject<T>;
+  errorRef: React.MutableRefObject<Record<keyof T, string>>;
+};
+interface FormFieldCustom<T> extends BaseFormField<T> {
+  type: "custom";
+  props?: Record<any, any>;
+  Component: React.FC<any>;
+}
+
+export type FormField<T> =
+  | FormFieldText<T>
+  | FormFieldSelect<T>
+  | FormFieldSwitch<T>
+  | FormFieldCustom<T>;
 
 export interface FormConfig<T> {
   fields: Array<FormField<T>>;
@@ -52,6 +69,7 @@ export interface FormConfig<T> {
   promptCancelButtonDialog?: boolean;
   submitHandler: (data: T, errors: Record<keyof T, string>) => Promise<void | FailedResponse>;
   errorResponseMapping?: Partial<Record<keyof T, string>>;
+  testIdContext?: string;
 }
 
 export interface FormProperties<T> {
@@ -64,7 +82,7 @@ const useFormRenderer = <T extends unknown>(
   config: FormConfig<T>,
   emptyValue: T
 ): { formProperties: FormProperties<T>; formRenderer: () => JSX.Element } => {
-  const valueRef = useRef<T>({} as T);
+  const valueRef = useRef<T>(emptyValue as T);
   const errorRef = useRef<Record<keyof T, string>>({} as Record<keyof T, string>);
   const hasUnsavedChangesRef = useRef<boolean>(false);
 
@@ -92,8 +110,9 @@ const useFormRenderer = <T extends unknown>(
                   if (mappingFound.length > 0) {
                     const idx = error[1].indexOf(mappingFound[0][1] as string);
                     const errorText = error[1].substring(idx);
-                    errorRef.current[mappingFound[0][0] as keyof T] =
-                      capitalizeFirstLetter(errorText);
+                    errorRef.current[mappingFound[0][0] as keyof T] = capitalizeFirstLetter(
+                      errorText
+                    ).replace("Id", "");
                   }
                 });
               } else {
@@ -120,13 +139,16 @@ const useFormRenderer = <T extends unknown>(
                 submitText="Cancel"
                 fullWidth
                 disabled={loading}
+                testIdContext={(config.testIdContext || "") + "Cancel"}
                 {...config.cancelButtonProps}
                 onClick={(e) => {
                   if (config.promptCancelButtonDialog && hasUnsavedChangesRef.current) {
                     showDialog(
                       {
                         title: "Unsaved Changes",
-                        content: "Your changes will be lost. Proceed?"
+                        content: "Your changes will be lost. Proceed?",
+                        positiveTestIdContext: config.testIdContext,
+                        negativeTestIdContext: config.testIdContext
                       },
                       () => {
                         if (config.cancelButtonProps?.onClick) config.cancelButtonProps?.onClick(e);
@@ -148,6 +170,7 @@ const useFormRenderer = <T extends unknown>(
               fullWidth
               loading={loading}
               submitText="Submit"
+              testIdContext={(config.testIdContext || "") + "Submit"}
               {...config.submitButtonProps}
             />
           </SubmitButtonContainer>
@@ -166,6 +189,7 @@ const useFormRenderer = <T extends unknown>(
                     label={field.label}
                     disabled={loading}
                     initialValue={valueRef.current[field.name]}
+                    testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
                     {...field.inputProps}
                     onChange={(e) => {
                       hasUnsavedChangesRef.current = true;
@@ -186,6 +210,7 @@ const useFormRenderer = <T extends unknown>(
                     validations={field.validations}
                     inputProps={field.inputProps}
                     initialValue={valueRef.current[field.name]}
+                    testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
                     {...field.selectProps}
                     onChange={(_valuRefIgnored, _errorRefIgnored, e, value, reason) => {
                       hasUnsavedChangesRef.current = true;
@@ -204,12 +229,31 @@ const useFormRenderer = <T extends unknown>(
                     label={field.label}
                     field={field.name}
                     validations={field.validations}
+                    testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
                     {...field.inputProps}
                     onChange={(e, checked) => {
                       hasUnsavedChangesRef.current = true;
                       if (field.inputProps?.onChange) field.inputProps.onChange(e, checked);
                     }}
                   />
+                </FormField>
+              );
+            case "custom":
+              return (
+                <FormField key={field.name as string} {...field.formFieldProps}>
+                  <field.Component
+                    {...field.props}
+                    valueRef={valueRef}
+                    errorRef={errorRef}
+                    label={field.label}
+                    field={field.name}
+                    validations={field.validations}
+                    testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
+                    onChange={(e: any) => {
+                      hasUnsavedChangesRef.current = true;
+                      if (field.props?.onChange) field.props.onChange(e);
+                    }}
+                  ></field.Component>
                 </FormField>
               );
           }

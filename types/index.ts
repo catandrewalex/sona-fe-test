@@ -1,7 +1,7 @@
 export interface User {
   userId: number;
   username: string;
-  email: string;
+  email?: string;
   userDetail: UserDetail;
   privilegeType: UserType;
   isDeactivated: boolean;
@@ -52,4 +52,13 @@ export interface Course {
   grade: Grade;
   defaultFee: number;
   defaultDurationMinute: number;
+}
+
+export interface Class {
+  classId: number;
+  teacher?: Teacher;
+  students: Student[];
+  course: Course;
+  transportFee: number;
+  isDeactivated: boolean;
 }

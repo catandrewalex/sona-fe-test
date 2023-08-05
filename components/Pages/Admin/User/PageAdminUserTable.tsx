@@ -38,7 +38,7 @@ const PageAdminUserTable = ({
               setSelectedData(data.filter((val) => val.userId === id)[0]);
               openModal();
             },
-            deleteDisableMessage: "This feature is not available yet."
+            deleteDisableMessage: "User deletion is disabled. You can deactivate this user instead."
           }),
           {
             field: "userId",

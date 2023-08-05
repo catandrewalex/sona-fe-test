@@ -124,7 +124,10 @@ const PageAdminTeacherTable = ({
             lg: 6,
             filterHandler: (data, value) =>
               data.user.userDetail.firstName.toLowerCase().includes(value.toLowerCase()) ||
-              data.user.userDetail.lastName?.toLowerCase()?.includes(value.toLowerCase())
+              data.user.userDetail.lastName?.toLowerCase()?.includes(value.toLowerCase()) ||
+              `${data.user.userDetail.firstName} ${data.user.userDetail.lastName || ""}`
+                .toLowerCase()
+                .includes(value.toLowerCase())
           },
           {
             type: "text-input",

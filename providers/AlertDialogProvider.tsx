@@ -20,6 +20,8 @@ type DialogConfig = {
   content: string | JSX.Element;
   style?: CSSProperties;
   informationDialog?: boolean;
+  positiveTestIdContext?: string;
+  negativeTestIdContext?: string;
 };
 
 export type AlertDialogContextValue = {
@@ -38,6 +40,8 @@ type AlertDialogState = {
   positiveAction?: VoidFunction;
   negativeAction?: VoidFunction;
   informationDialog?: boolean;
+  positiveTestIdContext?: string;
+  negativeTestIdContext?: string;
 };
 
 const initialState: AlertDialogState = {
@@ -47,7 +51,9 @@ const initialState: AlertDialogState = {
   style: {},
   informationDialog: false,
   positiveAction: () => undefined,
-  negativeAction: () => undefined
+  negativeAction: () => undefined,
+  positiveTestIdContext: "AlertDialogPositive",
+  negativeTestIdContext: "AlertDialogNegative"
 };
 
 const AlertDialogContext = createContext<AlertDialogContextValue>({
@@ -65,7 +71,14 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
   const [dialogState, setDialogState] = useState(initialState);
 
   const showDialog = (
-    { title, content, style = {}, informationDialog }: DialogConfig,
+    {
+      title,
+      content,
+      style = {},
+      informationDialog,
+      negativeTestIdContext,
+      positiveTestIdContext
+    }: DialogConfig,
     positiveAction?: () => void,
     negativeAction?: () => void
   ): void => {
@@ -77,7 +90,13 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
       style,
       positiveAction,
       negativeAction,
-      informationDialog
+      informationDialog,
+      negativeTestIdContext: negativeTestIdContext
+        ? "AlertDialogNegative-" + negativeTestIdContext
+        : "AlertDialogNegative",
+      positiveTestIdContext: positiveTestIdContext
+        ? "AlertDialogPositive-" + positiveTestIdContext
+        : "AlertDialogPositive"
     });
   };
 
@@ -120,6 +139,7 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
               fontWeight: "fontWeightBold",
               fontSize: "1.25em"
             }}
+            data-testid={dialogState.positiveTestIdContext}
           >
             {dialogState.informationDialog ? "Ok" : "Yes"}
           </Button>
@@ -132,6 +152,7 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
               fontSize: "1.25em",
               display: dialogState.informationDialog ? "none" : "initial"
             }}
+            data-testid={dialogState.negativeTestIdContext}
           >
             Cancel
           </Button>

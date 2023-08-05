@@ -26,6 +26,7 @@ const useTableActions = ({
     getActions: (params) => [
       <Tooltip content={editDisableMessage || ""} key={"edit-" + params.id}>
         <GridActionsCellItem
+          data-testid={"EditIcon-" + params.id}
           dense
           disableGutters
           icon={<Edit />}
@@ -38,6 +39,7 @@ const useTableActions = ({
       <Tooltip content={deleteDisableMessage || ""} key={"delete-" + params.id}>
         <GridActionsCellItem
           dense
+          data-testid={"DeleteIcon-" + params.id}
           disableGutters
           icon={<Delete />}
           label="Delete"

@@ -28,7 +28,7 @@ const defaultFields: FormFieldType<InstrumentUpsertFormData>[] = [
     name: "name",
     label: "Name",
     formFieldProps: { lg: 12, md: 12 },
-    inputProps: { testIdContext: "InstrumentUpsertName", type: "text" },
+    inputProps: { type: "text" },
     validations: [{ name: "required" }]
   }
 ];
@@ -48,14 +48,14 @@ const PageAdminInstrumentForm = ({
 
   const { formProperties, formRenderer } = useFormRenderer<InstrumentUpsertFormData>(
     {
+      testIdContext: "InstrumentUpsert",
       submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        testIdContext: "InstrumentUpsertCancel",
         startIcon: <Cancel />,
         onClick: onClose
       },
       promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save />, testIdContext: "InstrumentUpsertSubmit" },
+      submitButtonProps: { endIcon: <Save /> },
       fields: defaultFields,
       errorResponseMapping,
       submitHandler: async (formData, error) => {

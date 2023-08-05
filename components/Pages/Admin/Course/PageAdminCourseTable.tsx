@@ -2,19 +2,14 @@ import Table from "@sonamusica-fe/components/Table";
 import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
-import { Course, Grade, Instrument } from "@sonamusica-fe/types";
+import { Course } from "@sonamusica-fe/types";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";
-import {
-  advancedNumberFilter,
-  convertNumberToCurrencyString
-} from "@sonamusica-fe/utils/StringUtil";
+import { convertNumberToCurrencyString } from "@sonamusica-fe/utils/StringUtil";
 
 type PageAdminCourseTableProps = {
   data: Course[];
-  gradeData: Grade[];
-  instrumentData: Instrument[];
   setSelectedData: (newSelectedData?: Course) => void;
   openModal: () => void;
   loading: boolean;
@@ -28,9 +23,7 @@ const PageAdminCourseTable = ({
   openModal,
   loading,
   setLoading,
-  setData,
-  instrumentData,
-  gradeData
+  setData
 }: PageAdminCourseTableProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
   const { showDialog } = useAlertDialog();
@@ -95,7 +88,7 @@ const PageAdminCourseTable = ({
           {
             field: "defaultDurationMinute",
             headerName: "Duration (Minute)",
-            width: 175,
+            width: 165,
             align: "center",
             headerAlign: "center"
           }
@@ -105,33 +98,14 @@ const PageAdminCourseTable = ({
             type: "text-input",
             field: "instrument-grade",
             columnLabel: "Instrument or Grade",
-            md: 4,
-            lg: 4,
+            md: 12,
+            lg: 12,
             filterHandler: (data, value) =>
               data.grade.name.toLowerCase().includes(value.toLowerCase()) ||
               data.instrument.name.toLowerCase().includes(value.toLowerCase()) ||
               `${data.instrument.name} - ${data.grade.name}`
                 .toLowerCase()
                 .includes(value.toLowerCase())
-          },
-          {
-            type: "text-input",
-            field: "defaultFee",
-            columnLabel: "Fee",
-            helperText: "Equality signs can be used (<=700000, >100000, 375000, etc.)",
-            md: 4,
-            lg: 4,
-            filterHandler: (data, value) => advancedNumberFilter(data.defaultFee, value.trim())
-          },
-          {
-            type: "text-input",
-            field: "defaultDurationMinute",
-            columnLabel: "Duration",
-            helperText: "Equality signs can be used (<60, >=45, 30, etc.)",
-            md: 4,
-            lg: 4,
-            filterHandler: (data, value) =>
-              advancedNumberFilter(data.defaultDurationMinute, value.trim())
           }
         ]}
       />

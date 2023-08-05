@@ -71,8 +71,7 @@ const PageAdminStudentForm = ({
       selectProps: {
         options: users,
         getOptionLabel: (option) =>
-          `${option.userDetail?.firstName} ${option.userDetail?.lastName || ""} - ${option.email}`,
-        testIdContext: "UserUpsertPrivilegeType",
+          `${option.userDetail?.firstName} ${option.userDetail?.lastName || ""}`,
         isOptionEqualToValue: (option, value) => option?.userId === value?.userId,
         onChange: (valueRef, errorRef, _e, value) => {
           setSelectedUser(value);
@@ -118,7 +117,6 @@ const PageAdminStudentForm = ({
       label: "Email",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: {
-        testIdContext: "UserUpsertUsername",
         type: "email",
         disabled: Boolean(selectedUser)
       },
@@ -131,7 +129,6 @@ const PageAdminStudentForm = ({
       formFieldProps: { lg: 6, md: 6 },
       inputProps: {
         required: true,
-        testIdContext: "UserUpsertUsername",
         disabled: Boolean(selectedUser)
       },
       validations: [{ name: "required" }]
@@ -143,7 +140,7 @@ const PageAdminStudentForm = ({
             name: "password",
             label: "Password",
             formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
-            inputProps: { testIdContext: "UserUpsertPassword", type: "password" },
+            inputProps: { type: "password" },
             validations: []
           },
           {
@@ -151,7 +148,7 @@ const PageAdminStudentForm = ({
             name: "passwordConfirm",
             label: "Confirm Password",
             formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
-            inputProps: { testIdContext: "UserUpsertPassword", type: "password" },
+            inputProps: { type: "password" },
             validations: [
               { name: "match", parameters: { matcherField: "password", matcherLabel: "Password" } }
             ]
@@ -165,7 +162,6 @@ const PageAdminStudentForm = ({
       formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
-        testIdContext: "UserUpsertFirstName",
         disabled: Boolean(selectedUser)
       },
       validations: [{ name: "required" }]
@@ -175,7 +171,7 @@ const PageAdminStudentForm = ({
       name: "lastName",
       label: "Last Name",
       formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
-      inputProps: { testIdContext: "UserUpsertLastName", disabled: Boolean(selectedUser) },
+      inputProps: { disabled: Boolean(selectedUser) },
       validations: []
     },
     {
@@ -187,7 +183,6 @@ const PageAdminStudentForm = ({
       selectProps: {
         options,
         getOptionLabel: (option) => UserType[option],
-        testIdContext: "UserUpsertPrivilegeType",
         disabled: Boolean(selectedUser)
       },
       validations: [{ name: "required" }]
@@ -196,14 +191,14 @@ const PageAdminStudentForm = ({
 
   const { formProperties, formRenderer } = useFormRenderer<StudentInsertFormData>(
     {
+      testIdContext: "StudentUpsert",
       submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        testIdContext: "UserUpsertCancel",
         startIcon: <Cancel />,
         onClick: onClose
       },
       promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save />, testIdContext: "UserUpsertSubmit" },
+      submitButtonProps: { endIcon: <Save /> },
       fields: insertFields,
       errorResponseMapping,
       submitHandler: async (formData, error) => {

@@ -24,7 +24,7 @@ import { SxProps } from "@mui/system";
  * escape button. To disable this behaviour set this props to true.
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  */
-type ModalProps = {
+export type ModalProps = {
   children: React.ReactNode;
   open: boolean;
   closeIcon?: boolean;

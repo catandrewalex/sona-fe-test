@@ -40,8 +40,7 @@ const PageAdminCourseForm = ({
       inputProps: { required: true },
       selectProps: {
         options: gradeData,
-        getOptionLabel: (option) => option.name,
-        testIdContext: "CourseUpsertGrade"
+        getOptionLabel: (option) => option.name
       },
       validations: [{ name: "required" }]
     },
@@ -53,8 +52,7 @@ const PageAdminCourseForm = ({
       inputProps: { required: true },
       selectProps: {
         options: instrumentData,
-        getOptionLabel: (option) => option.name,
-        testIdContext: "CourseUpsertInstrument"
+        getOptionLabel: (option) => option.name
       },
       validations: [{ name: "required" }]
     },
@@ -65,7 +63,6 @@ const PageAdminCourseForm = ({
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
-        testIdContext: "CourseUpsertDuration",
         type: "number",
         endAdornment: <InputAdornment position="end">minute(s)</InputAdornment>
       },
@@ -78,7 +75,6 @@ const PageAdminCourseForm = ({
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
-        testIdContext: "CourseUpsertFee",
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
@@ -87,8 +83,9 @@ const PageAdminCourseForm = ({
   ];
 
   const defaultUpdateFields: FormFieldType<CourseUpdateFormData>[] = defaultInsertFields.filter(
-    (val) => val.name !== "grade" && val.name !== "instrument"
-  ) as FormFieldType<CourseUpdateFormData>[];
+    (val): val is FormFieldType<CourseUpdateFormData> =>
+      val.name !== "grade" && val.name !== "instrument"
+  );
 
   const defaultUpdateFieldValue: CourseUpdateFormData = {
     defaultDurationMinute: 0,
@@ -104,14 +101,14 @@ const PageAdminCourseForm = ({
   const { formProperties, formRenderer } = selectedData
     ? useFormRenderer<CourseUpdateFormData>(
         {
+          testIdContext: "CourseUpsert",
           submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            testIdContext: "CourseUpsertCancel",
             startIcon: <Cancel />,
             onClick: onClose
           },
           promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save />, testIdContext: "CourseUpsertSubmit" },
+          submitButtonProps: { endIcon: <Save /> },
           fields: defaultUpdateFields,
           errorResponseMapping: {
             defaultDurationMinute: "defaultDurationMinute",
@@ -141,14 +138,14 @@ const PageAdminCourseForm = ({
       )
     : useFormRenderer<CourseInsertFormData>(
         {
+          testIdContext: "CourseUpsert",
           submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            testIdContext: "CourseUpsertCancel",
             startIcon: <Cancel />,
             onClick: onClose
           },
           promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save />, testIdContext: "CourseUpsertSubmit" },
+          submitButtonProps: { endIcon: <Save /> },
           fields: defaultInsertFields,
           errorResponseMapping: {
             defaultDurationMinute: "defaultDurationMinute",

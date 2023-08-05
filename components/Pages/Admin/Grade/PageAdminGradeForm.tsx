@@ -28,7 +28,7 @@ const defaultFields: FormFieldType<GradeUpsertFormData>[] = [
     name: "name",
     label: "Name",
     formFieldProps: { lg: 12, md: 12 },
-    inputProps: { testIdContext: "GradeUpsertName", type: "text" },
+    inputProps: { type: "text" },
     validations: [{ name: "required" }]
   }
 ];
@@ -48,14 +48,14 @@ const PageAdminGradeForm = ({
 
   const { formProperties, formRenderer } = useFormRenderer<GradeUpsertFormData>(
     {
+      testIdContext: "GradeUpsert",
       submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        testIdContext: "GradeUpsertCancel",
         startIcon: <Cancel />,
         onClick: onClose
       },
       promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save />, testIdContext: "GradeUpsertSubmit" },
+      submitButtonProps: { endIcon: <Save /> },
       fields: defaultFields,
       errorResponseMapping,
       submitHandler: async (formData, error) => {

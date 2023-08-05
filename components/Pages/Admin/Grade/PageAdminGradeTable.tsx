@@ -4,8 +4,7 @@ import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Grade } from "@sonamusica-fe/types";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import moment from "moment";
-import React, { useMemo } from "react";
+import React from "react";
 import { FailedResponse } from "api";
 
 type PageAdminGradeTableProps = {
