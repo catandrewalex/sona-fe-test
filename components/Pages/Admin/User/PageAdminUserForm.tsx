@@ -107,14 +107,6 @@ updateFields.push({
   validations: [{ name: "required" }]
 });
 
-updateFields.push({
-  type: "switch",
-  name: "isActive",
-  label: "Active?",
-  formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
-  validations: [{ name: "required" }]
-});
-
 const PageAdminUserForm = ({
   data,
   setData,

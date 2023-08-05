@@ -15,13 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { UserType } from "@sonamusica-fe/types";
 import Modal from "@sonamusica-fe/components/Modal";
 import { Cancel, PasswordOutlined, Save } from "@mui/icons-material";
-import Form from "@sonamusica-fe/components/Form";
-import FormField from "@sonamusica-fe/components/Form/FormField";
-import TextInput from "@sonamusica-fe/components/Form/TextInput";
-import { useCheckRequired, useCheckMatch } from "@sonamusica-fe/utils/ValidationUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import SubmitButtonContainer from "@sonamusica-fe/components/Form/SubmitButtonContainer";
-import SubmitButton from "@sonamusica-fe/components/Form/SubmitButton";
 import { FailedResponse } from "api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
 
@@ -40,7 +34,6 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
   const apiTransformer = useApiTransformer();
 
   const [showChangePassword, setShowChangePassword] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
 
   let privilegeString = "NONE";
   if (user) {

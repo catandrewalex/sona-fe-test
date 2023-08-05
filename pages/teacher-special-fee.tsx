@@ -55,7 +55,7 @@ const TeacherSpecialFeePage = (): JSX.Element => {
   }, [user]);
 
   return (
-    <PageContainer navTitle="TeacherSpecialFee">
+    <PageContainer navTitle="Teacher Special Fee">
       <PageAdminTeacherSpecialFeeTable
         data={data}
         teacherData={teacherData}

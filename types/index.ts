@@ -69,3 +69,18 @@ export interface TeacherSpecialFee {
   course: Course;
   fee: number;
 }
+
+export interface StudentEnrollment {
+  studentEnrollmentId: number;
+  student: Student;
+  class: Class;
+}
+
+export interface StudentLearningToken {
+  studentLearningTokenId: number;
+  studentEnrollment: StudentEnrollment;
+  quota: number;
+  courseFeeValue: number;
+  transportFeeValue: number;
+  lastUpdatedAt: string;
+}

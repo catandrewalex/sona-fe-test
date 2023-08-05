@@ -21,6 +21,7 @@ type PageAdminClassFormProps = {
   onClose: () => void;
   open: boolean;
 };
+
 const errorResponseMapping = {
   teacher: "teacher",
   course: "course"
@@ -109,6 +110,7 @@ const PageAdminClassForm = ({
     ...defaultInsertFieldValue,
     isActive: true
   };
+  
   const { formProperties: formPropertiesUpdate, formRenderer: formRendererUpdate } =
     useFormRenderer<ClassUpdateFormData>(
       {
