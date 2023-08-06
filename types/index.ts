@@ -84,3 +84,13 @@ export interface StudentLearningToken {
   transportFeeValue: number;
   lastUpdatedAt: string;
 }
+
+export interface EnrollmentPayment {
+  enrollmentPaymentId: number;
+  studentEnrollment: StudentEnrollment;
+  balanceTopUp: number;
+  courseFeeValue: number;
+  transportFeeValue: number;
+  valuePenalty: number;
+  paymentDate: string;
+}

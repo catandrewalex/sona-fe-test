@@ -82,7 +82,7 @@ const TextInput = <T extends unknown>({
             case "match":
               errorMsg = matchCheck(
                 value,
-                valueRef.current[validation.parameters.matcherField],
+                valueRef.current[validation.parameters.matcherField] as string,
                 validation.parameters.matcherLabel
                   ? validation.parameters.matcherLabel
                   : (validation.parameters.matcherField as string)
@@ -106,7 +106,7 @@ const TextInput = <T extends unknown>({
   }, [initialValue]);
 
   useEffect(() => {
-    setInternalValue(valueRef.current[field] || "");
+    setInternalValue((valueRef.current[field] as string) || "");
   }, [valueRef.current[field]]);
 
   useEffect(() => {

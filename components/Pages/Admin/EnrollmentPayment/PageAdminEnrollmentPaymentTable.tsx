@@ -2,7 +2,7 @@ import Table from "@sonamusica-fe/components/Table";
 import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
-import { StudentLearningToken, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
+import { EnrollmentPayment, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";
@@ -12,18 +12,18 @@ import {
 } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
 
-type PageAdminStudentLearningTokenTableProps = {
-  data: StudentLearningToken[];
+type PageAdminEnrollmentPaymentTableProps = {
+  data: EnrollmentPayment[];
   studentData: Student[];
   teacherData: Teacher[];
-  setSelectedData: (newSelectedData?: StudentLearningToken) => void;
+  setSelectedData: (newSelectedData?: EnrollmentPayment) => void;
   openModal: () => void;
   loading: boolean;
   setLoading: (newData: boolean) => void;
-  setData: (newData: StudentLearningToken[]) => void;
+  setData: (newData: EnrollmentPayment[]) => void;
 };
 
-const PageAdminStudentLearningTokenTable = ({
+const PageAdminEnrollmentPaymentTable = ({
   data,
   studentData,
   teacherData,
@@ -32,17 +32,17 @@ const PageAdminStudentLearningTokenTable = ({
   loading,
   setLoading,
   setData
-}: PageAdminStudentLearningTokenTableProps): JSX.Element => {
+}: PageAdminEnrollmentPaymentTableProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
   const { showDialog } = useAlertDialog();
 
   return (
-    <TableContainer testIdContext="AdminStudentLearningToken" height="calc(80vh)">
+    <TableContainer testIdContext="AdminEnrollmentPayment" height="calc(80vh)">
       <Table
-        name="Student Learning Token"
-        testIdContext="AdminStudentLearningToken"
+        name="Enrollment Payment"
+        testIdContext="AdminEnrollmentPayment"
         loading={loading}
-        getRowId={(row) => row.studentLearningTokenId}
+        getRowId={(row) => row.enrollmentPaymentId}
         disableSelectionOnClick
         addItemToolbar
         addItemToolbarHandler={openModal}
@@ -53,30 +53,30 @@ const PageAdminStudentLearningTokenTable = ({
         columns={[
           useTableActions({
             editHandler: ({ id }) => {
-              setSelectedData(data.filter((val) => val.studentLearningTokenId === id)[0]);
+              setSelectedData(data.filter((val) => val.enrollmentPaymentId === id)[0]);
               openModal();
             },
             deleteHandler: ({ id, row }) => {
               showDialog(
                 {
-                  title: "Delete Student Learning Token",
+                  title: "Delete Enrollment Payment",
                   content: `Are you sure want to delete ${
                     row.studentEnrollment.student.user.userDetail.firstName
                   }${
                     row.studentEnrollment.student.user.userDetail.lastName
                       ? " " + row.studentEnrollment.student.user.userDetail.lastName
                       : ""
-                  } learning token on ${row.studentEnrollment.class.course.grade.name} - ${
+                  } payment on ${row.studentEnrollment.class.course.grade.name} - ${
                     row.studentEnrollment.class.course.instrument.name
                   }?`
                 },
                 () => {
                   setLoading(true);
-                  API.DeleteStudentLearningToken([{ studentLearningTokenId: id as number }])
+                  API.DeleteEnrollmentPayment([{ enrollmentPaymentId: id as number }])
                     .then((response) => {
                       const parsedResponse = apiTransformer(response, true);
                       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype)
-                        setData(data.filter((value) => value.studentLearningTokenId !== id));
+                        setData(data.filter((value) => value.enrollmentPaymentId !== id));
                     })
                     .finally(() => setLoading(false));
                 }
@@ -84,7 +84,7 @@ const PageAdminStudentLearningTokenTable = ({
             }
           }),
           {
-            field: "studentLearningTokenId",
+            field: "enrollmentPaymentId",
             headerName: "ID",
             width: 100,
             align: "center",
@@ -102,12 +102,12 @@ const PageAdminStudentLearningTokenTable = ({
                 : "-"
           },
           {
-            field: "quota",
-            headerName: "Quota",
+            field: "balaceTopUp",
+            headerName: "Balance",
             width: 75,
             align: "center",
             headerAlign: "center",
-            valueGetter: (params) => params.row.quota
+            valueGetter: (params) => params.row.balanceTopUp
           },
           {
             field: "courseFeeValue",
@@ -116,6 +116,15 @@ const PageAdminStudentLearningTokenTable = ({
             align: "center",
             headerAlign: "center",
             valueGetter: (params) => params.row.courseFeeValue,
+            valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
+          },
+          {
+            field: "valuePenalty",
+            headerName: "Penalty Fee",
+            width: 140,
+            align: "center",
+            headerAlign: "center",
+            valueGetter: (params) => params.row.valuePenalty,
             valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
           },
           {
@@ -137,10 +146,10 @@ const PageAdminStudentLearningTokenTable = ({
               params.row.studentEnrollment.class.course.grade.name
           },
           {
-            field: "lastUpdatedAt",
-            headerName: "Last Update",
+            field: "paymentDate",
+            headerName: "Payment Date",
             width: 200,
-            valueGetter: (params) => moment(params.row.lastUpdatedAt).format("DD MMMM YYYY")
+            valueGetter: (params) => moment(params.row.paymentDate).format("DD MMMM YYYY")
           }
         ]}
         tableMenu={[
@@ -170,7 +179,7 @@ const PageAdminStudentLearningTokenTable = ({
             getOptionLabel: (option) =>
               option.user.userDetail.firstName + " " + option.user.userDetail.lastName ?? "",
             md: 6,
-            lg: 6,
+            lg: 4,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.student.studentId === val.studentId;
@@ -200,7 +209,7 @@ const PageAdminStudentLearningTokenTable = ({
             field: "instrument-grade",
             columnLabel: "Course",
             md: 6,
-            lg: 4,
+            lg: 3,
             filterHandler: (data, value) =>
               data.studentEnrollment.class.course.grade.name
                 .toLowerCase()
@@ -219,8 +228,17 @@ const PageAdminStudentLearningTokenTable = ({
             columnLabel: "Course Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             md: 4,
-            lg: 4,
+            lg: 3,
             filterHandler: (data, value) => advancedNumberFilter(data.courseFeeValue, value.trim())
+          },
+          {
+            type: "text-input",
+            field: "valuePenalty",
+            columnLabel: "Penalty Fee",
+            helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            md: 4,
+            lg: 3,
+            filterHandler: (data, value) => advancedNumberFilter(data.valuePenalty, value.trim())
           },
           {
             type: "text-input",
@@ -228,7 +246,7 @@ const PageAdminStudentLearningTokenTable = ({
             columnLabel: "Transport Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             md: 4,
-            lg: 4,
+            lg: 3,
             filterHandler: (data, value) =>
               advancedNumberFilter(data.transportFeeValue, value.trim())
           }
@@ -238,4 +256,4 @@ const PageAdminStudentLearningTokenTable = ({
   );
 };
 
-export default PageAdminStudentLearningTokenTable;
+export default PageAdminEnrollmentPaymentTable;

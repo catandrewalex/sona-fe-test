@@ -11,6 +11,7 @@ import instrumentModule from "./instrument";
 import classModule from "./class";
 import teacherSpecialFeeModule from "./teacher-special-fee";
 import studentLearningTokenModule from "./student-learning-token";
+import enrollmentPaymenModule from "./enrollment-payment";
 
 export default {
   ...authModule,
@@ -22,7 +23,8 @@ export default {
   ...instrumentModule,
   ...classModule,
   ...teacherSpecialFeeModule,
-  ...studentLearningTokenModule
+  ...studentLearningTokenModule,
+  ...enrollmentPaymenModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

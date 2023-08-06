@@ -105,6 +105,14 @@ const data: Array<SidebarSection> = [
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
+      },
+      {
+        icon: People,
+        text: "Enrollment Payment",
+        url: "/enrollment-payment",
+        userHasAccess: (userType?: UserType): boolean => {
+          return userType === UserType.ADMIN;
+        }
       }
     ]
   }

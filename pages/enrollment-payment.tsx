@@ -3,18 +3,18 @@ import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
-import { StudentLearningToken, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
-import PageAdminStudentLearningTokenTable from "@sonamusica-fe/components/Pages/Admin/StudentLearningToken/PageAdminStudentLearningTokenTable";
-import PageAdminStudentLearningTokenForm from "@sonamusica-fe/components/Pages/Admin/StudentLearningToken/PageAdminStudentLearningTokenForm";
+import { EnrollmentPayment, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
+import PageAdminEnrollmentPaymentTable from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentTable";
+import PageAdminEnrollmentPaymentForm from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentForm";
 import { Alert, Typography } from "@mui/material";
 import Link from "next/link";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 
-const StudentLearningTokenPage = (): JSX.Element => {
-  const [data, setData] = useState<Array<StudentLearningToken>>([]);
+const EnrollmentPaymentPage = (): JSX.Element => {
+  const [data, setData] = useState<Array<EnrollmentPayment>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedData, setSelectedData] = useState<StudentLearningToken>();
+  const [selectedData, setSelectedData] = useState<EnrollmentPayment>();
   const [studentEnrollmentData, setStudentEnrollmentData] = useState<StudentEnrollment[]>([]);
   const [studentData, setStudentData] = useState<Student[]>([]);
   const [teacherData, setTeacherData] = useState<Teacher[]>([]);
@@ -27,17 +27,17 @@ const StudentLearningTokenPage = (): JSX.Element => {
   useEffect(() => {
     if (user) {
       const promises = [
-        API.GetAllStudentLearningToken(),
+        API.GetAllEnrollmentPayment(),
         API.GetAllStudentEnrollment(),
         API.GetAllStudent(),
         API.GetAllTeacher()
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
-          const response = value[0].value as SuccessResponse<StudentLearningToken>;
+          const response = value[0].value as SuccessResponse<EnrollmentPayment>;
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setData((parsedResponse as ResponseMany<StudentLearningToken>).results);
+            setData((parsedResponse as ResponseMany<EnrollmentPayment>).results);
           }
         } else {
           showSnackbar("Failed to fetch student learning token data!", "error");
@@ -77,7 +77,7 @@ const StudentLearningTokenPage = (): JSX.Element => {
   }, [user]);
 
   return (
-    <PageContainer navTitle="Student Learning Token">
+    <PageContainer navTitle="Enrollment Payment">
       <Alert sx={{ my: 2 }} severity="warning">
         <Typography>WARNING</Typography>
         <Typography variant="body2">
@@ -92,7 +92,7 @@ const StudentLearningTokenPage = (): JSX.Element => {
           instead.
         </Typography>
       </Alert>
-      <PageAdminStudentLearningTokenTable
+      <PageAdminEnrollmentPaymentTable
         data={data}
         studentData={studentData}
         teacherData={teacherData}
@@ -102,7 +102,7 @@ const StudentLearningTokenPage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminStudentLearningTokenForm
+      {/* <PageAdminEnrollmentPaymentForm
         selectedData={selectedData}
         studentEnrollmentData={studentEnrollmentData}
         data={data}
@@ -112,9 +112,9 @@ const StudentLearningTokenPage = (): JSX.Element => {
           setOpen(false);
           setSelectedData(undefined);
         }}
-      />
+      /> */}
     </PageContainer>
   );
 };
 
-export default StudentLearningTokenPage;
+export default EnrollmentPaymentPage;

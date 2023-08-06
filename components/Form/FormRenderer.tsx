@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TextFieldProps } from "@mui/material";
+import { DatePickerProps } from "@mui/x-date-pickers";
 import Form from "@sonamusica-fe/components/Form";
+import DatePicker from "@sonamusica-fe/components/Form/DatePicker";
 import FormField, { FormFieldTypes } from "@sonamusica-fe/components/Form/FormField";
 import Select, { SelectProps } from "@sonamusica-fe/components/Form/Select";
 import SubmitButton, { SubmitButtonProps } from "@sonamusica-fe/components/Form/SubmitButton";
@@ -13,9 +15,10 @@ import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { capitalizeFirstLetter, titleCase } from "@sonamusica-fe/utils/StringUtil";
 import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 import { FailedResponse } from "api";
+import { Moment } from "moment";
 import React, { useRef, useState } from "react";
 
-type FormFieldType = "text" | "select" | "switch" | "custom";
+type FormFieldType = "text" | "select" | "switch" | "custom" | "date";
 
 interface BaseFormField<T> {
   type: FormFieldType;
@@ -49,17 +52,24 @@ export type FormFieldCustomProps<T> = {
   valueRef: React.MutableRefObject<T>;
   errorRef: React.MutableRefObject<Record<keyof T, string>>;
 };
+
 interface FormFieldCustom<T> extends BaseFormField<T> {
   type: "custom";
   props?: Record<any, any>;
   Component: React.FC<any>;
 }
 
+interface FormFieldDate<T> extends BaseFormField<T> {
+  type: "date";
+  dateProps?: Omit<DatePickerProps<Moment>, "label">;
+}
+
 export type FormField<T> =
   | FormFieldText<T>
   | FormFieldSelect<T>
   | FormFieldSwitch<T>
-  | FormFieldCustom<T>;
+  | FormFieldCustom<T>
+  | FormFieldDate<T>;
 
 export interface FormConfig<T> {
   fields: Array<FormField<T>>;
@@ -188,7 +198,6 @@ const useFormRenderer = <T extends unknown>(
                     errorRef={errorRef}
                     label={field.label}
                     disabled={loading}
-                    initialValue={valueRef.current[field.name]}
                     testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
                     {...field.inputProps}
                     onChange={(e) => {
@@ -234,6 +243,24 @@ const useFormRenderer = <T extends unknown>(
                     onChange={(e, checked) => {
                       hasUnsavedChangesRef.current = true;
                       if (field.inputProps?.onChange) field.inputProps.onChange(e, checked);
+                    }}
+                  />
+                </FormField>
+              );
+            case "date":
+              return (
+                <FormField key={field.name as string} {...field.formFieldProps}>
+                  <DatePicker
+                    valueRef={valueRef}
+                    errorRef={errorRef}
+                    label={field.label}
+                    field={field.name}
+                    validations={field.validations}
+                    testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
+                    {...field.dateProps}
+                    onChange={(value, context) => {
+                      hasUnsavedChangesRef.current = true;
+                      if (field.dateProps?.onChange) field.dateProps.onChange(value, context);
                     }}
                   />
                 </FormField>

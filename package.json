@@ -18,6 +18,7 @@
     "@mui/styles": "5.2.1",
     "@mui/system": "^5.4.1",
     "@mui/x-data-grid": "6.4.0",
+    "@mui/x-date-pickers": "^6.11.0",
     "apexcharts": "3.33.2",
     "autosuggest-highlight": "3.2.0",
     "axios": "0.24.0",
