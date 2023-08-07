@@ -195,7 +195,7 @@ const PageAdminEnrollmentPaymentTable = ({
             getOptionLabel: (option) =>
               option.user.userDetail.firstName + " " + option.user.userDetail.lastName ?? "",
             md: 6,
-            lg: 6,
+            lg: 4,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.student.studentId === val.studentId;
@@ -209,7 +209,7 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "instrument-grade",
             columnLabel: "Course",
             md: 6,
-            lg: 3,
+            lg: 4,
             filterHandler: (data, value) =>
               data.studentEnrollment.class.course.grade.name
                 .toLowerCase()
@@ -228,7 +228,7 @@ const PageAdminEnrollmentPaymentTable = ({
             columnLabel: "Course Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             md: 4,
-            lg: 3,
+            lg: 4,
             filterHandler: (data, value) => advancedNumberFilter(data.courseFeeValue, value.trim())
           },
           {
@@ -237,7 +237,7 @@ const PageAdminEnrollmentPaymentTable = ({
             columnLabel: "Penalty Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             md: 4,
-            lg: 3,
+            lg: 4,
             filterHandler: (data, value) => advancedNumberFilter(data.valuePenalty, value.trim())
           },
           {
@@ -246,7 +246,7 @@ const PageAdminEnrollmentPaymentTable = ({
             columnLabel: "Transport Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             md: 4,
-            lg: 3,
+            lg: 4,
             filterHandler: (data, value) =>
               advancedNumberFilter(data.transportFeeValue, value.trim())
           }

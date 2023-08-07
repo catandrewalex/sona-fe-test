@@ -2,13 +2,18 @@
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import React, { useCallback, useEffect, useState } from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
-import { InputAdornment } from "@mui/material";
-import { ValidationConfig, useCheckRequired } from "@sonamusica-fe/utils/ValidationUtil";
+import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 import {
   DatePicker as MuiDatePicker,
   DatePickerProps as MuiDatePickerProps
 } from "@mui/x-date-pickers/DatePicker";
 import moment, { Moment } from "moment";
+
+const errorMapping: Record<string, string> = {
+  disableFuture: "Date can not point to a future date",
+  minDate: "Please select a date after the year of 1900",
+  invalidDate: "Date is invalid"
+};
 
 export type DatePickerProps<T> = {
   testIdContext?: string;
@@ -19,13 +24,6 @@ export type DatePickerProps<T> = {
   errorRef: React.MutableRefObject<Record<keyof T, string>>;
 } & Exclude<MuiDatePickerProps<Moment>, "value">;
 
-/**
- * Input component for text.
- * @since 1.0.0
- * @version 1.0.0
- * @author Joshua Lauwrich Nandy
- * @props DatePickerProps
- */
 const DatePicker = <T extends unknown>({
   testIdContext,
   validations,
@@ -38,30 +36,6 @@ const DatePicker = <T extends unknown>({
 }: DatePickerProps<T>): JSX.Element => {
   const [internalValue, setInternalValue] = useState<Moment | null>(null);
   const [internalErrorMsg, setInternalErrorMsg] = useState<string>("");
-
-  const requiredCheck = useCheckRequired(label);
-
-  const validationHandler = useCallback(
-    (value: string) => {
-      if (validations) {
-        for (const validation of validations) {
-          let errorMsg = "";
-          switch (validation.name) {
-            case "required":
-              errorMsg = requiredCheck(value);
-              break;
-          }
-          if (errorMsg) {
-            setInternalErrorMsg(errorMsg);
-            return errorMsg;
-          }
-        }
-      }
-      setInternalErrorMsg("");
-      return "";
-    },
-    [validations]
-  );
 
   useEffect(() => {
     setInternalValue(moment(valueRef.current[field] as string) || moment());
@@ -81,12 +55,22 @@ const DatePicker = <T extends unknown>({
         onChange={(value, context) => {
           const realValue = value ? moment(value).format() : "";
           setInternalValue(value);
-          errorRef.current[field] = validationHandler(realValue);
           if (onChange) onChange(value, context);
           valueRef.current[field] = realValue as T[keyof T];
         }}
+        slotProps={{ textField: { fullWidth: true } }}
         disableFuture
         {...props}
+        onError={(error) => {
+          if (error) {
+            const errorStr = errorMapping[error.toString()];
+            setInternalErrorMsg(errorStr);
+            errorRef.current[field] = errorStr;
+          } else {
+            setInternalErrorMsg("");
+            errorRef.current[field] = "";
+          }
+        }}
       />
       {internalErrorMsg !== "" && (
         <FormFeedback message={internalErrorMsg} error testIdContext={testIdContext} />

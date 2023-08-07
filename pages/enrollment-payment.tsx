@@ -102,7 +102,7 @@ const EnrollmentPaymentPage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      {/* <PageAdminEnrollmentPaymentForm
+      <PageAdminEnrollmentPaymentForm
         selectedData={selectedData}
         studentEnrollmentData={studentEnrollmentData}
         data={data}
@@ -112,7 +112,7 @@ const EnrollmentPaymentPage = (): JSX.Element => {
           setOpen(false);
           setSelectedData(undefined);
         }}
-      /> */}
+      />
     </PageContainer>
   );
 };
