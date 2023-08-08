@@ -32,6 +32,7 @@ const DatePicker = <T extends unknown>({
   valueRef,
   errorRef,
   onChange,
+  defaultValue,
   ...props
 }: DatePickerProps<T>): JSX.Element => {
   const [internalValue, setInternalValue] = useState<Moment | null>(null);
@@ -46,6 +47,15 @@ const DatePicker = <T extends unknown>({
       setInternalErrorMsg(errorRef.current[field]);
     }
   }, [errorRef.current[field]]);
+
+  useEffect(() => {
+    setInternalValue(defaultValue || null);
+    if (defaultValue) {
+      valueRef.current[field] = defaultValue.format() as T[keyof T];
+    } else {
+      valueRef.current[field] = "" as T[keyof T];
+    }
+  }, [defaultValue]);
 
   return (
     <>

@@ -4,15 +4,21 @@ import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { useRouter } from "next/router";
-import { Button } from "@mui/material";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
-// import { EnrollmentPayment } from "@sonamusica-fe/types";
-// import PageAdminEnrollmentPaymentTable from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentTable";
-// import PageAdminEnrollmentPaymentForm from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentForm";
+import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
+import moment, { Moment } from "moment";
+import SearchEnrollmentPayment from "@sonamusica-fe/components/Pages/Payment/SearchEnrollmentPayment";
+
+enum Page {
+  SEARCH,
+  CARD_LIST
+}
 
 const EnrollmentPaymentPage = (): JSX.Element => {
   const router = useRouter();
-  // const [data, setData] = useState<Array<EnrollmentPayment>>([]);
+  const [page, setPage] = useState<Page>(Page.SEARCH);
+  const [data, setData] = useState<Array<EnrollmentPayment>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   // const [selectedData, setSelectedData] = useState<EnrollmentPayment>();
@@ -21,50 +27,21 @@ const EnrollmentPaymentPage = (): JSX.Element => {
   const user = useUser((state) => state.user);
   const apiTransformer = useApiTransformer();
 
-  //   useEffect(() => {
-  //     if (user) {
-  //       API.GetAllEnrollmentPayment()
-  //         .then((response) => {
-  //           const parsedResponse = apiTransformer(response, false);
-  //           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-  //             setData((parsedResponse as ResponseMany<EnrollmentPayment>).results);
-  //           }
-  //         })
-  //         .finally(() => {
-  //           finishLoading();
-  //           setLoading(false);
-  //         });
-  //     }
-  //   }, [user]);
+  const movePage = () => setPage(Page.CARD_LIST);
 
-  useEffect(finishLoading, []);
+  useEffect(() => finishLoading(), [user]);
 
-  return (
-    <PageContainer navTitle="Enrollment Payment">
-      <Button startIcon={<Add />} variant="outlined" onClick={() => router.push("/payment/new")}>
-        New Payment
-      </Button>
-      <div></div>
-      {/* <PageAdminEnrollmentPaymentTable
-        data={data}
-        openModal={() => setOpen(true)}
-        loading={loading}
-        setLoading={setLoading}
-        setData={setData}
-        setSelectedData={setSelectedData}
-      />
-      <PageAdminEnrollmentPaymentForm
-        selectedData={selectedData}
-        data={data}
-        open={open}
-        setData={setData}
-        onClose={() => {
-          setOpen(false);
-          setSelectedData(undefined);
-        }}
-      /> */}
-    </PageContainer>
-  );
+  console.log("page", page);
+  const content =
+    page === Page.SEARCH ? (
+      <SearchEnrollmentPayment movePage={movePage} setData={setData} />
+    ) : (
+      <Box>
+        <Typography>asdf</Typography>
+      </Box>
+    );
+
+  return <PageContainer navTitle="Enrollment Payment">{content}</PageContainer>;
 };
 
 export default EnrollmentPaymentPage;
