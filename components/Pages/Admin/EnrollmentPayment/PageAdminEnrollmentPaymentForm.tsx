@@ -5,7 +5,7 @@ import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
-import { EnrollmentPayment, StudentEnrollment, Course } from "@sonamusica-fe/types";
+import { EnrollmentPayment, StudentEnrollment } from "@sonamusica-fe/types";
 import {
   EnrollmentPaymentInsertFormData,
   EnrollmentPaymentUpdateFormData
@@ -96,33 +96,30 @@ const PageAdminEnrollmentPaymentForm = ({
         type: "number"
       },
       validations: []
+    },
+    {
+      type: "date",
+      name: "paymentDate",
+      label: "Payment Date",
+      formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
+      validations: [{ name: "required" }]
     }
   ];
 
   const defaultUpdateFields: FormFieldType<EnrollmentPaymentUpdateFormData>[] =
     defaultInsertFields.slice(1) as FormFieldType<EnrollmentPaymentUpdateFormData>[];
 
-  defaultUpdateFields.push({
-    type: "date",
-    name: "paymentDate",
-    label: "Payment Date",
-    formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
-    validations: [{ name: "required" }]
-  });
-
-  const defaultInsertFieldValue: EnrollmentPaymentInsertFormData = {
-    balanceTopUp: 0,
-    courseFeeValue: 0,
-    transportFeeValue: 0,
-    valuePenalty: 0,
-    studentEnrollment: null
-  };
   const defaultUpdateFieldValue: EnrollmentPaymentUpdateFormData = {
     balanceTopUp: 0,
     courseFeeValue: 0,
     transportFeeValue: 0,
     valuePenalty: 0,
     paymentDate: moment().format()
+  };
+
+  const defaultInsertFieldValue: EnrollmentPaymentInsertFormData = {
+    ...defaultUpdateFieldValue,
+    studentEnrollment: null
   };
 
   const { formProperties, formRenderer } = selectedData
@@ -189,7 +186,14 @@ const PageAdminEnrollmentPaymentForm = ({
           fields: defaultInsertFields,
           errorResponseMapping,
           submitHandler: async (
-            { courseFeeValue, balanceTopUp, studentEnrollment, transportFeeValue, valuePenalty },
+            {
+              courseFeeValue,
+              balanceTopUp,
+              studentEnrollment,
+              paymentDate,
+              transportFeeValue,
+              valuePenalty
+            },
             error
           ) => {
             if (
@@ -206,7 +210,7 @@ const PageAdminEnrollmentPaymentForm = ({
                 transportFeeValue,
                 balanceTopUp,
                 valuePenalty,
-                paymentDate: moment().format(),
+                paymentDate,
                 studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
               }
             ]);

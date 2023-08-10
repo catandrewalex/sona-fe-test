@@ -101,8 +101,9 @@ const PageAdminEnrollmentPaymentTable = ({
                   (params.row.studentEnrollment.student?.user?.userDetail?.lastName || "")
                 : "-"
           },
+
           {
-            field: "balaceTopUp",
+            field: "balanceTopUp",
             headerName: "Balance",
             width: 75,
             align: "center",
@@ -146,6 +147,17 @@ const PageAdminEnrollmentPaymentTable = ({
               params.row.studentEnrollment.class.course.grade.name
           },
           {
+            field: "teachers",
+            headerName: "Teacher",
+            flex: 2,
+            valueGetter: (params) =>
+              params.row.studentEnrollment.class.teacher?.user?.userDetail?.firstName
+                ? (params.row.studentEnrollment.class.teacher?.user?.userDetail?.firstName || "") +
+                  " " +
+                  (params.row.studentEnrollment.class.teacher?.user?.userDetail?.lastName || "")
+                : "-"
+          },
+          {
             field: "paymentDate",
             headerName: "Payment Date",
             width: 200,
@@ -153,25 +165,6 @@ const PageAdminEnrollmentPaymentTable = ({
           }
         ]}
         tableMenu={[
-          // {
-          //   type: "text-input",
-          //   field: "teacher",
-          //   md: 6,
-          //   lg: 4,
-          //   filterHandler: (data, value) =>
-          //     data.teacher &&
-          //     (data.teacher.user.userDetail.firstName
-          //       .toLowerCase()
-          //       .includes(value.toLowerCase()) ||
-          //       data.teacher.user.userDetail.lastName
-          //         ?.toLowerCase()
-          //         ?.includes(value.toLowerCase()) ||
-          //       `${data.teacher.user.userDetail.firstName} ${
-          //         data.teacher.user.userDetail.lastName || ""
-          //       }`
-          //         .toLowerCase()
-          //         .includes(value.toLowerCase()))
-          // },
           {
             type: "select",
             data: studentData,
@@ -179,23 +172,7 @@ const PageAdminEnrollmentPaymentTable = ({
             getOptionLabel: (option) =>
               option.user.userDetail.firstName + " " + option.user.userDetail.lastName ?? "",
             md: 6,
-            lg: 4,
-            filterHandler: (data, value) => {
-              for (const val of value) {
-                const result = data.studentEnrollment.student.studentId === val.studentId;
-                if (result) return true;
-              }
-              return false;
-            }
-          },
-          {
-            type: "select",
-            data: studentData,
-            field: "students",
-            getOptionLabel: (option) =>
-              option.user.userDetail.firstName + " " + option.user.userDetail.lastName ?? "",
-            md: 6,
-            lg: 4,
+            lg: 6,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.student.studentId === val.studentId;
@@ -206,10 +183,29 @@ const PageAdminEnrollmentPaymentTable = ({
           },
           {
             type: "text-input",
+            field: "teachers",
+            md: 6,
+            lg: 3,
+            filterHandler: (data, value) =>
+              data.studentEnrollment.class.teacher &&
+              (data.studentEnrollment.class.teacher.user.userDetail.firstName
+                .toLowerCase()
+                .includes(value.toLowerCase()) ||
+                data.studentEnrollment.class.teacher.user.userDetail.lastName
+                  ?.toLowerCase()
+                  ?.includes(value.toLowerCase()) ||
+                `${data.studentEnrollment.class.teacher.user.userDetail.firstName} ${
+                  data.studentEnrollment.class.teacher.user.userDetail.lastName || ""
+                }`
+                  .toLowerCase()
+                  .includes(value.toLowerCase()))
+          },
+          {
+            type: "text-input",
             field: "instrument-grade",
             columnLabel: "Course",
             md: 6,
-            lg: 4,
+            lg: 3,
             filterHandler: (data, value) =>
               data.studentEnrollment.class.course.grade.name
                 .toLowerCase()

@@ -2,7 +2,7 @@ import { EnrollmentPayment, StudentEnrollment } from "@sonamusica-fe/types";
 
 export type EnrollmentPaymentInsertFormData = Omit<
   EnrollmentPayment,
-  "enrollmentPaymentId" | "studentEnrollment" | "paymentDate"
+  "enrollmentPaymentId" | "studentEnrollment"
 > & {
   studentEnrollment: StudentEnrollment | null;
 };
@@ -13,8 +13,8 @@ export type EnrollmentPaymentUpdateFormData = Omit<
 >;
 
 export type EnrollmentPaymentInsertFormRequest = Omit<
-  EnrollmentPayment,
-  "studentEnrollment" | "enrollmentPaymentId"
+  EnrollmentPaymentInsertFormData,
+  "studentEnrollment"
 > & {
   studentEnrollmentId: number;
 };

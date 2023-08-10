@@ -80,10 +80,19 @@ const EnrollmentPaymentPage = (): JSX.Element => {
     <PageContainer navTitle="Enrollment Payment">
       <Alert sx={{ my: 2 }} severity="warning">
         <Typography>WARNING</Typography>
+        <Typography component="span" fontWeight="bold" variant="body2">
+          Creating, updating, or deleting
+        </Typography>{" "}
+        from this page may cause{" "}
+        <Typography component="span" fontWeight="bold" variant="body2">
+          inconsistencies
+        </Typography>{" "}
+        to your system. Please avoid doing these actions{" "}
+        <Typography component="span" fontWeight="bold" variant="body2">
+          unless you really know what you are doing.
+        </Typography>{" "}
         <Typography variant="body2">
-          Creating, updating, or deleting from this page may cause inconsistencies to your system.
-          Please avoid doing these actions unless you really know what you are doing. If you wish to
-          manage this entity, you can visit{" "}
+          If you wish to manage this entity, you can visit{" "}
           <Link href="/test">
             <Typography variant="body2" sx={{ cursor: "pointer" }} component="span" color="blue">
               this page

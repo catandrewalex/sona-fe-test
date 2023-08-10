@@ -27,7 +27,9 @@ const SearchEnrollmentPayment = ({ movePage, setData }: SearchEnrollmentPaymentP
         align: "center"
       },
       submitButtonProps: {
+        md: 10,
         lg: 8,
+        xl: 8,
         submitText: "Search"
       },
       fields: [
