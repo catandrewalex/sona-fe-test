@@ -6,9 +6,8 @@ import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { StudentLearningToken, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
 import PageAdminStudentLearningTokenTable from "@sonamusica-fe/components/Pages/Admin/StudentLearningToken/PageAdminStudentLearningTokenTable";
 import PageAdminStudentLearningTokenForm from "@sonamusica-fe/components/Pages/Admin/StudentLearningToken/PageAdminStudentLearningTokenForm";
-import { Alert, Typography } from "@mui/material";
-import Link from "next/link";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
+import WarningCRUD from "@sonamusica-fe/components/WarningCRUD";
 
 const StudentLearningTokenPage = (): JSX.Element => {
   const [data, setData] = useState<Array<StudentLearningToken>>([]);
@@ -78,20 +77,7 @@ const StudentLearningTokenPage = (): JSX.Element => {
 
   return (
     <PageContainer navTitle="Student Learning Token">
-      <Alert sx={{ my: 2 }} severity="warning">
-        <Typography>WARNING</Typography>
-        <Typography variant="body2">
-          Creating, updating, or deleting from this page may cause inconsistencies to your system.
-          Please avoid doing these actions unless you really know what you are doing. If you wish to
-          manage this entity, you can visit{" "}
-          <Link href="/test">
-            <Typography variant="body2" sx={{ cursor: "pointer" }} component="span" color="blue">
-              this page
-            </Typography>
-          </Link>{" "}
-          instead.
-        </Typography>
-      </Alert>
+      <WarningCRUD />
       <PageAdminStudentLearningTokenTable
         data={data}
         studentData={studentData}

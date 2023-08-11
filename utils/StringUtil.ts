@@ -1,3 +1,5 @@
+import { Course, Student, Teacher, User } from "@sonamusica-fe/types";
+
 const currencyFormatter = new Intl.NumberFormat("id", {
   style: "currency",
   currency: "IDR"
@@ -64,6 +66,48 @@ export const capitalizeFirstLetter = (text: string): string => {
   return text.charAt(0).toUpperCase() + text.substring(1);
 };
 
-export const convertNumberToCurrencyString = (value: number) => {
+export const convertNumberToCurrencyString = (value: number): string => {
   return currencyFormatter.format(value);
+};
+
+export const getFullNameFromUser = (user?: User): string => {
+  return user
+    ? `${user.userDetail.firstName}${
+        user.userDetail.lastName ? " " + user.userDetail.lastName : ""
+      }`
+    : "";
+};
+
+export const getFullNameFromTeacher = (teacher?: Teacher): string => {
+  return teacher ? getFullNameFromUser(teacher.user) : "";
+};
+
+export const getFullNameFromStudent = (student?: Student): string => {
+  return student ? getFullNameFromUser(student.user) : "";
+};
+
+export const getCourseName = (course?: Course): string => {
+  return course ? `${course.instrument.name} - ${course.grade.name}` : "";
+};
+
+export const searchFullNameByValue = (value: string, user?: User): boolean => {
+  if (!user) return false;
+
+  if (user.userDetail.firstName.toLowerCase().includes(value.toLowerCase())) return true;
+
+  if (user.userDetail.lastName) {
+    if (user.userDetail.lastName.toLowerCase().includes(value.toLowerCase())) return true;
+  }
+
+  return getFullNameFromUser(user).toLowerCase().includes(value.toLowerCase());
+};
+
+export const searchCourseNameByValue = (value: string, course?: Course): boolean => {
+  if (!course) return false;
+
+  if (course.instrument.name.toLowerCase().includes(value.toLowerCase())) return true;
+
+  if (course.grade.name.toLowerCase().includes(value.toLowerCase())) return true;
+
+  return getCourseName(course).toLowerCase().includes(value.toLowerCase());
 };

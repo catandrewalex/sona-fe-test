@@ -8,6 +8,7 @@ import Modal from "@sonamusica-fe/components/Modal";
 import StudentSelectorInput from "@sonamusica-fe/components/Pages/Admin/Class/StudentSelectorInput";
 import { Class, Course, Student, Teacher } from "@sonamusica-fe/types";
 import { ClassInsertFormData, ClassUpdateFormData } from "@sonamusica-fe/types/form/class";
+import { getCourseName, getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
@@ -48,8 +49,7 @@ const PageAdminClassForm = ({
       inputProps: { required: true },
       selectProps: {
         options: teacherData,
-        getOptionLabel: (option) =>
-          `${option.user.userDetail?.firstName} ${option.user.userDetail?.lastName || ""}`
+        getOptionLabel: (option) => getFullNameFromTeacher(option)
       },
       validations: [{ name: "required" }]
     },
@@ -61,7 +61,7 @@ const PageAdminClassForm = ({
       inputProps: { required: true },
       selectProps: {
         options: courseData,
-        getOptionLabel: (option) => `${option.instrument.name} ${option.grade.name}`
+        getOptionLabel: (option) => getCourseName(option)
       },
       validations: [{ name: "required" }]
     },

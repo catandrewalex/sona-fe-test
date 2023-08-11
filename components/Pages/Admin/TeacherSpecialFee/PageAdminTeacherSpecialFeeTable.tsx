@@ -6,7 +6,12 @@ import { TeacherSpecialFee, Teacher, Course } from "@sonamusica-fe/types";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";
-import { convertNumberToCurrencyString } from "@sonamusica-fe/utils/StringUtil";
+import {
+  convertNumberToCurrencyString,
+  getCourseName,
+  getFullNameFromTeacher,
+  searchCourseNameByValue
+} from "@sonamusica-fe/utils/StringUtil";
 
 type PageAdminTeacherSpecialFeeTableProps = {
   data: TeacherSpecialFee[];
@@ -51,11 +56,9 @@ const PageAdminTeacherSpecialFeeTable = ({
               showDialog(
                 {
                   title: "Delete Teacher Special Fee",
-                  content: `Are you sure want to delete ${row.teacher.user.userDetail.firstName}${
-                    row.teacher.user.userDetail.lastName
-                      ? " " + row.teacher.user.userDetail.lastName
-                      : ""
-                  } special fee on ${row.course.grade.name} - ${row.course.instrument.name}?`
+                  content: `Are you sure want to delete ${getFullNameFromTeacher(
+                    row.teacher
+                  )} special fee on ${getCourseName(row.course)}?`
                 },
                 () => {
                   setLoading(true);
@@ -81,19 +84,13 @@ const PageAdminTeacherSpecialFeeTable = ({
             field: "teacher",
             headerName: "Teacher",
             flex: 2,
-            valueGetter: (params) =>
-              params.row.teacher?.user?.userDetail?.firstName
-                ? (params.row.teacher?.user?.userDetail?.firstName || "") +
-                  " " +
-                  (params.row.teacher?.user?.userDetail?.lastName || "")
-                : "-"
+            valueGetter: (params) => getFullNameFromTeacher(params.row.teacher)
           },
           {
             field: "instrument-grade",
             headerName: "Course",
             flex: 2,
-            valueGetter: (params) =>
-              params.row.course.instrument.name + " - " + params.row.course.grade.name
+            valueGetter: (params) => getCourseName(params.row.course)
           },
           {
             field: "fee",
@@ -110,8 +107,7 @@ const PageAdminTeacherSpecialFeeTable = ({
             type: "select",
             data: teacherData,
             field: "teacher",
-            getOptionLabel: (option) =>
-              option.user.userDetail.firstName + " " + (option.user.userDetail.lastName || ""),
+            getOptionLabel: (option) => getFullNameFromTeacher(option),
             md: 6,
             lg: 6,
             filterHandler: (data, value) => {
@@ -128,12 +124,7 @@ const PageAdminTeacherSpecialFeeTable = ({
             columnLabel: "Course",
             md: 6,
             lg: 6,
-            filterHandler: (data, value) =>
-              data.course.grade.name.toLowerCase().includes(value.toLowerCase()) ||
-              data.course.instrument.name.toLowerCase().includes(value.toLowerCase()) ||
-              `${data.course.instrument.name} - ${data.course.grade.name}`
-                .toLowerCase()
-                .includes(value.toLowerCase())
+            filterHandler: (data, value) => searchCourseNameByValue(value, data.course)
           }
         ]}
       />

@@ -8,7 +8,11 @@ import React from "react";
 import { FailedResponse } from "api";
 import {
   advancedNumberFilter,
-  convertNumberToCurrencyString
+  convertNumberToCurrencyString,
+  getCourseName,
+  getFullNameFromStudent,
+  getFullNameFromTeacher,
+  searchCourseNameByValue
 } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
 
@@ -60,15 +64,9 @@ const PageAdminStudentLearningTokenTable = ({
               showDialog(
                 {
                   title: "Delete Student Learning Token",
-                  content: `Are you sure want to delete ${
-                    row.studentEnrollment.student.user.userDetail.firstName
-                  }${
-                    row.studentEnrollment.student.user.userDetail.lastName
-                      ? " " + row.studentEnrollment.student.user.userDetail.lastName
-                      : ""
-                  } learning token on ${row.studentEnrollment.class.course.grade.name} - ${
-                    row.studentEnrollment.class.course.instrument.name
-                  }?`
+                  content: `Are you sure want to delete ${getFullNameFromStudent(
+                    row.studentEnrollment.student
+                  )} learning token on ${getCourseName(row.studentEnrollment.class.course)}?`
                 },
                 () => {
                   setLoading(true);
@@ -94,12 +92,7 @@ const PageAdminStudentLearningTokenTable = ({
             field: "student",
             headerName: "Student",
             flex: 2,
-            valueGetter: (params) =>
-              params.row.studentEnrollment.student?.user?.userDetail?.firstName
-                ? (params.row.studentEnrollment.student?.user?.userDetail?.firstName || "") +
-                  " " +
-                  (params.row.studentEnrollment.student?.user?.userDetail?.lastName || "")
-                : "-"
+            valueGetter: (params) => getFullNameFromStudent(params.row.studentEnrollment.student)
           },
           {
             field: "quota",
@@ -131,10 +124,14 @@ const PageAdminStudentLearningTokenTable = ({
             field: "instrument-grade",
             headerName: "Course",
             flex: 3,
+            valueGetter: (params) => getCourseName(params.row.studentEnrollment.class.course)
+          },
+          {
+            field: "teachers",
+            headerName: "Teacher",
+            flex: 3,
             valueGetter: (params) =>
-              params.row.studentEnrollment.class.course.instrument.name +
-              " - " +
-              params.row.studentEnrollment.class.course.grade.name
+              getFullNameFromTeacher(params.row.studentEnrollment.class.teacher)
           },
           {
             field: "lastUpdatedAt",
@@ -144,31 +141,11 @@ const PageAdminStudentLearningTokenTable = ({
           }
         ]}
         tableMenu={[
-          // {
-          //   type: "text-input",
-          //   field: "teacher",
-          //   md: 6,
-          //   lg: 4,
-          //   filterHandler: (data, value) =>
-          //     data.teacher &&
-          //     (data.teacher.user.userDetail.firstName
-          //       .toLowerCase()
-          //       .includes(value.toLowerCase()) ||
-          //       data.teacher.user.userDetail.lastName
-          //         ?.toLowerCase()
-          //         ?.includes(value.toLowerCase()) ||
-          //       `${data.teacher.user.userDetail.firstName} ${
-          //         data.teacher.user.userDetail.lastName || ""
-          //       }`
-          //         .toLowerCase()
-          //         .includes(value.toLowerCase()))
-          // },
           {
             type: "select",
             data: studentData,
             field: "students",
-            getOptionLabel: (option) =>
-              option.user.userDetail.firstName + " " + option.user.userDetail.lastName ?? "",
+            getOptionLabel: (option) => getFullNameFromStudent(option),
             md: 6,
             lg: 6,
             filterHandler: (data, value) => {
@@ -181,15 +158,14 @@ const PageAdminStudentLearningTokenTable = ({
           },
           {
             type: "select",
-            data: studentData,
-            field: "students",
-            getOptionLabel: (option) =>
-              option.user.userDetail.firstName + " " + option.user.userDetail.lastName ?? "",
+            data: teacherData,
+            field: "teachers",
+            getOptionLabel: (option) => getFullNameFromTeacher(option),
             md: 6,
             lg: 6,
             filterHandler: (data, value) => {
               for (const val of value) {
-                const result = data.studentEnrollment.student.studentId === val.studentId;
+                const result = data.studentEnrollment.class.teacher.teacherId === val.teacherId;
                 if (result) return true;
               }
               return false;
@@ -202,17 +178,8 @@ const PageAdminStudentLearningTokenTable = ({
             md: 6,
             lg: 4,
             filterHandler: (data, value) =>
-              data.studentEnrollment.class.course.grade.name
-                .toLowerCase()
-                .includes(value.toLowerCase()) ||
-              data.studentEnrollment.class.course.instrument.name
-                .toLowerCase()
-                .includes(value.toLowerCase()) ||
-              `${data.studentEnrollment.class.course.instrument.name} - ${data.studentEnrollment.class.course.grade.name}`
-                .toLowerCase()
-                .includes(value.toLowerCase())
+              searchCourseNameByValue(value, data.studentEnrollment.class.course)
           },
-
           {
             type: "text-input",
             field: "courseFeeValue",

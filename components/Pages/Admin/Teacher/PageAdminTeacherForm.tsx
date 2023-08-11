@@ -7,6 +7,7 @@ import useFormRenderer, {
 import Modal from "@sonamusica-fe/components/Modal";
 import { Teacher, UserType, User } from "@sonamusica-fe/types";
 import { TeacherInsertFormData } from "@sonamusica-fe/types/form/teacher";
+import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -70,8 +71,7 @@ const PageAdminTeacherForm = ({
       validations: [],
       selectProps: {
         options: users,
-        getOptionLabel: (option) =>
-          `${option.userDetail?.firstName} ${option.userDetail?.lastName || ""}`,
+        getOptionLabel: (option) => getFullNameFromUser(option),
         isOptionEqualToValue: (option, value) => option?.userId === value?.userId,
         onChange: (valueRef, errorRef, _e, value) => {
           setSelectedUser(value);

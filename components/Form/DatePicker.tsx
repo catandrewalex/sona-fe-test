@@ -8,6 +8,7 @@ import {
   DatePickerProps as MuiDatePickerProps
 } from "@mui/x-date-pickers/DatePicker";
 import moment, { Moment } from "moment";
+import { merge } from "lodash";
 
 const errorMapping: Record<string, string> = {
   disableFuture: "Date can not point to a future date",
@@ -26,13 +27,13 @@ export type DatePickerProps<T> = {
 
 const DatePicker = <T extends unknown>({
   testIdContext,
-  validations,
   field,
   label,
   valueRef,
   errorRef,
   onChange,
   defaultValue,
+  slotProps,
   ...props
 }: DatePickerProps<T>): JSX.Element => {
   const [internalValue, setInternalValue] = useState<Moment | null>(null);
@@ -68,7 +69,7 @@ const DatePicker = <T extends unknown>({
           if (onChange) onChange(value, context);
           valueRef.current[field] = realValue as T[keyof T];
         }}
-        slotProps={{ textField: { fullWidth: true } }}
+        slotProps={merge({ textField: { fullWidth: true, margin: "normal" } }, slotProps)}
         disableFuture
         {...props}
         onError={(error) => {

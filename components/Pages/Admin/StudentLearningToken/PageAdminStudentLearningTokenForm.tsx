@@ -10,6 +10,7 @@ import {
   StudentLearningTokenInsertFormData,
   StudentLearningTokenUpdateFormData
 } from "@sonamusica-fe/types/form/student-learning-token";
+import { getCourseName, getFullNameFromStudent } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
@@ -41,15 +42,13 @@ const PageAdminStudentLearningTokenForm = ({
     {
       type: "select",
       name: "studentEnrollment",
-      label: "StudentEnrollment",
+      label: "Student Enrollment",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: { required: true },
       selectProps: {
         options: studentEnrollmentData,
         getOptionLabel: (option) =>
-          `${option.student.user.userDetail?.firstName} ${
-            option.student.user.userDetail?.lastName || ""
-          } | ${option.class.course.instrument.name} - ${option.class.course.grade.name}`
+          `${getFullNameFromStudent(option.student)} | ${getCourseName(option.class.course)}`
       },
       validations: [{ name: "required" }]
     },

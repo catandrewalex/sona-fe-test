@@ -18,6 +18,7 @@ import { Cancel, PasswordOutlined, Save } from "@mui/icons-material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { FailedResponse } from "api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
+import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
 
 type MenuListProps = {
   anchorEl: Element | null;
@@ -121,8 +122,7 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
               {user?.userDetail.lastName?.charAt(0)}
             </Avatar>
             <Typography mt={1} textAlign="center" variant="h6">
-              {user?.userDetail.firstName}
-              {user?.userDetail.lastName || ""}
+              {getFullNameFromUser(user)}
             </Typography>
             <Typography
               sx={{ wordWrap: "break-word" }}

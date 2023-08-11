@@ -6,9 +6,8 @@ import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { EnrollmentPayment, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
 import PageAdminEnrollmentPaymentTable from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentTable";
 import PageAdminEnrollmentPaymentForm from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentForm";
-import { Alert, Typography } from "@mui/material";
-import Link from "next/link";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
+import WarningCRUD from "@sonamusica-fe/components/WarningCRUD";
 
 const EnrollmentPaymentPage = (): JSX.Element => {
   const [data, setData] = useState<Array<EnrollmentPayment>>([]);
@@ -78,29 +77,7 @@ const EnrollmentPaymentPage = (): JSX.Element => {
 
   return (
     <PageContainer navTitle="Enrollment Payment">
-      <Alert sx={{ my: 2 }} severity="warning">
-        <Typography>WARNING</Typography>
-        <Typography component="span" fontWeight="bold" variant="body2">
-          Creating, updating, or deleting
-        </Typography>{" "}
-        from this page may cause{" "}
-        <Typography component="span" fontWeight="bold" variant="body2">
-          inconsistencies
-        </Typography>{" "}
-        to your system. Please avoid doing these actions{" "}
-        <Typography component="span" fontWeight="bold" variant="body2">
-          unless you really know what you are doing.
-        </Typography>{" "}
-        <Typography variant="body2">
-          If you wish to manage this entity, you can visit{" "}
-          <Link href="/test">
-            <Typography variant="body2" sx={{ cursor: "pointer" }} component="span" color="blue">
-              this page
-            </Typography>
-          </Link>{" "}
-          instead.
-        </Typography>
-      </Alert>
+      <WarningCRUD />
       <PageAdminEnrollmentPaymentTable
         data={data}
         studentData={studentData}

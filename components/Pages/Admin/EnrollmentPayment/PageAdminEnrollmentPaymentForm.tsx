@@ -10,6 +10,7 @@ import {
   EnrollmentPaymentInsertFormData,
   EnrollmentPaymentUpdateFormData
 } from "@sonamusica-fe/types/form/enrollment-payment";
+import { getCourseName, getFullNameFromStudent } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import moment from "moment";
 import React, { useEffect } from "react";
@@ -25,7 +26,8 @@ type PageAdminEnrollmentPaymentFormProps = {
 
 const errorResponseMapping = {
   quota: "quota",
-  studentEnrollment: "studentEnrollmentId"
+  studentEnrollment: "studentEnrollmentId",
+  balanceTopUp: "balanceTopUp"
 };
 
 const PageAdminEnrollmentPaymentForm = ({
@@ -42,15 +44,13 @@ const PageAdminEnrollmentPaymentForm = ({
     {
       type: "select",
       name: "studentEnrollment",
-      label: "StudentEnrollment",
+      label: "Student Enrollment",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: { required: true },
       selectProps: {
         options: studentEnrollmentData,
         getOptionLabel: (option) =>
-          `${option.student.user.userDetail?.firstName} ${
-            option.student.user.userDetail?.lastName || ""
-          } | ${option.class.course.instrument.name} - ${option.class.course.grade.name}`
+          `${getFullNameFromStudent(option.student)} | ${getCourseName(option.class.course)}`
       },
       validations: [{ name: "required" }]
     },
@@ -93,16 +93,18 @@ const PageAdminEnrollmentPaymentForm = ({
       label: "Balance Top Up",
       formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
       inputProps: {
-        type: "number"
+        type: "number",
+        required: true
       },
-      validations: []
+      validations: [{ name: "required" }]
     },
     {
       type: "date",
       name: "paymentDate",
       label: "Payment Date",
       formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
-      validations: [{ name: "required" }]
+      validations: [],
+      dateProps: { defaultValue: moment(), slotProps: { textField: { required: true } } }
     }
   ];
 
