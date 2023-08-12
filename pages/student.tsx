@@ -1,7 +1,7 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { Student } from "@sonamusica-fe/types";
 import PageAdminStudentTable from "@sonamusica-fe/components/Pages/Admin/Student/PageAdminStudentTable";
@@ -15,6 +15,14 @@ const StudentPage = (): JSX.Element => {
   const finishLoading = useApp((state) => state.finishLoading);
   const user = useUser((state) => state.user);
   const apiTransformer = useApiTransformer();
+
+  const openForm = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const closeForm = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -36,17 +44,12 @@ const StudentPage = (): JSX.Element => {
     <PageContainer navTitle="Student">
       <PageAdminStudentTable
         data={data}
-        openModal={() => setOpen(true)}
+        openModal={openForm}
         loading={loading}
         setLoading={setLoading}
         setData={setData}
       />
-      <PageAdminStudentForm
-        data={data}
-        open={open}
-        setData={setData}
-        onClose={() => setOpen(false)}
-      />
+      <PageAdminStudentForm data={data} open={open} setData={setData} onClose={closeForm} />
     </PageContainer>
   );
 };

@@ -1,7 +1,7 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { User } from "@sonamusica-fe/types";
 import PageAdminUserTable from "@sonamusica-fe/components/Pages/Admin/User/PageAdminUserTable";
@@ -16,6 +16,15 @@ const UserPage = (): JSX.Element => {
   const finishLoading = useApp((state) => state.finishLoading);
   const user = useUser((state) => state.user);
   const apiTransformer = useApiTransformer();
+
+  const openForm = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const closeForm = useCallback(() => {
+    setOpen(false);
+    setSelectedData(undefined);
+  }, []);
 
   useEffect(() => {
     API.GetAllUser()
@@ -37,17 +46,14 @@ const UserPage = (): JSX.Element => {
         data={data}
         setSelectedData={setSelectedData}
         loading={loading}
-        openModal={() => setOpen(true)}
+        openModal={openForm}
       />
       <PageAdminUserForm
         data={data}
         setData={setData}
         selectedData={selectedData}
         open={open}
-        onClose={() => {
-          setOpen(false);
-          setSelectedData(undefined);
-        }}
+        onClose={closeForm}
       />
     </PageContainer>
   );

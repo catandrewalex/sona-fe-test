@@ -21,7 +21,7 @@ enum Page {
 
 const EnrollmentPaymentPage = (): JSX.Element => {
   const router = useRouter();
-  const [page, setPage] = useState<Page>(Page.CARD_LIST);
+  const [page, setPage] = useState<Page>(Page.SEARCH);
   const [data, setData] = useState<Array<EnrollmentPayment>>([]);
   const [displayData, setDisplayData] = useState<Array<EnrollmentPayment>>([]);
 
@@ -53,6 +53,7 @@ const EnrollmentPaymentPage = (): JSX.Element => {
         const parsedResponse = apiTransformer(response, false);
         if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
           setData((parsedResponse as ResponseMany<EnrollmentPayment>).results);
+          setDisplayData((parsedResponse as ResponseMany<EnrollmentPayment>).results);
         }
       } else {
         showSnackbar("Failed to fetch student learning token data!", "error");
@@ -133,7 +134,12 @@ const EnrollmentPaymentPage = (): JSX.Element => {
           ]}
         />
         <Divider sx={{ my: 1 }} />
-        <SearchResult data={displayData} />
+        <SearchResult
+          data={[...displayData, ...displayData, ...displayData, ...displayData, ...displayData]}
+          getDataContent={(data) => data.enrollmentPaymentId.toString()}
+          getDataKey={(data) => data.enrollmentPaymentId}
+          getDataTitle={(data) => data.transportFeeValue.toString()}
+        />
       </Box>
     );
 

@@ -1,7 +1,7 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { TeacherSpecialFee, Teacher, Course } from "@sonamusica-fe/types";
 import PageAdminTeacherSpecialFeeTable from "@sonamusica-fe/components/Pages/Admin/TeacherSpecialFee/PageAdminTeacherSpecialFeeTable";
@@ -20,6 +20,15 @@ const TeacherSpecialFeePage = (): JSX.Element => {
   const finishLoading = useApp((state) => state.finishLoading);
   const user = useUser((state) => state.user);
   const apiTransformer = useApiTransformer();
+
+  const openForm = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const closeForm = useCallback(() => {
+    setOpen(false);
+    setSelectedData(undefined);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -64,7 +73,7 @@ const TeacherSpecialFeePage = (): JSX.Element => {
       <PageAdminTeacherSpecialFeeTable
         data={data}
         teacherData={teacherData}
-        openModal={() => setOpen(true)}
+        openModal={openForm}
         loading={loading}
         setLoading={setLoading}
         setData={setData}
@@ -77,10 +86,7 @@ const TeacherSpecialFeePage = (): JSX.Element => {
         data={data}
         open={open}
         setData={setData}
-        onClose={() => {
-          setOpen(false);
-          setSelectedData(undefined);
-        }}
+        onClose={closeForm}
       />
     </PageContainer>
   );

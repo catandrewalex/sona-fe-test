@@ -1,7 +1,7 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { Grade } from "@sonamusica-fe/types";
 import PageAdminGradeTable from "@sonamusica-fe/components/Pages/Admin/Grade/PageAdminGradeTable";
@@ -16,6 +16,15 @@ const GradePage = (): JSX.Element => {
   const finishLoading = useApp((state) => state.finishLoading);
   const user = useUser((state) => state.user);
   const apiTransformer = useApiTransformer();
+
+  const openForm = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const closeForm = useCallback(() => {
+    setOpen(false);
+    setSelectedData(undefined);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -37,7 +46,7 @@ const GradePage = (): JSX.Element => {
     <PageContainer navTitle="Grade">
       <PageAdminGradeTable
         data={data}
-        openModal={() => setOpen(true)}
+        openModal={openForm}
         loading={loading}
         setLoading={setLoading}
         setData={setData}
@@ -48,10 +57,7 @@ const GradePage = (): JSX.Element => {
         data={data}
         open={open}
         setData={setData}
-        onClose={() => {
-          setOpen(false);
-          setSelectedData(undefined);
-        }}
+        onClose={closeForm}
       />
     </PageContainer>
   );
