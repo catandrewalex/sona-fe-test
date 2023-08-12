@@ -4,14 +4,15 @@ import {
   StudentLearningTokenInsertFormRequest,
   StudentLearningTokenDeleteRequest
 } from "@sonamusica-fe/types/form/student-learning-token";
-import API, { FailedResponse, GetRequestConfig, SuccessResponse } from "api";
+import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
 const GetAllStudentLearningToken = ({
   page = 1,
   resultsPerPage = 10000
 }: GetRequestConfig = {}): Promise<FailedResponse | SuccessResponse<StudentLearningToken>> => {
   return API.get<StudentLearningToken>({
-    url: `/studentLearningTokens?page=${page}&resultsPerPage=${resultsPerPage}`
+    url: AdminRoutes.STUDENT_LEARNING_TOKEN,
+    config: { params: { page, resultsPerPage } }
   });
 };
 
@@ -20,7 +21,8 @@ const GetAllStudentEnrollment = ({
   resultsPerPage = 10000
 }: GetRequestConfig = {}): Promise<FailedResponse | SuccessResponse<StudentEnrollment>> => {
   return API.get<StudentEnrollment>({
-    url: `/studentEnrollments?page=${page}&resultsPerPage=${resultsPerPage}`
+    url: AdminRoutes.STUDENT_ENROLLMENT,
+    config: { params: { page, resultsPerPage } }
   });
 };
 
@@ -28,7 +30,7 @@ const UpdateStudentLearningToken = (
   data: StudentLearningTokenUpdateFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<StudentLearningToken>> => {
   return API.put<StudentLearningToken>({
-    url: "/studentLearningTokens",
+    url: AdminRoutes.STUDENT_LEARNING_TOKEN,
     config: { data: { data } }
   });
 };
@@ -37,7 +39,7 @@ const InsertStudentLearningToken = (
   data: StudentLearningTokenInsertFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<StudentLearningToken>> => {
   return API.post<StudentLearningToken>({
-    url: "/studentLearningTokens",
+    url: AdminRoutes.STUDENT_LEARNING_TOKEN,
     config: { data: { data } }
   });
 };
@@ -46,7 +48,7 @@ const DeleteStudentLearningToken = (
   data: StudentLearningTokenDeleteRequest[]
 ): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.delete<undefined>({
-    url: "/studentLearningTokens",
+    url: AdminRoutes.STUDENT_LEARNING_TOKEN,
     config: { data: { data } }
   });
 };

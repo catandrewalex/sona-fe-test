@@ -4,13 +4,14 @@ import {
   StudentInsertNewUserFormRequest,
   StudentDeleteRequest
 } from "@sonamusica-fe/types/form/student";
-import API, { FailedResponse, GetRequestConfig, SuccessResponse } from "api";
+import API, { FailedResponse, GetRequestConfig, AdminRoutes, SuccessResponse } from "api";
 
 const GetAllStudent = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<
   FailedResponse | SuccessResponse<Student>
 > => {
   return API.get<Student>({
-    url: `/students?page=${page}&resultsPerPage=${resultsPerPage}`
+    url: AdminRoutes.STUDENT,
+    config: { params: { page, resultsPerPage } }
   });
 };
 
@@ -18,7 +19,7 @@ const InsertStudent = (
   data: StudentInsertFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Student>> => {
   return API.post<Student>({
-    url: "/students",
+    url: AdminRoutes.STUDENT,
     config: { data: { data } }
   });
 };
@@ -27,7 +28,7 @@ const InsertStudentNewUser = (
   data: StudentInsertNewUserFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Student>> => {
   return API.post<Student>({
-    url: "/students/new-users",
+    url: AdminRoutes.STUDENT + "/new-users",
     config: { data: { data } }
   });
 };
@@ -36,7 +37,7 @@ const DeleteStudent = (
   data: StudentDeleteRequest[]
 ): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.delete<undefined>({
-    url: "/students",
+    url: AdminRoutes.STUDENT,
     config: { data: { data } }
   });
 };

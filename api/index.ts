@@ -149,7 +149,7 @@ const API = {
         ...headers,
         ...apiVersionHeader
       },
-      ...(config?.params ? config.params : {})
+      params: config?.params ? config.params : {}
     });
     return httpResponseHandler(request);
   },
@@ -231,5 +231,23 @@ const API = {
     return httpResponseHandler(request);
   }
 };
+
+export enum AdminRoutes {
+  USER = "/users",
+  TEACHER = "/teachers",
+  STUDENT = "/students",
+  INSTRUMENT = "/instruments",
+  GRADE = "/grades",
+  COURSE = "/courses",
+  CLASS = "/classes",
+  TEACHER_SPECIAL_FEE = "/teacherSpecialFees",
+  STUDENT_LEARNING_TOKEN = "/studentLearningTokens",
+  STUDENT_ENROLLMENT = "/studentEnrollments",
+  ENROLLMENT_PAYMENT = "/enrollmentPayments"
+}
+
+export enum Routes {
+  PAYMENT = "/searchEnrollmentPayments"
+}
 
 export default API;

@@ -1,6 +1,6 @@
 import { User } from "@sonamusica-fe/types";
 import { UserUpdateFormRequest, UserInsertFormRequest } from "@sonamusica-fe/types/form/user";
-import API, { FailedResponse, GetRequestConfig, SuccessResponse } from "api";
+import API, { FailedResponse, GetRequestConfig, AdminRoutes, SuccessResponse } from "api";
 
 type UserFilter = "NOT_TEACHER" | "NOT_STUDENT";
 interface GetUserConfig extends GetRequestConfig {
@@ -21,9 +21,10 @@ const GetAllUser = ({
   includeDeactivated = true
 }: GetUserConfig = {}): Promise<FailedResponse | SuccessResponse<User>> => {
   return API.get<User>({
-    url: `/users?page=${page}&resultsPerPage=${resultsPerPage}${
-      filter ? "&filter=" + filter : ""
-    }&includeDeactivated=${includeDeactivated ? "true" : "false"}`
+    url: AdminRoutes.USER,
+    config: {
+      params: { page, resultsPerPage, filter, includeDeactivated }
+    }
   });
 };
 
@@ -31,7 +32,7 @@ const UpdateUser = (
   user: UserUpdateFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<User>> => {
   return API.put<User>({
-    url: "/users",
+    url: AdminRoutes.USER,
     config: { data: { data: user } }
   });
 };
@@ -40,7 +41,7 @@ const CreateUser = (
   user: UserInsertFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<User>> => {
   return API.post<User>({
-    url: "/users",
+    url: AdminRoutes.USER,
     config: { data: { data: user } }
   });
 };

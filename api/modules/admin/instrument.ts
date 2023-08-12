@@ -4,13 +4,14 @@ import {
   InstrumentInsertFormRequest,
   InstrumentDeleteRequest
 } from "@sonamusica-fe/types/form/instrument";
-import API, { FailedResponse, GetRequestConfig, SuccessResponse } from "api";
+import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
 const GetAllInstrument = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<
   FailedResponse | SuccessResponse<Instrument>
 > => {
   return API.get<Instrument>({
-    url: `/instruments?page=${page}&resultsPerPage=${resultsPerPage}`
+    url: AdminRoutes.INSTRUMENT,
+    config: { params: { page, resultsPerPage } }
   });
 };
 
@@ -18,7 +19,7 @@ const UpdateInstrument = (
   data: InstrumentUpdateFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Instrument>> => {
   return API.put<Instrument>({
-    url: "/instruments",
+    url: AdminRoutes.INSTRUMENT,
     config: { data: { data } }
   });
 };
@@ -27,7 +28,7 @@ const InsertInstrument = (
   data: InstrumentInsertFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Instrument>> => {
   return API.post<Instrument>({
-    url: "/instruments",
+    url: AdminRoutes.INSTRUMENT,
     config: { data: { data } }
   });
 };
@@ -36,7 +37,7 @@ const DeleteInstrument = (
   data: InstrumentDeleteRequest[]
 ): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.delete<undefined>({
-    url: "/instruments",
+    url: AdminRoutes.INSTRUMENT,
     config: { data: { data } }
   });
 };

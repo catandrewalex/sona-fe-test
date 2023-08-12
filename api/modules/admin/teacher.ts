@@ -4,13 +4,14 @@ import {
   TeacherInsertNewUserFormRequest,
   TeacherDeleteRequest
 } from "@sonamusica-fe/types/form/teacher";
-import API, { FailedResponse, GetRequestConfig, SuccessResponse } from "api";
+import API, { FailedResponse, GetRequestConfig, AdminRoutes, SuccessResponse } from "api";
 
 const GetAllTeacher = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<
   FailedResponse | SuccessResponse<Teacher>
 > => {
   return API.get<Teacher>({
-    url: `/teachers?page=${page}&resultsPerPage=${resultsPerPage}`
+    url: AdminRoutes.TEACHER,
+    config: { params: { page, resultsPerPage } }
   });
 };
 
@@ -18,7 +19,7 @@ const InsertTeacher = (
   data: TeacherInsertFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Teacher>> => {
   return API.post<Teacher>({
-    url: "/teachers",
+    url: AdminRoutes.TEACHER,
     config: { data: { data } }
   });
 };
@@ -27,7 +28,7 @@ const InsertTeacherNewUser = (
   data: TeacherInsertNewUserFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Teacher>> => {
   return API.post<Teacher>({
-    url: "/teachers/new-users",
+    url: AdminRoutes.TEACHER + "/new-users",
     config: { data: { data } }
   });
 };
@@ -36,7 +37,7 @@ const DeleteTeacher = (
   data: TeacherDeleteRequest[]
 ): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.delete<undefined>({
-    url: "/teachers",
+    url: AdminRoutes.TEACHER,
     config: { data: { data } }
   });
 };
