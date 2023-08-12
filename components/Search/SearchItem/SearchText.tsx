@@ -6,6 +6,7 @@ import StandardTextInput from "@sonamusica-fe/components/Form/StandardTextInput"
 
 type SearchTextProps = {
   xs?: GridSize;
+  sm?: GridSize;
   md?: GridSize;
   lg?: GridSize;
   xl?: GridSize;
@@ -23,6 +24,7 @@ const SearchText = ({
   xl = 3,
   lg = 4,
   md = 6,
+  sm = 12,
   xs = 12,
   sx,
   onChange,
@@ -41,6 +43,7 @@ const SearchText = ({
     <Grid
       key={keyChild}
       item
+      sm={sm}
       xl={xl}
       lg={lg}
       md={md}
@@ -57,7 +60,7 @@ const SearchText = ({
         value={innerValue}
         helperText={helperText}
         sx={sx}
-        InputProps={{ sx: { borderRadius: 100 } }}
+        InputProps={{ sx: { borderRadius: 8 } }}
         testIdContext={testIdContext + "-SearchTextFilter"}
         onChange={(e) => {
           setValue(e.target.value);

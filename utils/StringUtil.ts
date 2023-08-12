@@ -1,4 +1,5 @@
 import { Course, Student, Teacher, User } from "@sonamusica-fe/types";
+import { Moment } from "moment";
 
 const currencyFormatter = new Intl.NumberFormat("id", {
   style: "currency",
@@ -110,4 +111,8 @@ export const searchCourseNameByValue = (value: string, course?: Course): boolean
   if (course.grade.name.toLowerCase().includes(value.toLowerCase())) return true;
 
   return getCourseName(course).toLowerCase().includes(value.toLowerCase());
+};
+
+export const convertMomentDateToRFC3339 = (date: Moment): string => {
+  return date.format();
 };

@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, GridSize } from "@mui/material";
 import SearchArithmetic from "@sonamusica-fe/components/Search/SearchItem/SearchArithmatic";
 import SearchDropdown from "@sonamusica-fe/components/Search/SearchItem/SearchDropdown";
 import SearchText from "@sonamusica-fe/components/Search/SearchItem/SearchText";
-import TextInputFilter from "@sonamusica-fe/components/Table/TableMenu/TextInputFilter";
 import { useDebouncedCallback } from "@sonamusica-fe/utils/LodashUtil";
 import React, { useEffect, useState } from "react";
 
@@ -11,6 +10,11 @@ interface SearchFilterConfigBase<T> {
   type: "text" | "select" | "arithmetic";
   label: string;
   filterHandle?: (data: T, value: any) => boolean;
+  xs?: GridSize;
+  sm?: GridSize;
+  md?: GridSize;
+  lg?: GridSize;
+  xl?: GridSize;
 }
 
 interface SearchFilterTextConfig<T> extends SearchFilterConfigBase<T> {
@@ -78,7 +82,8 @@ const SearchFilter = <T extends unknown>({
     setData(
       data.filter((item: T) => {
         let result = true;
-        for (const [_key, value] of Object.entries(filterValue)) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [key, value] of Object.entries(filterValue)) {
           if (
             (Array.isArray(value.value) && value.value.length > 0) ||
             (typeof value.value === "string" && value.value !== "")
@@ -96,13 +101,17 @@ const SearchFilter = <T extends unknown>({
       })
     );
   }, [filterValue]);
-  console.log("filterValue", filterValue);
 
   const content = filters.map((filter) => {
     switch (filter.type) {
       case "text":
         return (
           <SearchText
+            xs={filter.xs}
+            sm={filter.sm}
+            md={filter.md}
+            lg={filter.lg}
+            xl={filter.xs}
             label={filter.label}
             value={filterValue[filter.label]?.value || ""}
             onChange={(value) => {
@@ -113,6 +122,11 @@ const SearchFilter = <T extends unknown>({
       case "select":
         return (
           <SearchDropdown
+            xs={filter.xs}
+            sm={filter.sm}
+            md={filter.md}
+            lg={filter.lg}
+            xl={filter.xs}
             label={filter.label}
             data={filter.data}
             getOptionLabel={filter.getOptionLabel}
@@ -125,6 +139,11 @@ const SearchFilter = <T extends unknown>({
       case "arithmetic":
         return (
           <SearchArithmetic
+            xs={filter.xs}
+            sm={filter.sm}
+            md={filter.md}
+            lg={filter.lg}
+            xl={filter.xs}
             label={filter.label}
             value={filterValue[filter.label]?.value.replaceAll(/[<=>]/g, "") || ""}
             onChange={(value) => {
@@ -136,12 +155,9 @@ const SearchFilter = <T extends unknown>({
   });
 
   return (
-    <Box>
-      <Grid container spacing={1}>
-        {content}
-      </Grid>
+    <Box sx={{ px: 2 }}>
+      <Grid container>{content}</Grid>
     </Box>
   );
 };
-
 export default SearchFilter;

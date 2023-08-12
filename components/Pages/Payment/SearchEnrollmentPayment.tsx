@@ -3,21 +3,21 @@ import { Box } from "@mui/system";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
 import { EnrollmentPayment } from "@sonamusica-fe/types";
+import { convertMomentDateToRFC3339 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import moment, { Moment } from "moment";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 
 type SearchPaymentListFormData = {
-  startDate: string;
-  endDate: string;
+  startDate: Moment;
+  endDate: Moment;
 };
 
 type SearchEnrollmentPaymentProps = {
-  movePage: () => void;
-  setData: (newData: EnrollmentPayment[]) => void;
+  onSearchSubmit: (data: EnrollmentPayment[]) => void;
 };
 
-const SearchEnrollmentPayment = ({ movePage, setData }: SearchEnrollmentPaymentProps) => {
+const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProps): JSX.Element => {
   const [startDate, setStartDate] = useState<Moment | null>(moment().subtract(1, "year"));
   const [endDate, setEndDate] = useState<Moment | null>(moment());
   const apiTransformer = useApiTransformer();
@@ -74,17 +74,19 @@ const SearchEnrollmentPayment = ({ movePage, setData }: SearchEnrollmentPaymentP
       ],
       submitHandler: async ({ startDate, endDate }, err) => {
         if (err.startDate || err.endDate) return Promise.reject();
-        const response = await API.GetAllEnrollmentPayment();
+        const response = await API.SearchPayments({
+          startDateTime: convertMomentDateToRFC3339(startDate),
+          endDateTime: convertMomentDateToRFC3339(endDate)
+        });
         const parsedResponse = apiTransformer(response, false);
         if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
           return parsedResponse as FailedResponse;
         } else {
-          setData((parsedResponse as ResponseMany<EnrollmentPayment>).results);
-          movePage();
+          onSearchSubmit((parsedResponse as ResponseMany<EnrollmentPayment>).results);
         }
       }
     },
-    { startDate: moment().subtract(1, "year").format(), endDate: moment().format() }
+    { startDate: moment().subtract(1, "year"), endDate: moment() }
   );
   return (
     <Box

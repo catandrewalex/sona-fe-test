@@ -5,6 +5,7 @@ import StandardTextInput from "@sonamusica-fe/components/Form/StandardTextInput"
 import StandardSelect from "@sonamusica-fe/components/Form/StandardSelect";
 
 type SearchArithmeticProps = {
+  sm?: GridSize;
   xs?: GridSize;
   md?: GridSize;
   lg?: GridSize;
@@ -23,6 +24,7 @@ const SearchArithmetic = ({
   lg = 4,
   md = 6,
   xs = 12,
+  sm = 12,
   onChange,
   value,
   keyChild,
@@ -44,6 +46,7 @@ const SearchArithmetic = ({
       lg={lg}
       md={md}
       xs={xs}
+      sm={sm}
       sx={{ pt: "0 !important", px: 1, py: 0.5, mt: -1, display: "flex", alignItems: "center" }}
       alignSelf="flex-start"
     >
@@ -52,13 +55,13 @@ const SearchArithmetic = ({
         fullWidth={false}
         getOptionLabel={(option) => option}
         value={equalitySign}
-        sx={{ width: "75px" }}
+        sx={{ width: "75px", marginTop: 0 }}
         disableClearable={true}
         inputProps={{
           sx: {
             [`& fieldset`]: {
-              borderTopLeftRadius: 100,
-              borderBottomLeftRadius: 100,
+              borderTopLeftRadius: 30,
+              borderBottomLeftRadius: 30,
               borderTopRightRadius: 0,
               borderBottomRightRadius: 0
             }
@@ -82,8 +85,8 @@ const SearchArithmetic = ({
         sx={{ marginLeft: "-1px", marginTop: 1.5 }}
         InputProps={{
           sx: {
-            borderTopRightRadius: 100,
-            borderBottomRightRadius: 100,
+            borderTopRightRadius: 30,
+            borderBottomRightRadius: 30,
             borderTopLeftRadius: 0,
             borderBottomLeftRadius: 0
           }

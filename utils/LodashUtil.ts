@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from "lodash";
-import React, { useCallback, useRef } from "react";
+import { useCallback, useRef } from "react";
 
 /**
  * Create a debounce function that will memoize its value but not its content
@@ -8,7 +9,10 @@ import React, { useCallback, useRef } from "react";
  * @param delay the delay for the debounce function
  * @returns memoized debounce function
  */
-export const useDebouncedCallback = (callback: any, delay: number) => {
+export const useDebouncedCallback = (
+  callback: any,
+  delay: number
+): _.DebouncedFunc<(...args: any) => any> => {
   const callbackRef = useRef<any>();
   callbackRef.current = callback;
   return useCallback(

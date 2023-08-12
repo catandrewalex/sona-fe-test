@@ -10,7 +10,11 @@ import {
   EnrollmentPaymentInsertFormData,
   EnrollmentPaymentUpdateFormData
 } from "@sonamusica-fe/types/form/enrollment-payment";
-import { getCourseName, getFullNameFromStudent } from "@sonamusica-fe/utils/StringUtil";
+import {
+  convertMomentDateToRFC3339,
+  getCourseName,
+  getFullNameFromStudent
+} from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import moment from "moment";
 import React, { useEffect } from "react";
@@ -109,14 +113,26 @@ const PageAdminEnrollmentPaymentForm = ({
   ];
 
   const defaultUpdateFields: FormFieldType<EnrollmentPaymentUpdateFormData>[] =
-    defaultInsertFields.slice(1) as FormFieldType<EnrollmentPaymentUpdateFormData>[];
+    defaultInsertFields.slice(
+      1,
+      defaultInsertFields.length - 1
+    ) as FormFieldType<EnrollmentPaymentUpdateFormData>[];
+
+  defaultUpdateFields.push({
+    type: "date",
+    name: "paymentDate",
+    label: "Payment Date",
+    formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
+    validations: [],
+    dateProps: { slotProps: { textField: { required: true } } }
+  });
 
   const defaultUpdateFieldValue: EnrollmentPaymentUpdateFormData = {
     balanceTopUp: 0,
     courseFeeValue: 0,
     transportFeeValue: 0,
     valuePenalty: 0,
-    paymentDate: moment().format()
+    paymentDate: moment()
   };
 
   const defaultInsertFieldValue: EnrollmentPaymentInsertFormData = {
@@ -154,7 +170,7 @@ const PageAdminEnrollmentPaymentForm = ({
                 balanceTopUp,
                 courseFeeValue,
                 transportFeeValue,
-                paymentDate,
+                paymentDate: convertMomentDateToRFC3339(paymentDate),
                 enrollmentPaymentId: selectedData.enrollmentPaymentId
               }
             ]);
@@ -212,7 +228,7 @@ const PageAdminEnrollmentPaymentForm = ({
                 transportFeeValue,
                 balanceTopUp,
                 valuePenalty,
-                paymentDate,
+                paymentDate: convertMomentDateToRFC3339(paymentDate),
                 studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
               }
             ]);
@@ -230,11 +246,12 @@ const PageAdminEnrollmentPaymentForm = ({
 
   useEffect(() => {
     if (selectedData) {
+      console.log(moment(selectedData.paymentDate).format());
       formProperties.valueRef.current = {
         balanceTopUp: selectedData.balanceTopUp,
         transportFeeValue: selectedData.transportFeeValue,
         courseFeeValue: selectedData.courseFeeValue,
-        paymentDate: selectedData.paymentDate,
+        paymentDate: moment(selectedData.paymentDate),
         valuePenalty: selectedData.valuePenalty
       };
       formProperties.errorRef.current = {} as Record<keyof EnrollmentPaymentUpdateFormData, string>;

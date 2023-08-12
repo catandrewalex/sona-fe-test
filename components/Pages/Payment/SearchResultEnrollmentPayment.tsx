@@ -1,0 +1,178 @@
+import { Course, EnrollmentPayment, Student, Teacher } from "@sonamusica-fe/types";
+import React, { useEffect, useState } from "react";
+import { Box, Divider, IconButton, Typography } from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
+import API, { useApiTransformer } from "@sonamusica-fe/api";
+
+import SearchResult from "@sonamusica-fe/components/Search/SearchResult";
+import {
+  advancedNumberFilter,
+  getCourseName,
+  getFullNameFromStudent,
+  getFullNameFromTeacher
+} from "@sonamusica-fe/utils/StringUtil";
+import SearchFilter from "@sonamusica-fe/components/Search/SearchFilter";
+import user from "@sonamusica-fe/pages/user";
+import { SuccessResponse, FailedResponse, ResponseMany } from "api";
+import moment from "moment";
+import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
+import PaymentDetail from "@sonamusica-fe/components/Pages/Payment/PaymentDetail";
+import PaymentDetailAction from "@sonamusica-fe/components/Pages/Payment/PaymentDetailAction";
+
+type SearchResultEnrollmentPaymentProps = {
+  data: EnrollmentPayment[];
+  backButtonHandler: () => void;
+};
+
+const SearchResultEnrollmentPayment = ({
+  data,
+  backButtonHandler
+}: SearchResultEnrollmentPaymentProps): JSX.Element => {
+  const [displayData, setDisplayData] = useState<Array<EnrollmentPayment>>([]);
+  const [studentData, setStudentData] = useState<Student[]>([]);
+  const [teacherData, setTeacherData] = useState<Teacher[]>([]);
+  const [courseData, setCourseData] = useState<Course[]>([]);
+  const apiTransformer = useApiTransformer();
+  const { showSnackbar } = useSnack();
+
+  useEffect(() => {
+    const promises = [API.GetAllStudent(), API.GetAllTeacher(), API.GetAllCourse()];
+    Promise.allSettled(promises).then((value) => {
+      if (value[0].status === "fulfilled") {
+        const response = value[0].value as SuccessResponse<Student>;
+        const parsedResponse = apiTransformer(response, false);
+        if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
+          setStudentData((parsedResponse as ResponseMany<Student>).results);
+        }
+      } else {
+        showSnackbar("Failed to fetch students data!", "error");
+      }
+      if (value[1].status === "fulfilled") {
+        const response = value[1].value as SuccessResponse<Teacher>;
+        const parsedResponse = apiTransformer(response, false);
+        if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
+          setTeacherData((parsedResponse as ResponseMany<Teacher>).results);
+        }
+      } else {
+        showSnackbar("Failed to fetch teachers data!", "error");
+      }
+      if (value[2].status === "fulfilled") {
+        const response = value[2].value as SuccessResponse<Course>;
+        const parsedResponse = apiTransformer(response, false);
+        if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
+          setCourseData((parsedResponse as ResponseMany<Course>).results);
+        }
+      } else {
+        showSnackbar("Failed to fetch teachers data!", "error");
+      }
+    });
+  }, [user]);
+
+  return (
+    <Box sx={{ mt: 1, position: "relative" }}>
+      <IconButton
+        sx={{ position: "absolute", top: "10px", left: "-25px" }}
+        onClick={backButtonHandler}
+        color="error"
+      >
+        <ArrowBack />
+      </IconButton>
+      <SearchFilter<EnrollmentPayment>
+        data={data}
+        setData={setDisplayData}
+        filters={[
+          {
+            type: "select",
+            label: "Students",
+            data: studentData,
+            getOptionLabel(option) {
+              return getFullNameFromStudent(option);
+            },
+            filterHandle(data, value) {
+              for (const val of value) {
+                if (val.studentId === data.studentEnrollment.student.studentId) return true;
+              }
+              return false;
+            }
+          },
+          {
+            type: "select",
+            label: "Courses",
+            data: courseData,
+            getOptionLabel(option) {
+              return getCourseName(option);
+            },
+            filterHandle(data, value) {
+              for (const val of value) {
+                if (val.courseId === data.studentEnrollment.class.course.courseId) return true;
+              }
+              return false;
+            }
+          },
+          {
+            type: "select",
+            label: "Teachers",
+            data: teacherData,
+            getOptionLabel(option) {
+              return getFullNameFromTeacher(option);
+            },
+            filterHandle(data, value) {
+              for (const val of value) {
+                if (val.teacherId === data.studentEnrollment.class.teacher?.teacherId) return true;
+              }
+              return false;
+            }
+          },
+          {
+            type: "arithmetic",
+            label: "Fee",
+            filterHandle(data, value) {
+              return advancedNumberFilter(data.courseFeeValue, value);
+            }
+          },
+          {
+            type: "arithmetic",
+            label: "Transport Fee",
+            filterHandle(data, value) {
+              return advancedNumberFilter(data.transportFeeValue, value);
+            }
+          },
+          {
+            type: "arithmetic",
+            label: "Penalty Fee",
+            filterHandle(data, value) {
+              return advancedNumberFilter(data.valuePenalty, value);
+            }
+          },
+          {
+            type: "arithmetic",
+            label: "Top Up Balance",
+            filterHandle(data, value) {
+              return advancedNumberFilter(data.balanceTopUp, value);
+            }
+          }
+        ]}
+      />
+      <Divider sx={{ my: 1 }} />
+      <SearchResult
+        maxHeight="70vh"
+        data={displayData}
+        getDataActions={PaymentDetailAction}
+        getDataContent={PaymentDetail}
+        getDataKey={(data) => data.enrollmentPaymentId}
+        getDataTitle={(data) => (
+          <>
+            <Typography fontWeight="bold">
+              {getFullNameFromStudent(data.studentEnrollment.student)}
+            </Typography>
+            <Typography fontWeight="bold">
+              {getCourseName(data.studentEnrollment.class.course)}
+            </Typography>
+          </>
+        )}
+        getDataSubTitle={(data) => moment(data.paymentDate).format("DD MMMM YYYY")}
+      />
+    </Box>
+  );
+};
+export default SearchResultEnrollmentPayment;

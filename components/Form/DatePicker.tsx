@@ -40,7 +40,7 @@ const DatePicker = <T extends unknown>({
   const [internalErrorMsg, setInternalErrorMsg] = useState<string>("");
 
   useEffect(() => {
-    setInternalValue(moment(valueRef.current[field] as string) || moment());
+    setInternalValue((valueRef.current[field] as Moment) || moment());
   }, [valueRef.current[field]]);
 
   useEffect(() => {
@@ -50,11 +50,9 @@ const DatePicker = <T extends unknown>({
   }, [errorRef.current[field]]);
 
   useEffect(() => {
-    setInternalValue(defaultValue || null);
     if (defaultValue) {
-      valueRef.current[field] = defaultValue.format() as T[keyof T];
-    } else {
-      valueRef.current[field] = "" as T[keyof T];
+      setInternalValue(defaultValue);
+      valueRef.current[field] = defaultValue as T[keyof T];
     }
   }, [defaultValue]);
 
@@ -64,10 +62,9 @@ const DatePicker = <T extends unknown>({
         value={internalValue}
         label={label}
         onChange={(value, context) => {
-          const realValue = value ? moment(value).format() : "";
           setInternalValue(value);
           if (onChange) onChange(value, context);
-          valueRef.current[field] = realValue as T[keyof T];
+          valueRef.current[field] = value as T[keyof T];
         }}
         slotProps={merge({ textField: { fullWidth: true, margin: "normal" } }, slotProps)}
         disableFuture

@@ -10,6 +10,7 @@ type SearchDropdownProps = {
   data: any[];
   onChange?: (value: string[]) => void;
   xs?: GridSize;
+  sm?: GridSize;
   md?: GridSize;
   lg?: GridSize;
   xl?: GridSize;
@@ -28,6 +29,7 @@ const SearchDropdown = ({
   lg = 4,
   md = 6,
   xs = 12,
+  sm = 12,
   sx,
   value,
   onChange,
@@ -46,6 +48,7 @@ const SearchDropdown = ({
     <Grid
       key={keyChild}
       item
+      sm={sm}
       xl={xl}
       lg={lg}
       md={md}
@@ -61,7 +64,7 @@ const SearchDropdown = ({
           margin: "dense",
           sx: {
             [`& fieldset`]: {
-              borderRadius: 100
+              borderRadius: 8
             }
           }
         }}
