@@ -57,13 +57,9 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
   const { formRenderer } = useFormRenderer<{ password: string; confirmPassword: string }>(
     {
       testIdContext: "ChangePassword",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
         onClick: () => setShowChangePassword(false)
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
       fields: [
         {
           type: "text",

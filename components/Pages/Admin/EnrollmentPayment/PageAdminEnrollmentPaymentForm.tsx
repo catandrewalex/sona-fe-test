@@ -144,13 +144,9 @@ const PageAdminEnrollmentPaymentForm = ({
     ? useFormRenderer<EnrollmentPaymentUpdateFormData>(
         {
           testIdContext: "EnrollmentPaymentUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultUpdateFields,
           submitHandler: async (
             { courseFeeValue, balanceTopUp, transportFeeValue, paymentDate, valuePenalty },
@@ -194,13 +190,9 @@ const PageAdminEnrollmentPaymentForm = ({
     : useFormRenderer<EnrollmentPaymentInsertFormData>(
         {
           testIdContext: "EnrollmentPaymentUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultInsertFields,
           errorResponseMapping,
           submitHandler: async (

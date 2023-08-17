@@ -115,13 +115,9 @@ const PageAdminClassForm = ({
     useFormRenderer<ClassUpdateFormData>(
       {
         testIdContext: "ClassUpsert",
-        submitContainerProps: { align: "space-between", spacing: 3 },
         cancelButtonProps: {
-          startIcon: <Cancel />,
           onClick: onClose
         },
-        promptCancelButtonDialog: true,
-        submitButtonProps: { endIcon: <Save /> },
         fields: defaultUpdateFields,
         errorResponseMapping,
         submitHandler: async ({ course, isActive, students, teacher, transportFee }, error) => {
@@ -165,13 +161,9 @@ const PageAdminClassForm = ({
   const { formRenderer: formRendererInsert } = useFormRenderer<ClassInsertFormData>(
     {
       testIdContext: "ClassUpsert",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
         onClick: onClose
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
       fields: defaultInsertFields,
       errorResponseMapping,
       submitHandler: async ({ course, students, teacher, transportFee }, error) => {

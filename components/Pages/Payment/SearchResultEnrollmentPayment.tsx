@@ -86,6 +86,18 @@ const SearchResultEnrollmentPayment = ({
     });
   }, [user]);
 
+  useEffect(() => {
+    if (displayData.length === 0 && data.length !== 0) {
+      setDisplayData(data);
+    } else {
+      const newDisplayData = [...data];
+      const mappedData = displayData.map((item) => item.enrollmentPaymentId);
+      setDisplayData(
+        newDisplayData.filter((item) => mappedData.includes(item.enrollmentPaymentId))
+      );
+    }
+  }, [data]);
+
   return (
     <Box sx={{ mt: 1, position: "relative" }}>
       <IconButton
@@ -186,11 +198,15 @@ const SearchResultEnrollmentPayment = ({
           <PaymentDetailAction
             data={currData}
             editHandler={() => setSelectedData(currData)}
-            deleteHandler={() =>
+            deleteHandler={() => {
               setData(
                 data.filter((item) => item.enrollmentPaymentId !== currData.enrollmentPaymentId)
-              )
-            }
+              );
+              console.log(currData);
+              console.log(
+                data.filter((item) => item.enrollmentPaymentId !== currData.enrollmentPaymentId)
+              );
+            }}
           />
         )}
         getDataContent={PaymentDetail}
@@ -209,13 +225,14 @@ const SearchResultEnrollmentPayment = ({
       />
       <EditPaymentForm
         data={selectedData}
+        onClose={() => setSelectedData(undefined)}
         onSubmit={(newData) => {
           setData(
             data.map((item) =>
               item.enrollmentPaymentId === newData.enrollmentPaymentId ? newData : item
             )
           );
-          setSelectedData(undefined);
+          console.log(newData);
         }}
       />
     </Box>

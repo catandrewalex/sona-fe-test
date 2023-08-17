@@ -7,30 +7,31 @@ import { EnrollmentPayment } from "@sonamusica-fe/types";
 import { EnrollmentPaymentUpdateFormData } from "@sonamusica-fe/types/form/admin/enrollment-payment";
 import { EditPaymentBalanceFormData } from "@sonamusica-fe/types/form/payment";
 import { convertMomentDateToRFC3339 } from "@sonamusica-fe/utils/StringUtil";
-import { FailedResponse, ResponseMany } from "api";
+import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
 
 type EditPaymentFormProps = {
   data?: EnrollmentPayment;
   onSubmit: (newData: EnrollmentPayment) => void;
+  onClose: () => void;
 };
 
-const EditPaymentForm = ({ data, onSubmit }: EditPaymentFormProps): JSX.Element => {
+const EditPaymentForm = ({ data, onSubmit, onClose }: EditPaymentFormProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(false);
-  const onClose = useCallback(() => setOpen(false), []);
+  const onCloseInternal = useCallback(() => {
+    setOpen(false);
+    onClose();
+  }, []);
   const apiTransformer = useApiTransformer();
 
   const { formRenderer, formProperties } = useFormRenderer<EditPaymentBalanceFormData>(
     {
       testIdContext: "EnrollmentPaymentUpsert",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
-        onClick: onClose
+        onClick: onCloseInternal
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
+
       fields: [
         {
           type: "text",
@@ -63,7 +64,7 @@ const EditPaymentForm = ({ data, onSubmit }: EditPaymentFormProps): JSX.Element 
         if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
           return parsedResponse as FailedResponse;
         } else {
-          const responseData = (parsedResponse as ResponseMany<EnrollmentPayment>).results[0];
+          const responseData = parsedResponse as EnrollmentPayment;
           onSubmit(responseData);
         }
       }

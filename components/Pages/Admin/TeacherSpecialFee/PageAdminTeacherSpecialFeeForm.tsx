@@ -109,13 +109,9 @@ const PageAdminTeacherSpecialFeeForm = ({
     ? useFormRenderer<TeacherSpecialFeeUpdateFormData>(
         {
           testIdContext: "TeacherSpecialFeeUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultUpdateFields,
           submitHandler: async ({ fee }, error) => {
             if (error.fee) return Promise.reject();
@@ -142,13 +138,9 @@ const PageAdminTeacherSpecialFeeForm = ({
     : useFormRenderer<TeacherSpecialFeeInsertFormData>(
         {
           testIdContext: "TeacherSpecialFeeUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultInsertFields,
           errorResponseMapping,
           submitHandler: async ({ fee, teacher, course }, error) => {

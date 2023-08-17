@@ -103,13 +103,9 @@ const PageAdminStudentLearningTokenForm = ({
     ? useFormRenderer<StudentLearningTokenUpdateFormData>(
         {
           testIdContext: "StudentLearningTokenUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultUpdateFields,
           submitHandler: async ({ courseFeeValue, quota, transportFeeValue }, error) => {
             if (error.courseFeeValue || error.quota || error.transportFeeValue)
@@ -143,13 +139,9 @@ const PageAdminStudentLearningTokenForm = ({
     : useFormRenderer<StudentLearningTokenInsertFormData>(
         {
           testIdContext: "StudentLearningTokenUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultInsertFields,
           errorResponseMapping,
           submitHandler: async (

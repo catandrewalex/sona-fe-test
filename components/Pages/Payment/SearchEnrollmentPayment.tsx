@@ -23,6 +23,8 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
   const apiTransformer = useApiTransformer();
   const { formRenderer } = useFormRenderer<SearchPaymentListFormData>(
     {
+      disableUseOfDefaultFormConfig: true,
+      disablePromptCancelButtonDialog: true,
       submitContainerProps: {
         align: "center"
       },
@@ -43,7 +45,7 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
             defaultValue: startDate,
             onChange(value) {
               if (value && value.isValid()) {
-                const endDate = moment(value).add(1, "year");
+                const endDate = moment(value).endOf("month");
                 if (endDate.isAfter(moment())) {
                   setEndDate(moment());
                 } else {
@@ -64,7 +66,7 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
             defaultValue: endDate,
             onChange(value) {
               if (value && value.isValid()) {
-                const startDate = moment(value).subtract(1, "year");
+                const startDate = moment(value).startOf("month");
                 setStartDate(startDate);
               }
               setEndDate(value);

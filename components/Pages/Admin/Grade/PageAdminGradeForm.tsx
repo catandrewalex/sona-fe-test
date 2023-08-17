@@ -49,13 +49,9 @@ const PageAdminGradeForm = ({
   const { formProperties, formRenderer } = useFormRenderer<GradeUpsertFormData>(
     {
       testIdContext: "GradeUpsert",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
         onClick: onClose
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
       fields: defaultFields,
       errorResponseMapping,
       submitHandler: async (formData, error) => {

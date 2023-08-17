@@ -4,8 +4,12 @@ import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { useRouter } from "next/router";
-import { Box, Button, Divider, Step, StepLabel, Stepper } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Box, Button, Divider, Paper, Step, StepLabel, Stepper } from "@mui/material";
+import { Add, ArrowLeft, ArrowRight, ArrowRightAlt } from "@mui/icons-material";
+import { Container, styled } from "@mui/system";
+import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
+import NewPaymentStepOne from "@sonamusica-fe/components/Pages/Payment/NewPayment/StepOne";
+import { StudentEnrollment } from "@sonamusica-fe/types";
 // import { EnrollmentPayment } from "@sonamusica-fe/types";
 // import PageAdminEnrollmentPaymentTable from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentTable";
 // import PageAdminEnrollmentPaymentForm from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentForm";
@@ -13,7 +17,8 @@ import { Add } from "@mui/icons-material";
 const steps = ["Select Student", "Create Invoice", "Finalize", "Print Invoice"];
 
 const NewEnrollmentPaymentPage = (): JSX.Element => {
-  const router = useRouter();
+  const { replace } = useRouter();
+  const [invoiceData, setInvoiceData] = useState<StudentEnrollment>();
   // const [data, setData] = useState<Array<EnrollmentPayment>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -23,6 +28,26 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
   const finishLoading = useApp((state) => state.finishLoading);
   const user = useUser((state) => state.user);
   const apiTransformer = useApiTransformer();
+  const { showDialog } = useAlertDialog();
+
+  const nextStep = () => {
+    if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
+  };
+
+  const prevStep = () => {
+    if (currentStep > 0) setCurrentStep(currentStep - 1);
+    else
+      showDialog(
+        {
+          title: "Discard Changes",
+          content:
+            "Are you sure want to cancel adding new enrollment payment? This will discard all changes and take you back to home page."
+        },
+        () => {
+          replace("/");
+        }
+      );
+  };
 
   //   useEffect(() => {
   //     if (user) {
@@ -40,26 +65,83 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
   //     }
   //   }, [user]);
 
+  let content;
+
+  switch (currentStep) {
+    case 0:
+      {
+        content = (
+          <NewPaymentStepOne
+            setInvoice={setInvoiceData}
+            defaultClass={invoiceData?.class}
+            defaultStudent={invoiceData?.student}
+          />
+        );
+      }
+      break;
+    case 1:
+      {
+        content = <Box>Step 2</Box>;
+      }
+      break;
+    case 2:
+      {
+        content = <Box>Step 3</Box>;
+      }
+      break;
+    case 3:
+      {
+        content = <Box>Step 4</Box>;
+      }
+      break;
+  }
+
   return (
-    <PageContainer navTitle="EnrollmentPayment">
-      <Box sx={{ width: "100%" }}>
-        <Stepper activeStep={currentStep} alternativeLabel>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </Box>
-      <Divider sx={{ my: 1 }} />
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Button variant="contained" color="error">
-          Back
-        </Button>
-        <Button variant="contained" color="success">
-          Next
-        </Button>
-      </Box>
+    <PageContainer navTitle="Add New Payment">
+      <Container
+        maxWidth="sm"
+        sx={{
+          height: "85vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          mt: 4
+        }}
+      >
+        <Paper
+          sx={{ p: 2, height: "100%", display: "flex", flexDirection: "column" }}
+          elevation={5}
+        >
+          <Box sx={{ width: "100%", my: 2 }}>
+            <Stepper activeStep={currentStep} alternativeLabel>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
+          <Divider sx={{ my: 1 }} />
+          <Box display="flex" flexDirection="column" height="100%">
+            <Box display="flex" alignItems="center" justifyContent="center" flexGrow={1}>
+              {content}
+            </Box>
+            <Box display="flex" justifyContent="space-between">
+              <Button variant="outlined" color="error" onClick={prevStep}>
+                {currentStep === 0 ? "Cancel" : "Back"}
+              </Button>
+              <Button
+                color="info"
+                variant="outlined"
+                onClick={nextStep}
+                disabled={currentStep === 0 && invoiceData === undefined}
+              >
+                {currentStep === steps.length - 2 ? "Submit" : "Next"}
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
       <div></div>
       {/* <PageAdminEnrollmentPaymentTable
         data={data}

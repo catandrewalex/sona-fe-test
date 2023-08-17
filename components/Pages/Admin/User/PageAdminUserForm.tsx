@@ -130,13 +130,9 @@ const PageAdminUserForm = ({
     ? useFormRenderer<UserUpdateFormData>(
         {
           testIdContext: "UserUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: updateFields,
           errorResponseMapping,
           submitHandler: async (formData, error) => {
@@ -175,13 +171,9 @@ const PageAdminUserForm = ({
     : useFormRenderer<UserInsertFormData>(
         {
           testIdContext: "UserUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: insertFields,
           errorResponseMapping,
           submitHandler: async (formData, error) => {

@@ -18,7 +18,7 @@ const ResetPassword = (): JSX.Element => {
   const { formRenderer } = useFormRenderer<{ password: string; confirmPassword: string }>(
     {
       submitContainerProps: { marginBottom: 2 },
-      promptCancelButtonDialog: true,
+
       submitButtonProps: { testIdContext: "ResetPassword", xs: 12, md: 12, lg: 12, xl: 12 },
       fields: [
         {

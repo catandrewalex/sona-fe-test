@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Cancel, Save } from "@mui/icons-material";
 import { TextFieldProps } from "@mui/material";
 import { DatePickerProps } from "@mui/x-date-pickers";
 import Form from "@sonamusica-fe/components/Form";
@@ -15,6 +16,7 @@ import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { capitalizeFirstLetter, titleCase } from "@sonamusica-fe/utils/StringUtil";
 import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 import { FailedResponse } from "api";
+import { merge } from "lodash";
 import { Moment } from "moment";
 import React, { useRef, useState } from "react";
 
@@ -76,10 +78,11 @@ export interface FormConfig<T> {
   submitContainerProps?: Omit<SubmitButtonContainerProps, "children">;
   submitButtonProps?: Omit<SubmitButtonProps, "children">;
   cancelButtonProps?: Omit<SubmitButtonProps, "children">;
-  promptCancelButtonDialog?: boolean;
+  disablePromptCancelButtonDialog?: boolean;
   submitHandler: (data: T, errors: Record<keyof T, string>) => Promise<void | FailedResponse>;
   errorResponseMapping?: Partial<Record<keyof T, string>>;
   testIdContext?: string;
+  disableUseOfDefaultFormConfig?: boolean;
 }
 
 export interface FormProperties<T> {
@@ -139,8 +142,12 @@ const useFormRenderer = <T extends unknown>(
             .finally(() => setLoading(false));
         }}
         formSubmit={
-          <SubmitButtonContainer {...config.submitContainerProps}>
-            {config.cancelButtonProps && (
+          <SubmitButtonContainer
+            {...(!config.disableUseOfDefaultFormConfig
+              ? merge({ align: "space-between", spacing: 3 }, config.submitContainerProps)
+              : config.submitContainerProps)}
+          >
+            {(config.cancelButtonProps || !config.disableUseOfDefaultFormConfig) && (
               <SubmitButton
                 align="center"
                 regular
@@ -150,9 +157,11 @@ const useFormRenderer = <T extends unknown>(
                 fullWidth
                 disabled={loading}
                 testIdContext={(config.testIdContext || "") + "Cancel"}
-                {...config.cancelButtonProps}
+                {...(!config.disableUseOfDefaultFormConfig
+                  ? merge({ startIcon: <Cancel /> }, config.cancelButtonProps)
+                  : config.cancelButtonProps)}
                 onClick={(e) => {
-                  if (config.promptCancelButtonDialog && hasUnsavedChangesRef.current) {
+                  if (!config.disablePromptCancelButtonDialog && hasUnsavedChangesRef.current) {
                     showDialog(
                       {
                         title: "Unsaved Changes",
@@ -181,7 +190,9 @@ const useFormRenderer = <T extends unknown>(
               loading={loading}
               submitText="Submit"
               testIdContext={(config.testIdContext || "") + "Submit"}
-              {...config.submitButtonProps}
+              {...(!config.disableUseOfDefaultFormConfig
+                ? merge({ endIcon: <Save /> }, config.submitButtonProps)
+                : config.submitButtonProps)}
             />
           </SubmitButtonContainer>
         }

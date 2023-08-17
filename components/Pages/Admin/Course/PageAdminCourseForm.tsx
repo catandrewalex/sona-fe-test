@@ -102,13 +102,9 @@ const PageAdminCourseForm = ({
     ? useFormRenderer<CourseUpdateFormData>(
         {
           testIdContext: "CourseUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultUpdateFields,
           errorResponseMapping: {
             defaultDurationMinute: "defaultDurationMinute",
@@ -139,13 +135,9 @@ const PageAdminCourseForm = ({
     : useFormRenderer<CourseInsertFormData>(
         {
           testIdContext: "CourseUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultInsertFields,
           errorResponseMapping: {
             defaultDurationMinute: "defaultDurationMinute",

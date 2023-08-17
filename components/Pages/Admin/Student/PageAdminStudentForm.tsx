@@ -192,13 +192,9 @@ const PageAdminStudentForm = ({
   const { formProperties, formRenderer } = useFormRenderer<StudentInsertFormData>(
     {
       testIdContext: "StudentUpsert",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
         onClick: onClose
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
       fields: insertFields,
       errorResponseMapping,
       submitHandler: async (formData, error) => {

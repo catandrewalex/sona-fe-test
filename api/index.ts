@@ -233,21 +233,21 @@ const API = {
 };
 
 export enum AdminRoutes {
-  USER = "/users",
-  TEACHER = "/teachers",
-  STUDENT = "/students",
-  INSTRUMENT = "/instruments",
-  GRADE = "/grades",
-  COURSE = "/courses",
-  CLASS = "/classes",
-  TEACHER_SPECIAL_FEE = "/teacherSpecialFees",
-  STUDENT_LEARNING_TOKEN = "/studentLearningTokens",
-  STUDENT_ENROLLMENT = "/studentEnrollments",
-  ENROLLMENT_PAYMENT = "/enrollmentPayments"
+  USER = "/admin/users",
+  TEACHER = "/admin/teachers",
+  STUDENT = "/admin/students",
+  INSTRUMENT = "/admin/instruments",
+  GRADE = "/admin/grades",
+  COURSE = "/admin/courses",
+  CLASS = "/admin/classes",
+  TEACHER_SPECIAL_FEE = "/admin/teacherSpecialFees",
+  STUDENT_LEARNING_TOKEN = "/admin/studentLearningTokens",
+  STUDENT_ENROLLMENT = "/admin/studentEnrollments",
+  ENROLLMENT_PAYMENT = "/admin/enrollmentPayments"
 }
 
 export enum Routes {
-  PAYMENT = "/searchEnrollmentPayments"
+  PAYMENT = "/enrollmentPayments"
 }
 
 export default API;

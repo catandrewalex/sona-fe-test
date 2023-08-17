@@ -18,7 +18,7 @@ const SearchPayments = ({ startDateTime, endDateTime }: SearchPaymentConfig = {}
   FailedResponse | SuccessResponse<EnrollmentPayment>
 > => {
   return API.get<EnrollmentPayment>({
-    url: Routes.PAYMENT,
+    url: `${Routes.PAYMENT}/search`,
     config: { params: { startDateTime, endDateTime } }
   });
 };
@@ -27,7 +27,7 @@ const EditPaymentTopUpBalance = (
   data: EditPaymentBalanceFormRequest
 ): Promise<FailedResponse | SuccessResponse<EnrollmentPayment>> => {
   return API.post<EnrollmentPayment>({
-    url: "/editEnrollmentPaymentBalance",
+    url: `${Routes.PAYMENT}/edit`,
     config: { data }
   });
 };
@@ -45,7 +45,7 @@ const RemovePayment = ({
   enrollmentPaymentId
 }: RemovePaymentFormRequest): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.post<undefined>({
-    url: "/removeEnrollmentPayment",
+    url: `${Routes.PAYMENT}/remove`,
     config: { data: { enrollmentPaymentId } }
   });
 };
