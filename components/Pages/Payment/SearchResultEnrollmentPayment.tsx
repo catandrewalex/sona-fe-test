@@ -1,7 +1,7 @@
 import { Course, EnrollmentPayment, Student, Teacher } from "@sonamusica-fe/types";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Box, Divider, IconButton, Typography } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { Add, ArrowBack } from "@mui/icons-material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 
 import SearchResult from "@sonamusica-fe/components/Search/SearchResult";
@@ -18,22 +18,40 @@ import moment from "moment";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import PaymentDetail from "@sonamusica-fe/components/Pages/Payment/PaymentDetail";
 import PaymentDetailAction from "@sonamusica-fe/components/Pages/Payment/PaymentDetailAction";
+import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
+import { useRouter } from "next/router";
+import EditPaymentForm from "@sonamusica-fe/components/Pages/Payment/EditPaymentForm";
 
 type SearchResultEnrollmentPaymentProps = {
   data: EnrollmentPayment[];
+  setData: (newData: EnrollmentPayment[]) => void;
   backButtonHandler: () => void;
 };
 
 const SearchResultEnrollmentPayment = ({
   data,
+  setData,
   backButtonHandler
 }: SearchResultEnrollmentPaymentProps): JSX.Element => {
   const [displayData, setDisplayData] = useState<Array<EnrollmentPayment>>([]);
+  const [selectedData, setSelectedData] = useState<EnrollmentPayment>();
   const [studentData, setStudentData] = useState<Student[]>([]);
   const [teacherData, setTeacherData] = useState<Teacher[]>([]);
   const [courseData, setCourseData] = useState<Course[]>([]);
   const apiTransformer = useApiTransformer();
   const { showSnackbar } = useSnack();
+  const { showDialog } = useAlertDialog();
+  const router = useRouter();
+
+  const addPaymentHandler = useCallback(() => {
+    showDialog(
+      {
+        title: "Move Page",
+        content: "Are you sure want to move to Add Enrollment Payment page?"
+      },
+      () => router.push({ query: { page: "AddEnrollmentPayment" }, pathname: "/" })
+    );
+  }, []);
 
   useEffect(() => {
     const promises = [API.GetAllStudent(), API.GetAllTeacher(), API.GetAllCourse()];
@@ -76,6 +94,13 @@ const SearchResultEnrollmentPayment = ({
         color="error"
       >
         <ArrowBack />
+      </IconButton>
+      <IconButton
+        sx={{ position: "absolute", top: "50px", left: "-25px" }}
+        onClick={addPaymentHandler}
+        color="success"
+      >
+        <Add />
       </IconButton>
       <SearchFilter<EnrollmentPayment>
         data={data}
@@ -157,7 +182,17 @@ const SearchResultEnrollmentPayment = ({
       <SearchResult
         maxHeight="70vh"
         data={displayData}
-        getDataActions={PaymentDetailAction}
+        getDataActions={(currData) => (
+          <PaymentDetailAction
+            data={currData}
+            editHandler={() => setSelectedData(currData)}
+            deleteHandler={() =>
+              setData(
+                data.filter((item) => item.enrollmentPaymentId !== currData.enrollmentPaymentId)
+              )
+            }
+          />
+        )}
         getDataContent={PaymentDetail}
         getDataKey={(data) => data.enrollmentPaymentId}
         getDataTitle={(data) => (
@@ -171,6 +206,17 @@ const SearchResultEnrollmentPayment = ({
           </>
         )}
         getDataSubTitle={(data) => moment(data.paymentDate).format("DD MMMM YYYY")}
+      />
+      <EditPaymentForm
+        data={selectedData}
+        onSubmit={(newData) => {
+          setData(
+            data.map((item) =>
+              item.enrollmentPaymentId === newData.enrollmentPaymentId ? newData : item
+            )
+          );
+          setSelectedData(undefined);
+        }}
       />
     </Box>
   );

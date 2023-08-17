@@ -30,7 +30,11 @@ const EnrollmentPaymentPage = (): JSX.Element => {
     page === Page.SEARCH ? (
       <SearchEnrollmentPayment onSearchSubmit={onSearchSubmit} />
     ) : (
-      <SearchResultEnrollmentPayment data={data} backButtonHandler={moveToSearchPage} />
+      <SearchResultEnrollmentPayment
+        data={data}
+        backButtonHandler={moveToSearchPage}
+        setData={setData}
+      />
     );
 
   return <PageContainer navTitle="Enrollment Payment">{content}</PageContainer>;

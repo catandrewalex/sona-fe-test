@@ -6,7 +6,7 @@ import useFormRenderer, {
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
 import { Teacher, UserType, User } from "@sonamusica-fe/types";
-import { TeacherInsertFormData } from "@sonamusica-fe/types/form/teacher";
+import { TeacherInsertFormData } from "@sonamusica-fe/types/form/admin/teacher";
 import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import React, { useEffect, useMemo, useState } from "react";

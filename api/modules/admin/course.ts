@@ -3,7 +3,7 @@ import {
   CourseUpdateFormRequest,
   CourseInsertFormRequest,
   CourseDeleteRequest
-} from "@sonamusica-fe/types/form/course";
+} from "@sonamusica-fe/types/form/admin/course";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
 const GetAllCourse = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<

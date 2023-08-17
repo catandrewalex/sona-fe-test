@@ -3,7 +3,7 @@ import {
   EnrollmentPaymentUpdateFormRequest,
   EnrollmentPaymentInsertFormRequest,
   EnrollmentPaymentDeleteRequest
-} from "@sonamusica-fe/types/form/enrollment-payment";
+} from "@sonamusica-fe/types/form/admin/enrollment-payment";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
 const GetAllEnrollmentPayment = ({

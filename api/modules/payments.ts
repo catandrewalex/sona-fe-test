@@ -3,7 +3,11 @@ import {
   EnrollmentPaymentUpdateFormRequest,
   EnrollmentPaymentInsertFormRequest,
   EnrollmentPaymentDeleteRequest
-} from "@sonamusica-fe/types/form/enrollment-payment";
+} from "@sonamusica-fe/types/form/admin/enrollment-payment";
+import {
+  EditPaymentBalanceFormRequest,
+  RemovePaymentFormRequest
+} from "@sonamusica-fe/types/form/payment";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, Routes, SuccessResponse } from "api";
 
 interface SearchPaymentConfig {
@@ -19,14 +23,14 @@ const SearchPayments = ({ startDateTime, endDateTime }: SearchPaymentConfig = {}
   });
 };
 
-// const UpdateEnrollmentPayment = (
-//   data: EnrollmentPaymentUpdateFormRequest[]
-// ): Promise<FailedResponse | SuccessResponse<EnrollmentPayment>> => {
-//   return API.put<EnrollmentPayment>({
-//     url: AdminRoutes.ENROLLMENT_PAYMENT,
-//     config: { data: { data } }
-//   });
-// };
+const EditPaymentTopUpBalance = (
+  data: EditPaymentBalanceFormRequest
+): Promise<FailedResponse | SuccessResponse<EnrollmentPayment>> => {
+  return API.post<EnrollmentPayment>({
+    url: "/editEnrollmentPaymentBalance",
+    config: { data }
+  });
+};
 
 // const InsertEnrollmentPayment = (
 //   data: EnrollmentPaymentInsertFormRequest[]
@@ -37,18 +41,19 @@ const SearchPayments = ({ startDateTime, endDateTime }: SearchPaymentConfig = {}
 //   });
 // };
 
-// const DeleteEnrollmentPayment = (
-//   data: EnrollmentPaymentDeleteRequest[]
-// ): Promise<FailedResponse | SuccessResponse<undefined>> => {
-//   return API.delete<undefined>({
-//     url: AdminRoutes.ENROLLMENT_PAYMENT,
-//     config: { data: { data } }
-//   });
-// };
+const RemovePayment = ({
+  enrollmentPaymentId
+}: RemovePaymentFormRequest): Promise<FailedResponse | SuccessResponse<undefined>> => {
+  return API.post<undefined>({
+    url: "/removeEnrollmentPayment",
+    config: { data: { enrollmentPaymentId } }
+  });
+};
 
 export default {
-  SearchPayments
+  SearchPayments,
+  EditPaymentTopUpBalance,
   //   InsertEnrollmentPayment,
   //   UpdateEnrollmentPayment,
-  //   DeleteEnrollmentPayment
+  RemovePayment
 };

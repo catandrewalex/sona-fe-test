@@ -9,7 +9,7 @@ import { EnrollmentPayment, StudentEnrollment } from "@sonamusica-fe/types";
 import {
   EnrollmentPaymentInsertFormData,
   EnrollmentPaymentUpdateFormData
-} from "@sonamusica-fe/types/form/enrollment-payment";
+} from "@sonamusica-fe/types/form/admin/enrollment-payment";
 import {
   convertMomentDateToRFC3339,
   getCourseName,
@@ -246,7 +246,6 @@ const PageAdminEnrollmentPaymentForm = ({
 
   useEffect(() => {
     if (selectedData) {
-      console.log(moment(selectedData.paymentDate).format());
       formProperties.valueRef.current = {
         balanceTopUp: selectedData.balanceTopUp,
         transportFeeValue: selectedData.transportFeeValue,

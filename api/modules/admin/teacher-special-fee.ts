@@ -3,7 +3,7 @@ import {
   TeacherSpecialFeeUpdateFormRequest,
   TeacherSpecialFeeInsertFormRequest,
   TeacherSpecialFeeDeleteRequest
-} from "@sonamusica-fe/types/form/teacher-special-fee";
+} from "@sonamusica-fe/types/form/admin/teacher-special-fee";
 import API, { FailedResponse, GetRequestConfig, AdminRoutes, SuccessResponse } from "api";
 
 const GetAllTeacherSpecialFee = ({

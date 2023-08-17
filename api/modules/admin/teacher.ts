@@ -3,7 +3,7 @@ import {
   TeacherInsertFormRequest,
   TeacherInsertNewUserFormRequest,
   TeacherDeleteRequest
-} from "@sonamusica-fe/types/form/teacher";
+} from "@sonamusica-fe/types/form/admin/teacher";
 import API, { FailedResponse, GetRequestConfig, AdminRoutes, SuccessResponse } from "api";
 
 const GetAllTeacher = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<

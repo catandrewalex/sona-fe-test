@@ -3,7 +3,7 @@ import {
   StudentInsertFormRequest,
   StudentInsertNewUserFormRequest,
   StudentDeleteRequest
-} from "@sonamusica-fe/types/form/student";
+} from "@sonamusica-fe/types/form/admin/student";
 import API, { FailedResponse, GetRequestConfig, AdminRoutes, SuccessResponse } from "api";
 
 const GetAllStudent = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<

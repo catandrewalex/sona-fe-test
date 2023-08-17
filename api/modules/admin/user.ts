@@ -1,5 +1,5 @@
 import { User } from "@sonamusica-fe/types";
-import { UserUpdateFormRequest, UserInsertFormRequest } from "@sonamusica-fe/types/form/user";
+import { UserUpdateFormRequest, UserInsertFormRequest } from "@sonamusica-fe/types/form/admin/user";
 import API, { FailedResponse, GetRequestConfig, AdminRoutes, SuccessResponse } from "api";
 
 type UserFilter = "NOT_TEACHER" | "NOT_STUDENT";

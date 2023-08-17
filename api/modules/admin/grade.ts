@@ -3,7 +3,7 @@ import {
   GradeUpdateFormRequest,
   GradeInsertFormRequest,
   GradeDeleteRequest
-} from "@sonamusica-fe/types/form/grade";
+} from "@sonamusica-fe/types/form/admin/grade";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
 const GetAllGrade = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<

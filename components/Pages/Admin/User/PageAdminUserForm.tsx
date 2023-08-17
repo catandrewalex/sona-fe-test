@@ -11,7 +11,7 @@ import {
   UserUpdateFormData,
   UserUpdateFormRequest,
   UserInsertFormRequest
-} from "@sonamusica-fe/types/form/user";
+} from "@sonamusica-fe/types/form/admin/user";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 

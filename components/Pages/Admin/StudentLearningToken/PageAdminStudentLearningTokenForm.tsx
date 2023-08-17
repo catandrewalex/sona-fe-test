@@ -9,7 +9,7 @@ import { StudentLearningToken, StudentEnrollment, Course } from "@sonamusica-fe/
 import {
   StudentLearningTokenInsertFormData,
   StudentLearningTokenUpdateFormData
-} from "@sonamusica-fe/types/form/student-learning-token";
+} from "@sonamusica-fe/types/form/admin/student-learning-token";
 import { getCourseName, getFullNameFromStudent } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";

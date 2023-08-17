@@ -3,7 +3,7 @@ import {
   StudentLearningTokenUpdateFormRequest,
   StudentLearningTokenInsertFormRequest,
   StudentLearningTokenDeleteRequest
-} from "@sonamusica-fe/types/form/student-learning-token";
+} from "@sonamusica-fe/types/form/admin/student-learning-token";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
 const GetAllStudentLearningToken = ({

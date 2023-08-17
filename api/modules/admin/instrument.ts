@@ -3,7 +3,7 @@ import {
   InstrumentUpdateFormRequest,
   InstrumentInsertFormRequest,
   InstrumentDeleteRequest
-} from "@sonamusica-fe/types/form/instrument";
+} from "@sonamusica-fe/types/form/admin/instrument";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
 const GetAllInstrument = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<

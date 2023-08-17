@@ -9,7 +9,7 @@ import { TeacherSpecialFee, Teacher, Course } from "@sonamusica-fe/types";
 import {
   TeacherSpecialFeeInsertFormData,
   TeacherSpecialFeeUpdateFormData
-} from "@sonamusica-fe/types/form/teacher-special-fee";
+} from "@sonamusica-fe/types/form/admin/teacher-special-fee";
 import { getCourseName, getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";

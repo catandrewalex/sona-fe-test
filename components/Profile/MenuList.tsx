@@ -118,8 +118,10 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
         <Card sx={{ width: 275 }}>
           <CardContent>
             <Avatar sx={{ m: "auto", width: 80, height: 80 }}>
-              {user?.userDetail.firstName.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || ""}
-              {user?.userDetail.lastName?.charAt(0)}
+              {user?.userDetail?.firstName?.charAt(0) ||
+                user?.email?.charAt(0)?.toUpperCase() ||
+                ""}
+              {user?.userDetail?.lastName?.charAt(0)}
             </Avatar>
             <Typography mt={1} textAlign="center" variant="h6">
               {getFullNameFromUser(user)}

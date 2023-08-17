@@ -3,7 +3,7 @@ import {
   ClassInsertFormRequest,
   ClassDeleteRequest,
   ClassUpdateFormRequest
-} from "@sonamusica-fe/types/form/class";
+} from "@sonamusica-fe/types/form/admin/class";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
 interface GetClassConfig extends GetRequestConfig {

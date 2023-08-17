@@ -6,7 +6,7 @@ import useFormRenderer, {
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
 import { Instrument } from "@sonamusica-fe/types";
-import { InstrumentUpsertFormData } from "@sonamusica-fe/types/form/instrument";
+import { InstrumentUpsertFormData } from "@sonamusica-fe/types/form/admin/instrument";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
