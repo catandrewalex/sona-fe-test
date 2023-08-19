@@ -22,13 +22,13 @@ type SearchStudentEnrollmentFormData = {
 };
 
 type NewPaymentStepOneProps = {
-  setInvoice: (data?: StudentEnrollment) => void;
+  setStudentEnrollment: (data?: StudentEnrollment) => void;
   defaultStudent?: Student;
   defaultClass?: Class;
 };
 
 const NewPaymentStepOne = ({
-  setInvoice,
+  setStudentEnrollment,
   defaultClass,
   defaultStudent
 }: NewPaymentStepOneProps): JSX.Element => {
@@ -39,8 +39,8 @@ const NewPaymentStepOne = ({
   const [filteredClassData, setFilteredClassData] = useState<Class[]>([]);
   const [studentEnrollmentData, setStudentEnrollmentData] = useState<StudentEnrollment[]>([]);
 
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(defaultStudent);
-  const [selectedClass, setSelectedClass] = useState<Class | null>(defaultClass);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(defaultStudent || null);
+  const [selectedClass, setSelectedClass] = useState<Class | null>(defaultClass || null);
   const [selectLoading, setSelectLoading] = useState<boolean>(false);
 
   const [error, setError] = useState<string>("");
@@ -194,7 +194,7 @@ const NewPaymentStepOne = ({
         data.student.studentId === selectedStudent?.studentId && data.class.classId === cl.classId
     );
     if (filteredStudentEnrollment.length > 0) {
-      setInvoice(filteredStudentEnrollment[0]);
+      setStudentEnrollment(filteredStudentEnrollment[0]);
       setError("");
     } else {
       setError("Student Enrollment not found!");
@@ -218,7 +218,7 @@ const NewPaymentStepOne = ({
               setSelectLoading(true);
               studentSearchHandler(value);
             } else {
-              setInvoice(undefined);
+              setStudentEnrollment(undefined);
               setSelectedClass(null);
             }
           }}
@@ -241,7 +241,7 @@ const NewPaymentStepOne = ({
             if (value) {
               classSearchHandler(value);
             } else {
-              setInvoice(undefined);
+              setStudentEnrollment(undefined);
             }
           }}
           fullWidth
@@ -252,19 +252,6 @@ const NewPaymentStepOne = ({
           {error}
         </Typography>
       )}
-      <Divider sx={{ my: 2 }} />
-      <Grid container>
-        {selectedStudent !== null && (
-          <Grid item lg={6} md={12} xl={6}>
-            <Typography align="center">Student Data</Typography>
-          </Grid>
-        )}
-        {selectedStudent !== null && selectedClass !== null && (
-          <Grid item lg={6} md={12} xl={6}>
-            <Typography align="center">Class Data</Typography>
-          </Grid>
-        )}
-      </Grid>
     </Box>
   );
 };

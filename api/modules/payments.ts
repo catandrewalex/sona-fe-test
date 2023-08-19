@@ -1,4 +1,4 @@
-import { EnrollmentPayment } from "@sonamusica-fe/types";
+import { EnrollmentPayment, EnrollmentPaymentInvoice } from "@sonamusica-fe/types";
 import {
   EnrollmentPaymentUpdateFormRequest,
   EnrollmentPaymentInsertFormRequest,
@@ -32,14 +32,13 @@ const EditPaymentTopUpBalance = (
   });
 };
 
-// const InsertEnrollmentPayment = (
-//   data: EnrollmentPaymentInsertFormRequest[]
-// ): Promise<FailedResponse | SuccessResponse<EnrollmentPayment>> => {
-//   return API.post<EnrollmentPayment>({
-//     url: AdminRoutes.ENROLLMENT_PAYMENT,
-//     config: { data: { data } }
-//   });
-// };
+const GetPaymentInvoice = (
+  id: number
+): Promise<FailedResponse | SuccessResponse<EnrollmentPaymentInvoice>> => {
+  return API.get<EnrollmentPaymentInvoice>({
+    url: `${Routes.PAYMENT}/invoice/${id}`
+  });
+};
 
 const RemovePayment = ({
   enrollmentPaymentId
@@ -53,7 +52,7 @@ const RemovePayment = ({
 export default {
   SearchPayments,
   EditPaymentTopUpBalance,
-  //   InsertEnrollmentPayment,
+  GetPaymentInvoice,
   //   UpdateEnrollmentPayment,
   RemovePayment
 };

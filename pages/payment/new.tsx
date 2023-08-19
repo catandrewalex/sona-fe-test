@@ -9,7 +9,12 @@ import { Add, ArrowLeft, ArrowRight, ArrowRightAlt } from "@mui/icons-material";
 import { Container, styled } from "@mui/system";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import NewPaymentStepOne from "@sonamusica-fe/components/Pages/Payment/NewPayment/StepOne";
-import { StudentEnrollment } from "@sonamusica-fe/types";
+import {
+  EnrollmentPayment,
+  EnrollmentPaymentInvoice,
+  StudentEnrollment
+} from "@sonamusica-fe/types";
+import NewPaymentStepTwo from "@sonamusica-fe/components/Pages/Payment/NewPayment/StepTwo";
 // import { EnrollmentPayment } from "@sonamusica-fe/types";
 // import PageAdminEnrollmentPaymentTable from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentTable";
 // import PageAdminEnrollmentPaymentForm from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentForm";
@@ -18,7 +23,8 @@ const steps = ["Select Student", "Create Invoice", "Finalize", "Print Invoice"];
 
 const NewEnrollmentPaymentPage = (): JSX.Element => {
   const { replace } = useRouter();
-  const [invoiceData, setInvoiceData] = useState<StudentEnrollment>();
+  const [studentEnrollment, setStudentEnrollment] = useState<StudentEnrollment>();
+  const [invoiceData, setInvoiceData] = useState<EnrollmentPaymentInvoice>();
   // const [data, setData] = useState<Array<EnrollmentPayment>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,10 +37,12 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
   const { showDialog } = useAlertDialog();
 
   const nextStep = () => {
+    setLoading(true);
     if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
   };
 
   const prevStep = () => {
+    setLoading(true);
     if (currentStep > 0) setCurrentStep(currentStep - 1);
     else
       showDialog(
@@ -72,16 +80,22 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
       {
         content = (
           <NewPaymentStepOne
-            setInvoice={setInvoiceData}
-            defaultClass={invoiceData?.class}
-            defaultStudent={invoiceData?.student}
+            setStudentEnrollment={setStudentEnrollment}
+            defaultClass={studentEnrollment?.class}
+            defaultStudent={studentEnrollment?.student}
           />
         );
       }
       break;
     case 1:
       {
-        content = <Box>Step 2</Box>;
+        content = (
+          <NewPaymentStepTwo
+            studentEnrollmentData={studentEnrollment}
+            setInvoiceData={setInvoiceData}
+            invoiceData={invoiceData}
+          />
+        );
       }
       break;
     case 2:
@@ -134,7 +148,10 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                 color="info"
                 variant="outlined"
                 onClick={nextStep}
-                disabled={currentStep === 0 && invoiceData === undefined}
+                disabled={
+                  (currentStep === 0 && studentEnrollment === undefined) ||
+                  (currentStep === 1 && invoiceData === undefined)
+                }
               >
                 {currentStep === steps.length - 2 ? "Submit" : "Next"}
               </Button>

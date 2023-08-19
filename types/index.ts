@@ -94,3 +94,8 @@ export interface EnrollmentPayment {
   valuePenalty: number;
   paymentDate: string;
 }
+
+export type EnrollmentPaymentInvoice = Omit<
+  EnrollmentPayment,
+  "enrollmentPaymentId" | "studentEnrollment" | "paymentDate"
+>;
