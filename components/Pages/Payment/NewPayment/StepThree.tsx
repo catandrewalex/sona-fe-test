@@ -25,7 +25,7 @@ const NewPaymentStepThree = ({
   const courseFeeValue = invoiceData?.courseFeeValue || 0;
   const transportFeeValue = invoiceData?.transportFeeValue || 0;
   const penaltyFeeValue = invoiceData?.penaltyFeeValue || 0;
-  const balanceTopUp = invoiceData?.balanceTopUp || 0;
+
   return (
     <Box width="100%" margin="auto" p={2}>
       <Typography variant="body1">Student Name:</Typography>
@@ -84,9 +84,7 @@ const NewPaymentStepThree = ({
       <Divider sx={{ borderWidth: "3px", my: 3 }} />
       <Typography variant="h6" textAlign="right">
         Total Payment:{" "}
-        {convertNumberToCurrencyString(
-          balanceTopUp * courseFeeValue + transportFeeValue + penaltyFeeValue
-        )}
+        {convertNumberToCurrencyString(courseFeeValue + transportFeeValue + penaltyFeeValue)}
       </Typography>
     </Box>
   );

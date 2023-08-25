@@ -157,7 +157,7 @@ const NewPaymentStepTwo = ({
         {
           title: "Total Payment",
           value: convertNumberToCurrencyString(
-            data.balanceTopUp * data.courseFeeValue + data.transportFeeValue + data.penaltyFeeValue
+            data.courseFeeValue + data.transportFeeValue + data.penaltyFeeValue
           ),
           sx: { fontWeight: "bold", py: 1.5, fontSize: 20 }
         }
