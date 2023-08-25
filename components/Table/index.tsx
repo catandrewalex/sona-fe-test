@@ -15,7 +15,7 @@ import {
   GridColumnVisibilityModel
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import Grid, { GridSize } from "@mui/material/Grid";
+import { GridSize } from "@mui/material/Grid";
 import TextInputFilter from "./TableMenu/TextInputFilter";
 import { useDebouncedCallback } from "use-debounce";
 import SelectFilter from "./TableMenu/SelectFilter";
@@ -24,6 +24,7 @@ import ErrorDataGridEmpty from "@sonamusica-fe/components/Error/ErrorDataGridEmp
 import { UncapitalizeObjectKeys } from "@mui/x-data-grid/internals";
 import Toolbar from "@sonamusica-fe/components/Table/Toolbar";
 import { titleCase } from "@sonamusica-fe/utils/StringUtil";
+import { Grid } from "@mui/material";
 interface DefaultFilterConfig {
   xl?: GridSize;
   lg?: GridSize;

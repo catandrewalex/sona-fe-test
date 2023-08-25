@@ -1,10 +1,10 @@
-import TextField, { TextFieldProps } from "@mui/material/TextField";
-import Autocomplete, { AutocompleteProps } from "@mui/material/Autocomplete";
+import { TextFieldProps } from "@mui/material/TextField";
+import { AutocompleteProps } from "@mui/material/Autocomplete";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import React from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, TextField, Autocomplete } from "@mui/material";
 
 /**
  * StandardSelect component prop types.

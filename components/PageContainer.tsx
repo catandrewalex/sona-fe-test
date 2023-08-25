@@ -2,9 +2,6 @@ import React, { useEffect } from "react";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import Loader from "@sonamusica-fe/components/Loader";
 import PageInfo from "@sonamusica-fe/components/PageInfo";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import LoginForm from "@sonamusica-fe/components/LoginForm";
 import { getCookie, getLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
@@ -12,6 +9,8 @@ import { User } from "@sonamusica-fe/types";
 import Navigation from "@sonamusica-fe/components/Navigation";
 import Error403 from "@sonamusica-fe/components/Error/Error403";
 import { CSSProperties } from "styled-components";
+
+import { styled, Paper, Box } from "@mui/material";
 
 const LoginContainer = styled(Paper)(({ theme }) => ({
   width: "100vw",

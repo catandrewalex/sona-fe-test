@@ -1,15 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import TextField, { TextFieldProps } from "@mui/material/TextField";
-import Autocomplete, {
-  AutocompleteChangeReason,
-  AutocompleteProps
-} from "@mui/material/Autocomplete";
+import { TextFieldProps } from "@mui/material/TextField";
+import { AutocompleteChangeReason } from "@mui/material/Autocomplete";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import React, { useCallback, useEffect, useState } from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
 import { ValidationConfig, useCheckNotNull } from "@sonamusica-fe/utils/ValidationUtil";
-import { AutocompleteValue } from "@mui/material";
+import { AutocompleteValue, TextField, Autocomplete, AutocompleteProps } from "@mui/material";
 
 /**
  * Select component prop types.

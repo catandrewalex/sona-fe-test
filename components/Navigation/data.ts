@@ -1,8 +1,8 @@
-import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material";
 import { UserType } from "@sonamusica-fe/types";
 import HomeIcon from "@mui/icons-material/Home";
 import { People, Hail } from "@mui/icons-material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 
 export type SidebarItem = {
   text: string;
@@ -53,7 +53,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "User",
-        url: "/user",
+        url: "/admin/user",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -61,7 +61,7 @@ const data: Array<SidebarSection> = [
       {
         icon: Hail,
         text: "Teacher",
-        url: "/teacher",
+        url: "/admin/teacher",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -69,7 +69,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Student",
-        url: "/student",
+        url: "/admin/student",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -77,7 +77,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Instrument",
-        url: "/instrument",
+        url: "/admin/instrument",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -85,7 +85,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Grade",
-        url: "/grade",
+        url: "/admin/grade",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -93,7 +93,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Course",
-        url: "/course",
+        url: "/admin/course",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -101,7 +101,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Class",
-        url: "/class",
+        url: "/admin/class",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -109,7 +109,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Teacher Special Fee",
-        url: "/teacher-special-fee",
+        url: "/admin/teacher-special-fee",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -117,7 +117,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Student Learning Token",
-        url: "/student-learning-token",
+        url: "/admin/student-learning-token",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -125,7 +125,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Enrollment Payment",
-        url: "/enrollment-payment",
+        url: "/admin/enrollment-payment",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }

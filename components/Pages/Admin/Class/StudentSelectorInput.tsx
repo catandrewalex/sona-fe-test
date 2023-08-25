@@ -51,7 +51,7 @@ const StudentSelectorInput = <T extends unknown>({
   );
 
   useEffect(() => {
-    setInternalValue((valueRef.current[field] as Student[]) || []);
+    setInternalValue((valueRef.current[field] as unknown as Student[]) || []);
   }, [valueRef.current[field]]);
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const StudentSelectorInput = <T extends unknown>({
                         setInternalValue(newValue);
                         errorRef.current[field] = validationHandler(newValue);
                         if (onChange) onChange(newValue);
-                        valueRef.current[field] = newValue as T[keyof T];
+                        valueRef.current[field] = newValue as unknown as T[keyof T];
                       }}
                       color="error"
                     >
@@ -131,7 +131,7 @@ const StudentSelectorInput = <T extends unknown>({
                 setSelectValue(null);
                 errorRef.current[field] = validationHandler(newValue);
                 if (onChange) onChange(newValue);
-                valueRef.current[field] = newValue as T[keyof T];
+                valueRef.current[field] = newValue as unknown as T[keyof T];
               }
             }}
             color="info"

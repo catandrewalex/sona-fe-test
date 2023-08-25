@@ -1,8 +1,8 @@
 /* eslint-disable react/destructuring-assignment */
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { TextFieldProps } from "@mui/material/TextField";
 import React from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
-import { InputAdornment } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 
 /**
  * Text Input prop types.

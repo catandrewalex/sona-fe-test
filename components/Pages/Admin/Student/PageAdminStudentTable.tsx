@@ -7,7 +7,7 @@ import { Student, UserType } from "@sonamusica-fe/types";
 import { getFullNameFromStudent, searchFullNameByValue } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "api";
 import moment from "moment";
-import React, { useMemo } from "react";
+import React from "react";
 
 type PageAdminStudentTableProps = {
   data: Student[];

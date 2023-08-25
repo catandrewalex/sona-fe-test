@@ -41,7 +41,7 @@ const required = (value: string | undefined | null): boolean => {
   return Boolean(value);
 };
 
-const notEmptyArray = (value: Array<any>): boolean => {
+const notEmptyArray = (value: Array<unknown>): boolean => {
   return value.length > 0;
 };
 
@@ -67,8 +67,8 @@ export const useCheckRequired = (field: string): ((value: string) => string) => 
   }, []);
 };
 
-export const useNotEmptyArray = (field: string): ((value: Array<any>) => string) => {
-  return useCallback((value: Array<any>) => {
+export const useNotEmptyArray = (field: string): ((value: Array<unknown>) => string) => {
+  return useCallback((value: Array<unknown>) => {
     if (!notEmptyArray(value)) {
       return `${field} is required!`;
     }

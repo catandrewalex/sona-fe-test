@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 
+/**
+ * @type {import('next').NextConfig}
+ */
 module.exports = () => {
   const env = {
     sassOptions: {
@@ -14,7 +17,12 @@ module.exports = () => {
   return {
     env,
     distDir: "build",
-    swcMinify: false
+    swcMinify: false,
+    output: "export",
+    images: {
+      loader: "custom",
+      loaderFile: "./imageLoader.js"
+    }
     /* config options for all phases except development here */
   };
 };

@@ -1,11 +1,18 @@
-import Typography from "@mui/material/Typography";
 import { useEffect } from "react";
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { useUser } from "@sonamusica-fe/providers/AppProvider";
 import Image from "next/image";
 import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
-import { Button, Card, CardActions, CardContent, CardHeader, Divider } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Divider,
+  Typography
+} from "@mui/material";
 import { useRouter } from "next/router";
 import { Add, ArrowRight } from "@mui/icons-material";
 

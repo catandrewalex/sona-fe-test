@@ -1,9 +1,9 @@
-import { CSSObject } from "@mui/material/styles";
 import { UrlObject } from "url";
-import Box from "@mui/material/Box";
 import { GridCellParams } from "@mui/x-data-grid";
 import React from "react";
 import Link from "next/link";
+
+import { CSSObject, Box } from "@mui/material";
 
 type ColouredCellProps = {
   params: GridCellParams;

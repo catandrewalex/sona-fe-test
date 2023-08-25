@@ -1,8 +1,8 @@
 /* eslint-disable react/destructuring-assignment */
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { TextFieldProps } from "@mui/material/TextField";
 import React, { useCallback, useEffect, useState } from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
-import { InputAdornment } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import {
   ValidationConfig,
   useCheckEmail,
@@ -82,10 +82,10 @@ const TextInput = <T extends unknown>({
             case "match":
               errorMsg = matchCheck(
                 value,
-                valueRef.current[validation.parameters.matcherField] as string,
+                valueRef.current[validation.parameters.matcherField] as unknown as string,
                 validation.parameters.matcherLabel
                   ? validation.parameters.matcherLabel
-                  : (validation.parameters.matcherField as string)
+                  : (validation.parameters.matcherField as unknown as string)
               );
               break;
           }
@@ -106,7 +106,7 @@ const TextInput = <T extends unknown>({
   }, [initialValue]);
 
   useEffect(() => {
-    setInternalValue((valueRef.current[field] as string) || "");
+    setInternalValue((valueRef.current[field] as unknown as string) || "");
   }, [valueRef.current[field]]);
 
   useEffect(() => {
@@ -128,8 +128,8 @@ const TextInput = <T extends unknown>({
           if (onChange) onChange(e);
           valueRef.current[field] =
             props.type === "number"
-              ? (parseInt(e.target.value) as T[keyof T])
-              : (e.target.value as T[keyof T]);
+              ? (parseInt(e.target.value) as unknown as T[keyof T])
+              : (e.target.value as unknown as T[keyof T]);
         }}
         error={internalErrorMsg !== ""}
         inputProps={finalInputProps}

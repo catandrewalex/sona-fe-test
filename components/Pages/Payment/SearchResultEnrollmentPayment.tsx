@@ -12,7 +12,6 @@ import {
   getFullNameFromTeacher
 } from "@sonamusica-fe/utils/StringUtil";
 import SearchFilter from "@sonamusica-fe/components/Search/SearchFilter";
-import user from "@sonamusica-fe/pages/user";
 import { SuccessResponse, FailedResponse, ResponseMany } from "api";
 import moment from "moment";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
@@ -21,6 +20,7 @@ import PaymentDetailAction from "@sonamusica-fe/components/Pages/Payment/Payment
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { useRouter } from "next/router";
 import EditPaymentForm from "@sonamusica-fe/components/Pages/Payment/EditPaymentForm";
+import { useUser } from "@sonamusica-fe/providers/AppProvider";
 
 type SearchResultEnrollmentPaymentProps = {
   data: EnrollmentPayment[];
@@ -42,6 +42,7 @@ const SearchResultEnrollmentPayment = ({
   const { showSnackbar } = useSnack();
   const { showDialog } = useAlertDialog();
   const router = useRouter();
+  const user = useUser((state) => state.user);
 
   const addPaymentHandler = useCallback(() => {
     showDialog(

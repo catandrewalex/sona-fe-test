@@ -1,7 +1,7 @@
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 import React from "react";
 import { useUser } from "@sonamusica-fe/providers/AppProvider";
+
+import { Avatar, Box } from "@mui/material";
 
 type ProfileViewProps = {
   open: boolean;

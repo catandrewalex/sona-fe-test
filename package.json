@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
+    "export": "next export",
     "lint": "eslint . --ignore-path .eslintignore --fix --cache",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
@@ -55,6 +56,7 @@
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "app-root-path": "^3.0.0",
+    "babel-plugin-direct-import": "^1.0.0",
     "chalk": "4.1.2",
     "dotenv": "^16.0.0",
     "eslint": "7.32.0",

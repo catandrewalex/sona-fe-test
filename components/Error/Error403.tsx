@@ -1,5 +1,5 @@
-import Box from "@mui/material/Box";
 import Image from "next/image";
+import { Box } from "@mui/material";
 
 const Error403 = (): JSX.Element => {
   return (

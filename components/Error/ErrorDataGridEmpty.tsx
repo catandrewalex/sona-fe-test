@@ -1,5 +1,5 @@
-import Stack from "@mui/material/Stack";
 import Image from "next/image";
+import { Stack } from "@mui/material";
 
 const ErrorDataGridEmpty = (): JSX.Element => {
   return (

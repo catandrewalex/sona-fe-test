@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { deleteCookie, getCookie } from "@sonamusica-fe/utils/BrowserUtil";
 

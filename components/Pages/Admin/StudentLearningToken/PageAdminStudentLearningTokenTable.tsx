@@ -2,7 +2,7 @@ import Table from "@sonamusica-fe/components/Table";
 import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
-import { StudentLearningToken, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
+import { StudentLearningToken, Student, Teacher } from "@sonamusica-fe/types";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";

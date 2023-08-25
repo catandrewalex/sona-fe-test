@@ -1,14 +1,6 @@
 import { Masonry } from "@mui/lab";
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid
-} from "@mui/material";
-import React, { useEffect } from "react";
+import { Box, Card, CardActions, CardContent, CardHeader } from "@mui/material";
+import React from "react";
 
 type SearchResultProps<T> = {
   data: T[];

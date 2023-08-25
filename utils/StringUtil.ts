@@ -122,7 +122,5 @@ export const convertMomentDateToRFC3339 = (date: Moment): string => {
   return date.format();
 };
 
-const addCommas = (num: string): string => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
 export const removeNonNumericCharacter = (num: string): string =>
   num.toString().replace(/[^0-9]/g, "");

@@ -14,7 +14,7 @@ import {
 import LogoutIcon from "@mui/icons-material/Logout";
 import { UserType } from "@sonamusica-fe/types";
 import Modal from "@sonamusica-fe/components/Modal";
-import { Cancel, PasswordOutlined, Save } from "@mui/icons-material";
+import { PasswordOutlined } from "@mui/icons-material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { FailedResponse } from "api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";

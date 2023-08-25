@@ -1,6 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
-import TextField, { TextFieldProps } from "@mui/material/TextField";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
 import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 import {
@@ -40,7 +39,7 @@ const DatePicker = <T extends unknown>({
   const [internalErrorMsg, setInternalErrorMsg] = useState<string>("");
 
   useEffect(() => {
-    setInternalValue((valueRef.current[field] as Moment) || moment());
+    setInternalValue((valueRef.current[field] as unknown as Moment) || moment());
   }, [valueRef.current[field]]);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ const DatePicker = <T extends unknown>({
   useEffect(() => {
     if (defaultValue) {
       setInternalValue(defaultValue);
-      valueRef.current[field] = defaultValue as T[keyof T];
+      valueRef.current[field] = defaultValue as unknown as T[keyof T];
     }
   }, [defaultValue]);
 
@@ -64,7 +63,7 @@ const DatePicker = <T extends unknown>({
         onChange={(value, context) => {
           setInternalValue(value);
           if (onChange) onChange(value, context);
-          valueRef.current[field] = value as T[keyof T];
+          valueRef.current[field] = value as unknown as T[keyof T];
         }}
         slotProps={merge(
           {

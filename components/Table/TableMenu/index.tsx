@@ -1,7 +1,7 @@
 import { Theme } from "@emotion/react";
-import Grid from "@mui/material/Grid";
 import { SxProps } from "@mui/system";
 import React from "react";
+import { Grid } from "@mui/material";
 
 type TableMenuContainerProps = {
   children: React.ReactNode;
