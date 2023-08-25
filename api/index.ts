@@ -247,7 +247,11 @@ export enum AdminRoutes {
 }
 
 export enum Routes {
-  PAYMENT = "/enrollmentPayments"
+  PAYMENT = "/enrollmentPayment",
+  TEACHER = "/teachers",
+  STUDENT = "/students",
+  COURSE = "/courses",
+  STUDENT_ENROLLMENT = "/studentEnrollments"
 }
 
 export default API;

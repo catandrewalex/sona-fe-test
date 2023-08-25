@@ -18,7 +18,7 @@ type SearchEnrollmentPaymentProps = {
 };
 
 const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProps): JSX.Element => {
-  const [startDate, setStartDate] = useState<Moment | null>(moment().subtract(1, "year"));
+  const [startDate, setStartDate] = useState<Moment | null>(moment().startOf("month"));
   const [endDate, setEndDate] = useState<Moment | null>(moment());
   const apiTransformer = useApiTransformer();
   const { formRenderer } = useFormRenderer<SearchPaymentListFormData>(
@@ -45,11 +45,14 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
             defaultValue: startDate,
             onChange(value) {
               if (value && value.isValid()) {
-                const endDate = moment(value).endOf("month");
-                if (endDate.isAfter(moment())) {
-                  setEndDate(moment());
-                } else {
-                  setEndDate(endDate);
+                if (endDate && moment(endDate).subtract(1, "year").diff(value) > 0) {
+                  setEndDate(moment(value).add(1, "year"));
+                } else if (endDate && moment(endDate).diff(value) < 0) {
+                  if (moment().diff(moment(value).add(1, "year")) < 0) {
+                    setEndDate(moment());
+                  } else {
+                    setEndDate(moment(value).add(1, "year"));
+                  }
                 }
               }
               setStartDate(value);
@@ -66,8 +69,11 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
             defaultValue: endDate,
             onChange(value) {
               if (value && value.isValid()) {
-                const startDate = moment(value).startOf("month");
-                setStartDate(startDate);
+                if (startDate && moment(startDate).diff(value) > 0) {
+                  setStartDate(moment(value).subtract(1, "year"));
+                } else if (startDate && moment(value).subtract(1, "year").diff(startDate) > 0) {
+                  setStartDate(moment(value).subtract(1, "year"));
+                }
               }
               setEndDate(value);
             }
@@ -88,7 +94,7 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
         }
       }
     },
-    { startDate: moment().subtract(1, "year"), endDate: moment() }
+    { startDate: moment().startOf("month"), endDate: moment() }
   );
   return (
     <Box

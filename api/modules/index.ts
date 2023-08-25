@@ -13,6 +13,9 @@ import teacherSpecialFeeAdminModule from "./admin/teacher-special-fee";
 import studentLearningTokenAdminModule from "./admin/student-learning-token";
 import enrollmentPaymenAdminModule from "./admin/enrollment-payment";
 import paymentsModule from "./payments";
+import teacherModule from "./teacher";
+import studentModule from "./student";
+import courseModule from "./course";
 
 export default {
   ...authModule,
@@ -26,7 +29,10 @@ export default {
   ...teacherSpecialFeeAdminModule,
   ...studentLearningTokenAdminModule,
   ...enrollmentPaymenAdminModule,
-  ...paymentsModule
+  ...paymentsModule,
+  ...teacherModule,
+  ...studentModule,
+  ...courseModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

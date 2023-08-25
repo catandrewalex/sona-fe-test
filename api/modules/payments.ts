@@ -1,14 +1,10 @@
 import { EnrollmentPayment, EnrollmentPaymentInvoice } from "@sonamusica-fe/types";
 import {
-  EnrollmentPaymentUpdateFormRequest,
-  EnrollmentPaymentInsertFormRequest,
-  EnrollmentPaymentDeleteRequest
-} from "@sonamusica-fe/types/form/admin/enrollment-payment";
-import {
   EditPaymentBalanceFormRequest,
-  RemovePaymentFormRequest
+  RemovePaymentFormRequest,
+  SubmitPaymentBalanceFormRequest
 } from "@sonamusica-fe/types/form/payment";
-import API, { AdminRoutes, FailedResponse, GetRequestConfig, Routes, SuccessResponse } from "api";
+import API, { FailedResponse, Routes, SuccessResponse } from "api";
 
 interface SearchPaymentConfig {
   startDateTime?: string;
@@ -49,10 +45,19 @@ const RemovePayment = ({
   });
 };
 
+const SubmitPayment = (
+  data: SubmitPaymentBalanceFormRequest
+): Promise<FailedResponse | SuccessResponse<undefined>> => {
+  return API.post<undefined>({
+    url: `${Routes.PAYMENT}/submit`,
+    config: { data }
+  });
+};
+
 export default {
   SearchPayments,
   EditPaymentTopUpBalance,
   GetPaymentInvoice,
-  //   UpdateEnrollmentPayment,
+  SubmitPayment,
   RemovePayment
 };

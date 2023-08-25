@@ -49,12 +49,16 @@ const SearchResultEnrollmentPayment = ({
         title: "Move Page",
         content: "Are you sure want to move to Add Enrollment Payment page?"
       },
-      () => router.push({ query: { page: "AddEnrollmentPayment" }, pathname: "/" })
+      () => router.push({ pathname: "/payment/new" })
     );
   }, []);
 
   useEffect(() => {
-    const promises = [API.GetAllStudent(), API.GetAllTeacher(), API.GetAllCourse()];
+    const promises = [
+      API.GetStudentDropdownOptions(),
+      API.GetTeacherDropdownOptions(),
+      API.GetCourseDropdownOptions()
+    ];
     Promise.allSettled(promises).then((value) => {
       if (value[0].status === "fulfilled") {
         const response = value[0].value as SuccessResponse<Student>;
@@ -178,7 +182,7 @@ const SearchResultEnrollmentPayment = ({
             type: "arithmetic",
             label: "Penalty Fee",
             filterHandle(data, value) {
-              return advancedNumberFilter(data.valuePenalty, value);
+              return advancedNumberFilter(data.penaltyFeeValue, value);
             }
           },
           {
@@ -200,10 +204,6 @@ const SearchResultEnrollmentPayment = ({
             editHandler={() => setSelectedData(currData)}
             deleteHandler={() => {
               setData(
-                data.filter((item) => item.enrollmentPaymentId !== currData.enrollmentPaymentId)
-              );
-              console.log(currData);
-              console.log(
                 data.filter((item) => item.enrollmentPaymentId !== currData.enrollmentPaymentId)
               );
             }}
@@ -232,7 +232,6 @@ const SearchResultEnrollmentPayment = ({
               item.enrollmentPaymentId === newData.enrollmentPaymentId ? newData : item
             )
           );
-          console.log(newData);
         }}
       />
     </Box>

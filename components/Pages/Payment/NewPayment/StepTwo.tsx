@@ -1,4 +1,4 @@
-import { Box, Grid, InputAdornment } from "@mui/material";
+import { Box } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import StandardTextInput from "@sonamusica-fe/components/Form/StandardTextInput";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
@@ -6,22 +6,16 @@ import FormDataViewerTable, {
   FormDataViewerTableConfig
 } from "@sonamusica-fe/components/Table/FormDataViewerTable";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
+import { Class, EnrollmentPaymentInvoice, Student, StudentEnrollment } from "@sonamusica-fe/types";
 import {
-  Class,
-  EnrollmentPayment,
-  EnrollmentPaymentInvoice,
-  Student,
-  StudentEnrollment
-} from "@sonamusica-fe/types";
-import {
-  convertMomentDateToRFC3339,
   convertNumberToCurrencyString,
+  convertNumberToCurrencyStringWithoutPrefixAndSuffix,
   getCourseName,
   getFullNameFromStudent,
-  getFullNameFromTeacher
+  getFullNameFromTeacher,
+  removeNonNumericCharacter
 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "api";
-import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 
 type NewPaymentStepTwoProps = {
@@ -52,7 +46,7 @@ const NewPaymentStepTwo = ({
               balanceTopUp: invoiceData.balanceTopUp,
               courseFeeValue: invoiceData.courseFeeValue,
               transportFeeValue: invoiceData.transportFeeValue,
-              valuePenalty: invoiceData.valuePenalty
+              penaltyFeeValue: invoiceData.penaltyFeeValue
             });
           } else {
             showSnackbar("Failed to fetch invoice data!", "error");
@@ -83,7 +77,6 @@ const NewPaymentStepTwo = ({
     }
     return [];
   }, []);
-
   const getInvoiceDataDisplay = useCallback((data?: EnrollmentPaymentInvoice) => {
     if (data) {
       return [
@@ -93,7 +86,7 @@ const NewPaymentStepTwo = ({
             <StandardTextInput
               value={data.balanceTopUp}
               onChange={(e) =>
-                setInvoiceData({ ...data, balanceTopUp: parseInt(e.target.value || "1") })
+                setInvoiceData({ ...data, balanceTopUp: parseInt(e.target.value || "0") })
               }
               type="number"
               margin="dense"
@@ -105,14 +98,19 @@ const NewPaymentStepTwo = ({
           title: "Course Fee",
           value: (
             <StandardTextInput
-              value={data.courseFeeValue}
+              value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.courseFeeValue)}
               onChange={(e) =>
-                setInvoiceData({ ...data, courseFeeValue: parseInt(e.target.value || "0") })
+                setInvoiceData({
+                  ...data,
+                  courseFeeValue: parseInt(
+                    e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
+                  )
+                })
               }
-              type="number"
+              type="text"
               margin="dense"
               size="small"
-              helperText={"Currency Fomat: " + convertNumberToCurrencyString(data.courseFeeValue)}
+              startAdornment="Rp"
             />
           )
         },
@@ -120,16 +118,19 @@ const NewPaymentStepTwo = ({
           title: "Transport Fee",
           value: (
             <StandardTextInput
-              value={data.transportFeeValue}
+              value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.transportFeeValue)}
               onChange={(e) =>
-                setInvoiceData({ ...data, transportFeeValue: parseInt(e.target.value || "0") })
+                setInvoiceData({
+                  ...data,
+                  transportFeeValue: parseInt(
+                    e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
+                  )
+                })
               }
               type="number"
               margin="dense"
               size="small"
-              helperText={
-                "Currency Fomat: " + convertNumberToCurrencyString(data.transportFeeValue)
-              }
+              startAdornment="Rp"
             />
           )
         },
@@ -137,21 +138,26 @@ const NewPaymentStepTwo = ({
           title: "Penalty Fee",
           value: (
             <StandardTextInput
-              value={data.valuePenalty}
+              value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.penaltyFeeValue)}
               onChange={(e) =>
-                setInvoiceData({ ...data, valuePenalty: parseInt(e.target.value || "0") })
+                setInvoiceData({
+                  ...data,
+                  penaltyFeeValue: parseInt(
+                    e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
+                  )
+                })
               }
               type="number"
               margin="dense"
               size="small"
-              helperText={"Currency Fomat: " + convertNumberToCurrencyString(data.valuePenalty)}
+              startAdornment="Rp"
             />
           )
         },
         {
           title: "Total Payment",
           value: convertNumberToCurrencyString(
-            data.balanceTopUp * data.courseFeeValue + data.transportFeeValue + data.valuePenalty
+            data.balanceTopUp * data.courseFeeValue + data.transportFeeValue + data.penaltyFeeValue
           ),
           sx: { fontWeight: "bold", py: 1.5, fontSize: 20 }
         }
@@ -159,11 +165,11 @@ const NewPaymentStepTwo = ({
     }
     return [];
   }, []);
-  console.log(invoiceData);
+
   if (loading) return <LoaderSimple />;
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", margin: "auto" }}>
       <Box mb={2}>
         <FormDataViewerTable
           tableProps={{ size: "small" }}

@@ -20,7 +20,7 @@ const EnrollmentPaymentPage = (): JSX.Element => {
     setData(data);
     setPage(Page.SEARCH_RESULT);
   }, []);
-  const moveToSearchPage = useCallback(() => setPage(Page.SEARCH), []);
+  const navigateToSearchPage = useCallback(() => setPage(Page.SEARCH), []);
 
   useEffect(() => {
     finishLoading();
@@ -32,7 +32,7 @@ const EnrollmentPaymentPage = (): JSX.Element => {
     ) : (
       <SearchResultEnrollmentPayment
         data={data}
-        backButtonHandler={moveToSearchPage}
+        backButtonHandler={navigateToSearchPage}
         setData={setData}
       />
     );

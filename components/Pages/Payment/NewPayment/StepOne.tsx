@@ -1,11 +1,10 @@
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
 import StandardSelect from "@sonamusica-fe/components/Form/StandardSelect";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
 import { useUser } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { Class, Course, Student, StudentEnrollment, Teacher } from "@sonamusica-fe/types";
+import { Class, Student, StudentEnrollment } from "@sonamusica-fe/types";
 import { useDebouncedCallback } from "@sonamusica-fe/utils/LodashUtil";
 import {
   getCourseName,
@@ -14,12 +13,6 @@ import {
 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import React, { useEffect, useState } from "react";
-
-type SearchStudentEnrollmentFormData = {
-  teacher: Teacher | null;
-  student: Student | null;
-  course: Course | null;
-};
 
 type NewPaymentStepOneProps = {
   setStudentEnrollment: (data?: StudentEnrollment) => void;
@@ -33,9 +26,6 @@ const NewPaymentStepOne = ({
   defaultStudent
 }: NewPaymentStepOneProps): JSX.Element => {
   const [studentData, setStudentData] = useState<Student[]>([]);
-  const [teacherData, setTeacherData] = useState<Teacher[]>([]);
-  const [courseData, setCourseData] = useState<Course[]>([]);
-  const [classData, setClassData] = useState<Class[]>([]);
   const [filteredClassData, setFilteredClassData] = useState<Class[]>([]);
   const [studentEnrollmentData, setStudentEnrollmentData] = useState<StudentEnrollment[]>([]);
 
@@ -52,13 +42,7 @@ const NewPaymentStepOne = ({
 
   useEffect(() => {
     if (user) {
-      const promises = [
-        API.GetAllStudent(),
-        API.GetAllTeacher(),
-        API.GetAllCourse(),
-        API.GetAllStudentEnrollment(),
-        API.GetAllClass()
-      ];
+      const promises = [API.GetStudentDropdownOptions(), API.GetAllStudentEnrollment()];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
           const response = value[0].value as SuccessResponse<Student>;
@@ -69,39 +53,12 @@ const NewPaymentStepOne = ({
         } else {
           showSnackbar("Failed to fetch students data!", "error");
         }
+
         if (value[1].status === "fulfilled") {
-          const response = value[1].value as SuccessResponse<Teacher>;
-          const parsedResponse = apiTransformer(response, false);
-          if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setTeacherData((parsedResponse as ResponseMany<Teacher>).results);
-          }
-        } else {
-          showSnackbar("Failed to fetch teachers data!", "error");
-        }
-        if (value[2].status === "fulfilled") {
-          const response = value[2].value as SuccessResponse<Course>;
-          const parsedResponse = apiTransformer(response, false);
-          if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setCourseData((parsedResponse as ResponseMany<Course>).results);
-          }
-        } else {
-          showSnackbar("Failed to fetch courses data!", "error");
-        }
-        if (value[3].status === "fulfilled") {
-          const response = value[3].value as SuccessResponse<StudentEnrollment>;
+          const response = value[1].value as SuccessResponse<StudentEnrollment>;
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
             setStudentEnrollmentData((parsedResponse as ResponseMany<StudentEnrollment>).results);
-          }
-        } else {
-          showSnackbar("Failed to fetch courses data!", "error");
-        }
-        if (value[4].status === "fulfilled") {
-          const response = value[4].value as SuccessResponse<Class>;
-          const parsedResponse = apiTransformer(response, false);
-          if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setClassData((parsedResponse as ResponseMany<Class>).results);
-            setFilteredClassData((parsedResponse as ResponseMany<Class>).results);
           }
         } else {
           showSnackbar("Failed to fetch courses data!", "error");
@@ -112,66 +69,6 @@ const NewPaymentStepOne = ({
     }
   }, [user]);
 
-  //   const { formRenderer } = useFormRenderer<SearchStudentEnrollmentFormData>(
-  //     {
-  //       testIdContext: "NewEnrollmentPayment-ChooseStudent",
-  //       disablePromptCancelButtonDialog: true,
-  //       disableUseOfDefaultFormConfig: true,
-  //       submitContainerProps: {
-  //         align: "center"
-  //       },
-  //       submitButtonProps: {
-  //         lg: 6,
-  //         md: 6,
-  //         submitText: "Search"
-  //       },
-  //       fields: [
-  //         {
-  //           type: "select",
-  //           name: "student",
-  //           label: "Student",
-  //           formFieldProps: { lg: 12, md: 12, sx: { pt: "8px !important" } },
-  //           inputProps: { required: true },
-  //           selectProps: {
-  //             options: studentData,
-  //             getOptionLabel: (option) => getFullNameFromStudent(option)
-  //           },
-  //           validations: [{ name: "required" }]
-  //         },
-  //         {
-  //           type: "select",
-  //           name: "teacher",
-  //           label: "Teacher",
-  //           formFieldProps: { lg: 12, md: 12, sx: { pt: "8px !important" } },
-  //           inputProps: { required: true },
-  //           selectProps: {
-  //             options: teacherData,
-  //             getOptionLabel: (option) => getFullNameFromTeacher(option)
-  //           },
-  //           validations: [{ name: "required" }]
-  //         },
-
-  //         {
-  //           type: "select",
-  //           name: "course",
-  //           label: "Course",
-  //           formFieldProps: { lg: 12, md: 12, sx: { pt: "8px !important" } },
-  //           inputProps: { required: true },
-  //           selectProps: {
-  //             options: courseData,
-  //             getOptionLabel: (option) => getCourseName(option)
-  //           },
-  //           validations: [{ name: "required" }]
-  //         }
-  //       ],
-  //       submitHandler: async ({ teacher, student, course }, error) => {
-  //         if (error.course || error.student || error.teacher) return Promise.reject();
-  //         setLoading(true);
-  //       }
-  //     },
-  //     { teacher: null, student: null, course: null }
-  //   );
-
   const studentSearchHandler = useDebouncedCallback((student: Student) => {
     const filteredStudentEnrollment = studentEnrollmentData.filter(
       (data) => data.student.studentId === student.studentId
@@ -179,14 +76,6 @@ const NewPaymentStepOne = ({
     setFilteredClassData(filteredStudentEnrollment.map((data) => data.class));
     setSelectLoading(false);
   }, 750);
-
-  //   const classSearchHandler = useDebouncedCallback((class: Class) => {
-  //     const filteredStudentEnrollment = studentEnrollmentData.filter(
-  //       (data) => data.student.studentId === student.studentId
-  //     );
-  //     setFilteredClassData(filteredStudentEnrollment.map((data) => data.class));
-  //     setSelectLoading(false);
-  //   }, 750);
 
   const classSearchHandler = useDebouncedCallback((cl: Class) => {
     const filteredStudentEnrollment = studentEnrollmentData.filter(

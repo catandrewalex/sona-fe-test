@@ -8,7 +8,6 @@ import {
   CardHeader,
   Grid
 } from "@mui/material";
-import Aos from "aos";
 import React, { useEffect } from "react";
 
 type SearchResultProps<T> = {
@@ -30,9 +29,8 @@ const SearchResult = <T extends unknown>({
   getDataActions,
   getDataSubTitle
 }: SearchResultProps<T>): JSX.Element => {
-  useEffect(() => Aos.init({ delay: 250, duration: 500 }), []);
   const content = data.map((item) => (
-    <Card key={getDataKey(item)} elevation={3} data-aos="fade-up">
+    <Card key={getDataKey(item)} elevation={3}>
       <CardHeader
         title={getDataTitle(item)}
         sx={{ py: 0.5, borderBottom: "1px solid rgba(0,0,0,0.15)" }}
@@ -47,7 +45,7 @@ const SearchResult = <T extends unknown>({
 
   return (
     <Box sx={{ mt: 2, p: 2, maxHeight, overflowY: "auto" }}>
-      <Masonry spacing={3} columns={{ md: 6, xl: 4, lg: 3 }}>
+      <Masonry spacing={3} columns={{ md: 2, xl: 4, lg: 3 }}>
         {content}
       </Masonry>
     </Box>

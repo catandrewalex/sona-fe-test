@@ -113,12 +113,12 @@ const PageAdminEnrollmentPaymentTable = ({
             valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
           },
           {
-            field: "valuePenalty",
+            field: "penaltyFeeValue",
             headerName: "Penalty Fee",
             width: 140,
             align: "center",
             headerAlign: "center",
-            valueGetter: (params) => params.row.valuePenalty,
+            valueGetter: (params) => params.row.penaltyFeeValue,
             valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
           },
           {
@@ -202,12 +202,12 @@ const PageAdminEnrollmentPaymentTable = ({
           },
           {
             type: "text-input",
-            field: "valuePenalty",
+            field: "penaltyFeeValue",
             columnLabel: "Penalty Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             md: 4,
             lg: 4,
-            filterHandler: (data, value) => advancedNumberFilter(data.valuePenalty, value.trim())
+            filterHandler: (data, value) => advancedNumberFilter(data.penaltyFeeValue, value.trim())
           },
           {
             type: "text-input",

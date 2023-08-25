@@ -52,7 +52,7 @@ const PaymentDetail = (data: EnrollmentPayment): JSX.Element => {
         <TableRow>
           <CellTitle width="30%">Penalty</CellTitle>
           <CellSemiColon align="center">:</CellSemiColon>
-          <TableCell>{convertNumberToCurrencyString(data.valuePenalty)}</TableCell>
+          <TableCell>{convertNumberToCurrencyString(data.penaltyFeeValue)}</TableCell>
         </TableRow>
         <TableRow>
           <CellTitle width="30%">Teacher</CellTitle>

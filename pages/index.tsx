@@ -8,8 +8,6 @@ import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
 import { Button, Card, CardActions, CardContent, CardHeader, Divider } from "@mui/material";
 import { useRouter } from "next/router";
 import { Add, ArrowRight } from "@mui/icons-material";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 export default function Home(): JSX.Element {
   const finishLoading = useApp((state) => state.finishLoading);
@@ -17,8 +15,6 @@ export default function Home(): JSX.Element {
   const { push } = useRouter();
 
   const user = useUser((state) => state.user);
-
-  useEffect(() => AOS.init({ delay: 250, duration: 750 }), []);
 
   return (
     <PageContainer pageTitle="Sonamusica" navTitle="Home">
@@ -29,7 +25,7 @@ export default function Home(): JSX.Element {
         </Typography>
       </div>
       <Divider sx={{ my: 2, mb: 3 }} />
-      <Card elevation={4} sx={{ pl: 2 }} data-aos="fade-up">
+      <Card elevation={4} sx={{ pl: 2 }}>
         <CardHeader title="Enrollment Payment" />
         <CardContent>
           <Typography>
@@ -45,7 +41,12 @@ export default function Home(): JSX.Element {
           >
             Add New Payment
           </Button>
-          <Button endIcon={<ArrowRight />} variant="outlined" color="secondary">
+          <Button
+            onClick={() => push("/payment")}
+            endIcon={<ArrowRight />}
+            variant="outlined"
+            color="secondary"
+          >
             Manage Enrollment Payment
           </Button>
         </CardActions>

@@ -1,3 +1,4 @@
+import { EnrollmentPaymentInvoice } from "@sonamusica-fe/types";
 import { Moment } from "moment";
 
 export type RemovePaymentFormRequest = {
@@ -13,4 +14,9 @@ export type EditPaymentBalanceFormRequest = {
   enrollmentPaymentId: number;
   paymentDate: string;
   balanceTopUp: number;
+};
+
+export type SubmitPaymentBalanceFormRequest = EnrollmentPaymentInvoice & {
+  studentEnrollmentId: number;
+  paymentDate: string;
 };

@@ -71,6 +71,11 @@ export const convertNumberToCurrencyString = (value: number): string => {
   return currencyFormatter.format(value);
 };
 
+export const convertNumberToCurrencyStringWithoutPrefixAndSuffix = (value: number): string => {
+  const result = currencyFormatter.format(value);
+  return result.substring(3, result.length - 3);
+};
+
 export const getFullNameFromUser = (user?: User): string => {
   return user
     ? `${user.userDetail.firstName}${
@@ -116,3 +121,8 @@ export const searchCourseNameByValue = (value: string, course?: Course): boolean
 export const convertMomentDateToRFC3339 = (date: Moment): string => {
   return date.format();
 };
+
+const addCommas = (num: string): string => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+export const removeNonNumericCharacter = (num: string): string =>
+  num.toString().replace(/[^0-9]/g, "");

@@ -82,7 +82,7 @@ const PageAdminEnrollmentPaymentForm = ({
     },
     {
       type: "text",
-      name: "valuePenalty",
+      name: "penaltyFeeValue",
       label: "Penalty Fee",
       formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
       inputProps: {
@@ -131,7 +131,7 @@ const PageAdminEnrollmentPaymentForm = ({
     balanceTopUp: 0,
     courseFeeValue: 0,
     transportFeeValue: 0,
-    valuePenalty: 0,
+    penaltyFeeValue: 0,
     paymentDate: moment()
   };
 
@@ -149,20 +149,20 @@ const PageAdminEnrollmentPaymentForm = ({
           },
           fields: defaultUpdateFields,
           submitHandler: async (
-            { courseFeeValue, balanceTopUp, transportFeeValue, paymentDate, valuePenalty },
+            { courseFeeValue, balanceTopUp, transportFeeValue, paymentDate, penaltyFeeValue },
             error
           ) => {
             if (
               error.courseFeeValue ||
               error.balanceTopUp ||
               error.transportFeeValue ||
-              error.valuePenalty ||
+              error.penaltyFeeValue ||
               error.paymentDate
             )
               return Promise.reject();
             const response = await API.UpdateEnrollmentPayment([
               {
-                valuePenalty,
+                penaltyFeeValue,
                 balanceTopUp,
                 courseFeeValue,
                 transportFeeValue,
@@ -202,7 +202,7 @@ const PageAdminEnrollmentPaymentForm = ({
               studentEnrollment,
               paymentDate,
               transportFeeValue,
-              valuePenalty
+              penaltyFeeValue
             },
             error
           ) => {
@@ -211,7 +211,7 @@ const PageAdminEnrollmentPaymentForm = ({
               error.balanceTopUp ||
               error.transportFeeValue ||
               error.studentEnrollment ||
-              error.valuePenalty
+              error.penaltyFeeValue
             )
               return Promise.reject();
             const response = await API.InsertEnrollmentPayment([
@@ -219,7 +219,7 @@ const PageAdminEnrollmentPaymentForm = ({
                 courseFeeValue,
                 transportFeeValue,
                 balanceTopUp,
-                valuePenalty,
+                penaltyFeeValue,
                 paymentDate: convertMomentDateToRFC3339(paymentDate),
                 studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
               }
@@ -243,7 +243,7 @@ const PageAdminEnrollmentPaymentForm = ({
         transportFeeValue: selectedData.transportFeeValue,
         courseFeeValue: selectedData.courseFeeValue,
         paymentDate: moment(selectedData.paymentDate),
-        valuePenalty: selectedData.valuePenalty
+        penaltyFeeValue: selectedData.penaltyFeeValue
       };
       formProperties.errorRef.current = {} as Record<keyof EnrollmentPaymentUpdateFormData, string>;
     }

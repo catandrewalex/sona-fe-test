@@ -66,7 +66,15 @@ const DatePicker = <T extends unknown>({
           if (onChange) onChange(value, context);
           valueRef.current[field] = value as T[keyof T];
         }}
-        slotProps={merge({ textField: { fullWidth: true, margin: "normal" } }, slotProps)}
+        slotProps={merge(
+          {
+            textField: { fullWidth: true, margin: "normal" },
+            actionBar: {
+              actions: ["today", "clear"]
+            }
+          },
+          slotProps
+        )}
         disableFuture
         {...props}
         onError={(error) => {

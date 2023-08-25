@@ -91,7 +91,7 @@ export interface EnrollmentPayment {
   balanceTopUp: number;
   courseFeeValue: number;
   transportFeeValue: number;
-  valuePenalty: number;
+  penaltyFeeValue: number;
   paymentDate: string;
 }
 
