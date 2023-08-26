@@ -1,6 +1,7 @@
 import { Masonry } from "@mui/lab";
 import { Box, Card, CardActions, CardContent, CardHeader } from "@mui/material";
-import React from "react";
+import ErrorDataGridEmpty from "@sonamusica-fe/components/Error/ErrorDataGridEmpty";
+import React, { useEffect } from "react";
 
 type SearchResultProps<T> = {
   data: T[];
@@ -10,12 +11,10 @@ type SearchResultProps<T> = {
   getDataSubTitle?: (data: T) => string;
   getDataActions?: (data: T) => JSX.Element | JSX.Element[];
   onCardClick?: (data: T) => void;
-  maxHeight?: string | number;
 };
 
 const SearchResult = <T extends unknown>({
   data,
-  maxHeight = "calc(100vh - 104px)",
   getDataContent,
   getDataKey,
   getDataTitle,
@@ -42,11 +41,34 @@ const SearchResult = <T extends unknown>({
     </Card>
   ));
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const searchFilterEl = document.getElementById("search-filter-container") as HTMLElement;
+      const searchResultEl = document.getElementById("search-result-container") as HTMLElement;
+      if (searchFilterEl && searchResultEl) {
+        const height = searchFilterEl.clientHeight;
+        searchResultEl.style.height = `calc(100vh - 120px - ${height}px)`;
+        clearInterval(interval);
+      }
+    });
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
-    <Box sx={{ mt: 2, p: 2, maxHeight, overflowY: "auto" }}>
-      <Masonry spacing={3} columns={{ md: 2, xl: 4, lg: 3 }}>
-        {content}
-      </Masonry>
+    <Box
+      sx={{ mt: 2, p: 2, height: "calc(100vh - 200px)", overflowY: "auto" }}
+      id="search-result-container"
+    >
+      {content.length === 0 ? (
+        <ErrorDataGridEmpty />
+      ) : (
+        <Masonry spacing={3} columns={{ md: 2, xl: 4, lg: 3 }}>
+          {content}
+        </Masonry>
+      )}
     </Box>
   );
 };

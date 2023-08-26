@@ -13,11 +13,14 @@ enum Page {
 
 const PresencePage = (): JSX.Element => {
   const [page, setPage] = useState<Page>(Page.SEARCH);
-  const { query } = useRouter();
+  const { query, replace } = useRouter();
 
   const finishLoading = useApp((state) => state.finishLoading);
 
-  const navigateToSearchPage = useCallback(() => setPage(Page.SEARCH), []);
+  const navigateToSearchPage = useCallback(() => {
+    setPage(Page.SEARCH);
+    replace({ query: {} });
+  }, []);
   const navigateToSearchResultPage = useCallback(() => setPage(Page.SEARCH_RESULT), []);
 
   useEffect(() => {

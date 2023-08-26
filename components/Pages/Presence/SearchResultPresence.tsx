@@ -164,7 +164,6 @@ const SearchResultPresence = ({ backButtonHandler }: SearchResultPresenceProps):
         <LoaderSimple />
       ) : (
         <SearchResult
-          maxHeight="70vh"
           data={displayData}
           getDataActions={(currData) => (
             <Button

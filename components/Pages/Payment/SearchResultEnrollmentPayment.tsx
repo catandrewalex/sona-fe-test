@@ -197,7 +197,6 @@ const SearchResultEnrollmentPayment = ({
       />
       <Divider sx={{ my: 1 }} />
       <SearchResult
-        maxHeight="70vh"
         data={displayData}
         getDataActions={(currData) => (
           <PaymentDetailAction

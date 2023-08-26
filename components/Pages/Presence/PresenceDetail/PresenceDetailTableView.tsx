@@ -24,7 +24,6 @@ const PresenceDetailTableView = ({
   currPage,
   teacherId
 }: PresenceDetailTableViewProps): JSX.Element => {
-  console.log(data);
   return (
     <Table sx={{ "& .MuiTableCell-root": { py: 1.5 } }}>
       <TableHead>
