@@ -17,6 +17,11 @@ module.exports = () => {
   return {
     env,
     distDir: "build",
-    swcMinify: false
+    swcMinify: false,
+    output: "export",
+    images: {
+      loader: "custom",
+      loaderFile: "./imageLoader.js"
+    }
   };
 };
