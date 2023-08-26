@@ -124,3 +124,7 @@ export const convertMomentDateToRFC3339 = (date: Moment): string => {
 
 export const removeNonNumericCharacter = (num: string): string =>
   num.toString().replace(/[^0-9]/g, "");
+
+export const isValidNumericString = (value: unknown): boolean => {
+  return Boolean(value) && typeof value === "string" && !isNaN(+value);
+};

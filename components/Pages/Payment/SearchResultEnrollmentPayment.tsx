@@ -86,7 +86,7 @@ const SearchResultEnrollmentPayment = ({
           setCourseData((parsedResponse as ResponseMany<Course>).results);
         }
       } else {
-        showSnackbar("Failed to fetch teachers data!", "error");
+        showSnackbar("Failed to fetch courses data!", "error");
       }
     });
   }, [user]);

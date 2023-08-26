@@ -9,6 +9,7 @@ type SearchResultProps<T> = {
   getDataTitle: (data: T) => JSX.Element | string;
   getDataSubTitle?: (data: T) => string;
   getDataActions?: (data: T) => JSX.Element | JSX.Element[];
+  onCardClick?: (data: T) => void;
   maxHeight?: string | number;
 };
 
@@ -19,10 +20,16 @@ const SearchResult = <T extends unknown>({
   getDataKey,
   getDataTitle,
   getDataActions,
-  getDataSubTitle
+  getDataSubTitle,
+  onCardClick
 }: SearchResultProps<T>): JSX.Element => {
   const content = data.map((item) => (
-    <Card key={getDataKey(item)} elevation={3}>
+    <Card
+      key={getDataKey(item)}
+      elevation={3}
+      sx={onCardClick ? { cursor: "pointer" } : {}}
+      onClick={() => onCardClick?.(item)}
+    >
       <CardHeader
         title={getDataTitle(item)}
         sx={{ py: 0.5, borderBottom: "1px solid rgba(0,0,0,0.15)" }}

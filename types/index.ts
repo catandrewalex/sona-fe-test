@@ -99,3 +99,21 @@ export type EnrollmentPaymentInvoice = Omit<
   EnrollmentPayment,
   "enrollmentPaymentId" | "studentEnrollment" | "paymentDate"
 >;
+
+export interface Presence {
+  presenceId: number;
+  class: Class;
+  teacher: Teacher;
+  student: Student;
+  studentLearningToken: StudentLearningToken;
+  date: string;
+  usedStudentTokenQuota: number;
+  duration: number;
+  note: string;
+}
+
+export interface SearchClassConfig {
+  studentId?: number;
+  teacherId?: number;
+  courseId?: number;
+}

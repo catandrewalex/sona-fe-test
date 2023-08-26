@@ -3,20 +3,23 @@ import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
-import { EnrollmentPayment, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
-import PageAdminEnrollmentPaymentTable from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentTable";
-import PageAdminEnrollmentPaymentForm from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentForm";
+import { Presence, StudentLearningToken, Student, Teacher, Class } from "@sonamusica-fe/types";
+import PageAdminPresenceTable from "@sonamusica-fe/components/Pages/Admin/Presence/PageAdminPresenceTable";
+import PageAdminPresenceForm from "@sonamusica-fe/components/Pages/Admin/Presence/PageAdminPresenceForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import WarningCRUD from "@sonamusica-fe/components/WarningCRUD";
 
-const EnrollmentPaymentPage = (): JSX.Element => {
-  const [data, setData] = useState<Array<EnrollmentPayment>>([]);
+const PresencePage = (): JSX.Element => {
+  const [data, setData] = useState<Array<Presence>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedData, setSelectedData] = useState<EnrollmentPayment>();
-  const [studentEnrollmentData, setStudentEnrollmentData] = useState<StudentEnrollment[]>([]);
+  const [selectedData, setSelectedData] = useState<Presence>();
+  const [studentLearningTokenData, setStudentLearningTokenData] = useState<StudentLearningToken[]>(
+    []
+  );
   const [studentData, setStudentData] = useState<Student[]>([]);
   const [teacherData, setTeacherData] = useState<Teacher[]>([]);
+  const [classData, setClassData] = useState<Class[]>([]);
 
   const { showSnackbar } = useSnack();
   const finishLoading = useApp((state) => state.finishLoading);
@@ -35,29 +38,32 @@ const EnrollmentPaymentPage = (): JSX.Element => {
   useEffect(() => {
     if (user) {
       const promises = [
-        API.GetAllEnrollmentPayment(),
-        API.GetAllStudentEnrollment(),
+        API.GetAllPresence(),
+        API.GetAllStudentLearningToken(),
         API.GetAllStudent(),
-        API.GetAllTeacher()
+        API.GetAllTeacher(),
+        API.GetAllClass()
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
-          const response = value[0].value as SuccessResponse<EnrollmentPayment>;
+          const response = value[0].value as SuccessResponse<Presence>;
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setData((parsedResponse as ResponseMany<EnrollmentPayment>).results);
+            setData((parsedResponse as ResponseMany<Presence>).results);
           }
         } else {
-          showSnackbar("Failed to fetch enrollment payment data!", "error");
+          showSnackbar("Failed to fetch presence data!", "error");
         }
         if (value[1].status === "fulfilled") {
-          const response = value[1].value as SuccessResponse<StudentEnrollment>;
+          const response = value[1].value as SuccessResponse<StudentLearningToken>;
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setStudentEnrollmentData((parsedResponse as ResponseMany<StudentEnrollment>).results);
+            setStudentLearningTokenData(
+              (parsedResponse as ResponseMany<StudentLearningToken>).results
+            );
           }
         } else {
-          showSnackbar("Failed to fetch student enrollment data!", "error");
+          showSnackbar("Failed to fetch student learning token data!", "error");
         }
         if (value[2].status === "fulfilled") {
           const response = value[2].value as SuccessResponse<Student>;
@@ -77,6 +83,15 @@ const EnrollmentPaymentPage = (): JSX.Element => {
         } else {
           showSnackbar("Failed to fetch teachers data!", "error");
         }
+        if (value[4].status === "fulfilled") {
+          const response = value[4].value as SuccessResponse<Class>;
+          const parsedResponse = apiTransformer(response, false);
+          if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
+            setClassData((parsedResponse as ResponseMany<Class>).results);
+          }
+        } else {
+          showSnackbar("Failed to fetch class data!", "error");
+        }
 
         finishLoading();
         setLoading(false);
@@ -85,9 +100,9 @@ const EnrollmentPaymentPage = (): JSX.Element => {
   }, [user]);
 
   return (
-    <PageContainer navTitle="Enrollment Payment">
-      <WarningCRUD link="/payment" />
-      <PageAdminEnrollmentPaymentTable
+    <PageContainer navTitle="Presence">
+      <WarningCRUD link="/presence" />
+      <PageAdminPresenceTable
         data={data}
         studentData={studentData}
         teacherData={teacherData}
@@ -97,9 +112,12 @@ const EnrollmentPaymentPage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminEnrollmentPaymentForm
+      <PageAdminPresenceForm
         selectedData={selectedData}
-        studentEnrollmentData={studentEnrollmentData}
+        studentLearningTokenData={studentLearningTokenData}
+        teacherData={teacherData}
+        studentData={studentData}
+        classData={classData}
         data={data}
         open={open}
         setData={setData}
@@ -109,4 +127,4 @@ const EnrollmentPaymentPage = (): JSX.Element => {
   );
 };
 
-export default EnrollmentPaymentPage;
+export default PresencePage;
