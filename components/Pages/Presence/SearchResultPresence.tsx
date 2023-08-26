@@ -21,7 +21,7 @@ import PaymentDetailAction from "@sonamusica-fe/components/Pages/Payment/Payment
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { useRouter } from "next/router";
 import EditPaymentForm from "@sonamusica-fe/components/Pages/Payment/EditPaymentForm";
-import { useUser } from "@sonamusica-fe/providers/AppProvider";
+import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import PresenceResultDetail from "@sonamusica-fe/components/Pages/Presence/PresenceResultDetail";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
 
@@ -37,9 +37,10 @@ const SearchResultPresence = ({ backButtonHandler }: SearchResultPresenceProps):
   const [courseData, setCourseData] = useState<Course[]>([]);
   const apiTransformer = useApiTransformer();
   const { showSnackbar } = useSnack();
-  const { query } = useRouter();
+  const { query, push } = useRouter();
   const user = useUser((state) => state.user);
   const [loading, setLoading] = useState<boolean>(true);
+  const startLoading = useApp((state) => state.startLoading);
 
   useEffect(() => {
     const queryTeacher = isValidNumericString(query.teacher);
@@ -166,7 +167,16 @@ const SearchResultPresence = ({ backButtonHandler }: SearchResultPresenceProps):
           maxHeight="70vh"
           data={displayData}
           getDataActions={(currData) => (
-            <Button variant="contained" fullWidth sx={{ mx: 2, mb: 1 }} startIcon={<Visibility />}>
+            <Button
+              onClick={() => {
+                push("/presence/" + currData.classId);
+                startLoading();
+              }}
+              variant="contained"
+              fullWidth
+              sx={{ mx: 2, mb: 1 }}
+              startIcon={<Visibility />}
+            >
               View Detail
             </Button>
           )}
@@ -174,7 +184,9 @@ const SearchResultPresence = ({ backButtonHandler }: SearchResultPresenceProps):
           getDataKey={(data) => data.classId}
           getDataTitle={(data) => (
             <>
-              <Typography fontWeight="bold">{getFullNameFromTeacher(data?.teacher)}</Typography>
+              <Typography fontWeight="bold">
+                {getFullNameFromTeacher(data?.teacher) || "(No Teacher)"}
+              </Typography>
               <Typography fontWeight="bold">{getCourseName(data.course)}</Typography>
             </>
           )}

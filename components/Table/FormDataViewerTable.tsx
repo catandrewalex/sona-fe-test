@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Divider,
@@ -27,6 +28,8 @@ type FormDataViewerTableProps = {
   tableProps?: TableProps;
   tableRowProps?: TableRowProps;
   tableCellProps?: Omit<TableCellProps, "sx"> & { sx: CSSProperties };
+  CellValueComponent?: React.FC<any>;
+  cellValueComponentProps?: any;
 };
 
 const CellTitle = styled(TableCell)({
@@ -43,7 +46,9 @@ const FormDataViewerTable = ({
   dataTitle,
   tableProps,
   tableRowProps,
-  tableCellProps
+  tableCellProps,
+  CellValueComponent,
+  cellValueComponentProps
 }: FormDataViewerTableProps): JSX.Element => {
   return (
     <Box>
@@ -79,13 +84,29 @@ const FormDataViewerTable = ({
             return (
               <TableRow key={item.title + "-" + item.value} {...tableRowProps}>
                 <CellTitle {...tableCellProps} sx={merge({}, tableCellProps?.sx, item?.sx)}>
-                  {item.title}
+                  {CellValueComponent ? (
+                    <CellValueComponent {...cellValueComponentProps}>
+                      {item.title}
+                    </CellValueComponent>
+                  ) : (
+                    item.title
+                  )}
                 </CellTitle>
                 <CellSemiColon {...tableCellProps} sx={merge({}, tableCellProps?.sx, item?.sx)}>
-                  :
+                  {CellValueComponent ? (
+                    <CellValueComponent {...cellValueComponentProps}>:</CellValueComponent>
+                  ) : (
+                    ":"
+                  )}
                 </CellSemiColon>
                 <TableCell {...tableCellProps} sx={merge({}, tableCellProps?.sx, item?.sx)}>
-                  {item.value}
+                  {CellValueComponent ? (
+                    <CellValueComponent {...cellValueComponentProps}>
+                      {item.value}
+                    </CellValueComponent>
+                  ) : (
+                    item.value
+                  )}
                 </TableCell>
               </TableRow>
             );

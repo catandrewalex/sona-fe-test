@@ -2,7 +2,6 @@ import PageContainer from "@sonamusica-fe/components/PageContainer";
 import SearchPresence from "@sonamusica-fe/components/Pages/Presence/SearchPresence";
 import SearchResultPresence from "@sonamusica-fe/components/Pages/Presence/SearchResultPresence";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
-import { Class } from "@sonamusica-fe/types";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useCallback } from "react";
 
@@ -14,7 +13,6 @@ enum Page {
 
 const PresencePage = (): JSX.Element => {
   const [page, setPage] = useState<Page>(Page.SEARCH);
-  const [data, setData] = useState<Array<Class>>([]);
   const { query } = useRouter();
 
   const finishLoading = useApp((state) => state.finishLoading);
