@@ -42,3 +42,6 @@ docs/
 
 tests/screenshots
 tests/videos
+
+.babelrc
+next.config.js
