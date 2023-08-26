@@ -48,7 +48,7 @@ const Loader = ({ animation = false, testIdContext }: LoaderPropsType): JSX.Elem
   return (
     <>
       <animated.div style={props} className="container" data-testid={`${testIdContext}-Loader`}>
-        <Image src="/logo.png" width="500" height="287" />
+        <Image unoptimized src="/logo.png" width="500" height="287" />
         <CircularProgress
           className={clsx("m-5", {
             "hide-visual": !loaderVisible

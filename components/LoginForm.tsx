@@ -167,7 +167,7 @@ const LoginButton = (): JSX.Element => {
 
   return (
     <>
-      <Image src="/logo.png" width={200} height={95} />
+      <Image unoptimized src="/logo.png" width={200} height={95} />
       <Paper
         elevation={5}
         sx={{

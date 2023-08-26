@@ -3,8 +3,8 @@
   "version": "2.4.0",
   "private": true,
   "scripts": {
-    "dev": "cp next.config.local.js next.config.js && next dev",
-    "build": "cp next.config.production.js next.config.js && next build && next export",
+    "dev": "next dev",
+    "build": "next build && next export",
     "start": "next start",
     "export": "next export",
     "lint": "eslint . --ignore-path .eslintignore --fix --cache",

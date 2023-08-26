@@ -73,7 +73,7 @@ const ResetPassword = (): JSX.Element => {
   return (
     <PageContainer noAuth noNavigation>
       <>
-        <Image src="/logo.png" width={200} height={95} />
+        <Image unoptimized src="/logo.png" width={200} height={95} />
         <Paper
           elevation={5}
           sx={{

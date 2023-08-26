@@ -26,7 +26,7 @@ export default function Home(): JSX.Element {
   return (
     <PageContainer pageTitle="Sonamusica" navTitle="Home">
       <div style={{ textAlign: "center" }}>
-        <Image src="/logo.png" width="350" height="200" />
+        <Image unoptimized src="/logo.png" width="350" height="200" />
         <Typography variant="h5" sx={{ mt: 2 }}>
           Hi {getFullNameFromUser(user)}, Welcome!
         </Typography>

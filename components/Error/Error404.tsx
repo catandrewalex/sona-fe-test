@@ -6,7 +6,7 @@ const Error404 = (): JSX.Element => {
     <Box className="flex flex-full-percent flex-column align-center">
       <div>
         <div style={{ textAlign: "center" }}>
-          <Image src="/404.png" alt="not found" height={250} width={250} />
+          <Image unoptimized src="/404.png" alt="not found" height={250} width={250} />
         </div>
         <div>
           <h1 style={{ textAlign: "center" }}>Page Not Found</h1>

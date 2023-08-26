@@ -9,7 +9,7 @@ const Error403 = (): JSX.Element => {
     >
       <div>
         <div style={{ textAlign: "center" }}>
-          <Image src="/403.png" alt="unauthorized" height="350" width="350" />
+          <Image unoptimized src="/403.png" alt="unauthorized" height="350" width="350" />
         </div>
         <div>
           <h1 style={{ textAlign: "center" }}>Unauthorized!</h1>
