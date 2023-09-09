@@ -36,7 +36,8 @@ export default function Home(): JSX.Element {
         <CardHeader title="Enrollment Payment" />
         <CardContent>
           <Typography>
-            Manage student enrollment payments, such as: top up balance and update payment date.
+            Manage student enrollment payments: add new student payment, search existing payments,
+            and update payment records.
           </Typography>
         </CardContent>
         <CardActions>

@@ -39,8 +39,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
       showDialog(
         {
           title: "Discard Changes",
-          content:
-            "Are you sure want to cancel adding new enrollment payment? This will discard all changes and take you back to home page."
+          content: "Discard all changes, and return to the homepage?"
         },
         () => {
           replace("/");
@@ -55,7 +54,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
         .then((response) => {
           const parsedResponse = apiTransformer(response);
           if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-            showSnackbar("There is error when submitting the data!", "error");
+            showSnackbar("Failed to submit payment data", "error");
           } else {
             callback();
           }
