@@ -5,7 +5,7 @@ import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
 import { EnrollmentPayment } from "@sonamusica-fe/types";
 import { convertMomentDateToRFC3339 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
-import moment, { Moment } from "moment";
+import moment, { Moment, min, max } from "moment";
 import React, { useState } from "react";
 
 type SearchPaymentListFormData = {
@@ -44,18 +44,11 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
           dateProps: {
             defaultValue: startDate,
             onChange(value) {
-              if (value && value.isValid()) {
-                if (endDate && moment(endDate).subtract(1, "year").diff(value) > 0) {
-                  setEndDate(moment(value).add(1, "year"));
-                } else if (endDate && moment(endDate).diff(value) < 0) {
-                  if (moment().diff(moment(value).add(1, "year")) < 0) {
-                    setEndDate(moment());
-                  } else {
-                    setEndDate(moment(value).add(1, "year"));
-                  }
-                }
-              }
               setStartDate(value);
+              if (value && value.isValid() && endDate) {
+                const maxValidEndDate = min([moment(), moment(value).add(1, "year")]);
+                setEndDate(min([endDate, maxValidEndDate]));
+              }
             }
           }
         },
@@ -68,14 +61,11 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
           dateProps: {
             defaultValue: endDate,
             onChange(value) {
-              if (value && value.isValid()) {
-                if (startDate && moment(startDate).diff(value) > 0) {
-                  setStartDate(moment(value).subtract(1, "year"));
-                } else if (startDate && moment(value).subtract(1, "year").diff(startDate) > 0) {
-                  setStartDate(moment(value).subtract(1, "year"));
-                }
-              }
               setEndDate(value);
+              if (value && value.isValid() && startDate) {
+                const minValidStartDate = moment(value).subtract(1, "year");
+                setStartDate(max([startDate, minValidStartDate]));
+              }
             }
           }
         }
