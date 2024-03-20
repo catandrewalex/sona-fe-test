@@ -202,6 +202,7 @@ const SearchResultEnrollmentPayment = ({
           <PaymentDetailAction
             data={currData}
             editHandler={() => setSelectedData(currData)}
+            // TODO(FerdiantJoshua): rename the "deleteHandler" as the core deletion action is done by PaymentDetailAction's implementation. This handler only serves as an extra-effect.
             deleteHandler={() => {
               setData(
                 data.filter((item) => item.enrollmentPaymentId !== currData.enrollmentPaymentId)
