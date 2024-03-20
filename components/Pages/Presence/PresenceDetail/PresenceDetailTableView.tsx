@@ -11,6 +11,8 @@ type PresenceDetailTableViewProps = {
   data: Presence[];
 };
 
+const RESULT_PER_PAGE = 12;
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -39,7 +41,7 @@ const PresenceDetailTableView = ({
         {data.map((item, idx) => (
           <TableRow hover key={item.presenceId}>
             <StyledTableCell sx={{ textAlign: "center", maxWidth: 50 }}>
-              {(currPage - 1) * 10 + (idx + 1)}
+              {(currPage - 1) * RESULT_PER_PAGE + (idx + 1)}
             </StyledTableCell>
             <StyledTableCell sx={{ textAlign: "center", maxWidth: 200 }}>
               {moment(item.date).format("DD MMMM YYYY HH:mm:ss")}
