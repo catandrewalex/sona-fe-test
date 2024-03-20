@@ -133,18 +133,6 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => handleAction("positive")}
-            sx={{
-              color: "success.dark",
-              fontWeight: "fontWeightBold",
-              fontSize: "1.25em"
-            }}
-            data-testid={dialogState.positiveTestIdContext}
-          >
-            {dialogState.informationDialog ? "Ok" : "Yes"}
-          </Button>
-
-          <Button
             onClick={() => handleAction("negative")}
             sx={{
               color: "error.dark",
@@ -155,6 +143,17 @@ const AlertDialogProvider = ({ children }: AlertDialogProviderProps): JSX.Elemen
             data-testid={dialogState.negativeTestIdContext}
           >
             Cancel
+          </Button>
+          <Button
+            onClick={() => handleAction("positive")}
+            sx={{
+              color: "success.dark",
+              fontWeight: "fontWeightBold",
+              fontSize: "1.25em"
+            }}
+            data-testid={dialogState.positiveTestIdContext}
+          >
+            {dialogState.informationDialog ? "Ok" : "Yes"}
           </Button>
         </DialogActions>
       </Dialog>

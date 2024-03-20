@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
-import Grid, { GridSize } from "@mui/material/Grid";
+import { GridSize } from "@mui/material/Grid";
 import { titleCase } from "@sonamusica-fe/utils/StringUtil";
 import { CSSProperties } from "@mui/styles";
 import StandardSelect from "@sonamusica-fe/components/Form/StandardSelect";
+
+import { Grid } from "@mui/material";
 
 type SelectFilterProps = {
   column: string;

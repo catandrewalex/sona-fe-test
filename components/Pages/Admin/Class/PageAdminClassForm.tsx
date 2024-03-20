@@ -1,4 +1,3 @@
-import { Cancel, Save } from "@mui/icons-material";
 import { InputAdornment, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
@@ -7,7 +6,8 @@ import useFormRenderer, {
 import Modal from "@sonamusica-fe/components/Modal";
 import StudentSelectorInput from "@sonamusica-fe/components/Pages/Admin/Class/StudentSelectorInput";
 import { Class, Course, Student, Teacher } from "@sonamusica-fe/types";
-import { ClassInsertFormData, ClassUpdateFormData } from "@sonamusica-fe/types/form/class";
+import { ClassInsertFormData, ClassUpdateFormData } from "@sonamusica-fe/types/form/admin/class";
+import { getCourseName, getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
@@ -48,8 +48,7 @@ const PageAdminClassForm = ({
       inputProps: { required: true },
       selectProps: {
         options: teacherData,
-        getOptionLabel: (option) =>
-          `${option.user.userDetail?.firstName} ${option.user.userDetail?.lastName || ""}`
+        getOptionLabel: (option) => getFullNameFromTeacher(option)
       },
       validations: [{ name: "required" }]
     },
@@ -61,7 +60,7 @@ const PageAdminClassForm = ({
       inputProps: { required: true },
       selectProps: {
         options: courseData,
-        getOptionLabel: (option) => `${option.instrument.name} ${option.grade.name}`
+        getOptionLabel: (option) => getCourseName(option)
       },
       validations: [{ name: "required" }]
     },
@@ -110,18 +109,14 @@ const PageAdminClassForm = ({
     ...defaultInsertFieldValue,
     isActive: true
   };
-  
+
   const { formProperties: formPropertiesUpdate, formRenderer: formRendererUpdate } =
     useFormRenderer<ClassUpdateFormData>(
       {
         testIdContext: "ClassUpsert",
-        submitContainerProps: { align: "space-between", spacing: 3 },
         cancelButtonProps: {
-          startIcon: <Cancel />,
           onClick: onClose
         },
-        promptCancelButtonDialog: true,
-        submitButtonProps: { endIcon: <Save /> },
         fields: defaultUpdateFields,
         errorResponseMapping,
         submitHandler: async ({ course, isActive, students, teacher, transportFee }, error) => {
@@ -165,13 +160,9 @@ const PageAdminClassForm = ({
   const { formRenderer: formRendererInsert } = useFormRenderer<ClassInsertFormData>(
     {
       testIdContext: "ClassUpsert",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
         onClick: onClose
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
       fields: defaultInsertFields,
       errorResponseMapping,
       submitHandler: async ({ course, students, teacher, transportFee }, error) => {

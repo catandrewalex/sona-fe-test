@@ -1,4 +1,3 @@
-import { Cancel, Save } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
@@ -6,7 +5,7 @@ import useFormRenderer, {
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
 import { Instrument } from "@sonamusica-fe/types";
-import { InstrumentUpsertFormData } from "@sonamusica-fe/types/form/instrument";
+import { InstrumentUpsertFormData } from "@sonamusica-fe/types/form/admin/instrument";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
@@ -49,13 +48,9 @@ const PageAdminInstrumentForm = ({
   const { formProperties, formRenderer } = useFormRenderer<InstrumentUpsertFormData>(
     {
       testIdContext: "InstrumentUpsert",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
         onClick: onClose
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
       fields: defaultFields,
       errorResponseMapping,
       submitHandler: async (formData, error) => {

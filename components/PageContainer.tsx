@@ -2,14 +2,15 @@ import React, { useEffect } from "react";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import Loader from "@sonamusica-fe/components/Loader";
 import PageInfo from "@sonamusica-fe/components/PageInfo";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import LoginForm from "@sonamusica-fe/components/LoginForm";
 import { getCookie, getLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { User } from "@sonamusica-fe/types";
 import Navigation from "@sonamusica-fe/components/Navigation";
+import Error403 from "@sonamusica-fe/components/Error/Error403";
+import { CSSProperties } from "styled-components";
+
+import { styled, Paper, Box } from "@mui/material";
 
 const LoginContainer = styled(Paper)(({ theme }) => ({
   width: "100vw",
@@ -41,6 +42,8 @@ type PageContainerProps = {
   page?: string | undefined;
   notFound?: boolean;
   noAuth?: boolean;
+  isAuthorized?: (user?: User) => boolean;
+  sx?: CSSProperties;
 };
 
 /**
@@ -59,7 +62,9 @@ const PageContainer = ({
   pageDescription,
   headElement,
   navTitle,
-  noAuth
+  noAuth,
+  isAuthorized,
+  sx
 }: PageContainerProps): JSX.Element => {
   const { isAppLoading, closeDrawer, openDrawer, turnOnDark, turnOffDark } = useApp((state) => ({
     isAppLoading: state.isAppLoading,
@@ -122,75 +127,41 @@ const PageContainer = ({
   if (noAuth) {
     content = children;
   } else {
-    if (!user) {
-      return (
-        <LoginContainer data-testid="LoginPageContainer">
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <LoginForm />
-          </Box>
-        </LoginContainer>
+    if (isAuthorized && !isAuthorized(user)) {
+      content = (
+        <Navigation title={navTitle}>
+          <Error403 />
+        </Navigation>
       );
     } else {
-      content = <Navigation title={navTitle}>{children}</Navigation>;
+      if (!user) {
+        return (
+          <LoginContainer data-testid="LoginPageContainer">
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <LoginForm />
+            </Box>
+          </LoginContainer>
+        );
+      } else {
+        content = <Navigation title={navTitle}>{children}</Navigation>;
+      }
     }
   }
 
-  // if (noNavigation) {
-  //   content = (
-  //     <RemoteConfig isPage={true} confKey={page}>
-  //       {children}
-  //     </RemoteConfig>
-  //   );
-  // } else {
-  //   if (user && adminOnly) {
-  //     const isAdmin = user.roles.filter((role) => role.name === "Admin");
-
-  //     if (isAdmin.length === 0) {
-  //       content = (
-  //         <Navigation title={navTitle}>
-  //           <Error403 />
-  //         </Navigation>
-  //       );
-  //     } else {
-  //       content = (
-  //         <Navigation title={navTitle}>
-  //           <RemoteConfig isPage={true} confKey={page}>
-  //             {children}
-  //           </RemoteConfig>
-  //         </Navigation>
-  //       );
-  //     }
-  //   } else if (notFound) {
-  //     content = (
-  //       <Navigation title={"not found"}>
-  //         <Error404 />
-  //       </Navigation>
-  //     );
-  //   } else {
-  //     content = (
-  //       <Navigation title={navTitle}>
-  //         <RemoteConfig isPage={true} confKey={page}>
-  //           {children}
-  //         </RemoteConfig>
-  //       </Navigation>
-  //     );
-  //   }
-  // }
-
   return (
-    <div className="container" data-testid={navTitle} style={{ height: "100vh" }}>
+    <Box sx={sx} className="container" data-testid={navTitle} style={{ height: "100vh" }}>
       <PageInfo title={pageTitle} description={pageDescription}>
         {headElement}
       </PageInfo>
       {content}
-    </div>
+    </Box>
   );
 };
 

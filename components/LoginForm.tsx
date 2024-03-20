@@ -27,6 +27,8 @@ const LoginButton = (): JSX.Element => {
 
   const { formRenderer: formRendererLogin } = useFormRenderer<{ email: string; password: string }>(
     {
+      disableUseOfDefaultFormConfig: true,
+      disablePromptCancelButtonDialog: true,
       submitContainerProps: { spacing: 2, marginBottom: 2 },
       submitButtonProps: {
         xs: 12,
@@ -91,6 +93,8 @@ const LoginButton = (): JSX.Element => {
 
   const { formRenderer: formRendererForgotPassword } = useFormRenderer<{ email: string }>(
     {
+      disablePromptCancelButtonDialog: true,
+      disableUseOfDefaultFormConfig: true,
       submitContainerProps: { spacing: 2, marginBottom: 2 },
       submitButtonProps: {
         xs: 12,
@@ -163,7 +167,7 @@ const LoginButton = (): JSX.Element => {
 
   return (
     <>
-      <Image src="/logo.png" width={200} height={95} />
+      <Image unoptimized src="/logo.png" width={200} height={95} />
       <Paper
         elevation={5}
         sx={{

@@ -1,4 +1,3 @@
-import { Cancel, Save } from "@mui/icons-material";
 import { InputAdornment, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
@@ -6,7 +5,7 @@ import useFormRenderer, {
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
 import { Course, Grade, Instrument } from "@sonamusica-fe/types";
-import { CourseInsertFormData, CourseUpdateFormData } from "@sonamusica-fe/types/form/course";
+import { CourseInsertFormData, CourseUpdateFormData } from "@sonamusica-fe/types/form/admin/course";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
@@ -102,13 +101,9 @@ const PageAdminCourseForm = ({
     ? useFormRenderer<CourseUpdateFormData>(
         {
           testIdContext: "CourseUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultUpdateFields,
           errorResponseMapping: {
             defaultDurationMinute: "defaultDurationMinute",
@@ -139,13 +134,9 @@ const PageAdminCourseForm = ({
     : useFormRenderer<CourseInsertFormData>(
         {
           testIdContext: "CourseUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultInsertFields,
           errorResponseMapping: {
             defaultDurationMinute: "defaultDurationMinute",

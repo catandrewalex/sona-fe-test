@@ -2,6 +2,7 @@ import Table from "@sonamusica-fe/components/Table";
 import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { User, UserType } from "@sonamusica-fe/types";
+import { getFullNameFromUser, searchFullNameByValue } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
 import React from "react";
 
@@ -55,8 +56,7 @@ const PageAdminUserTable = ({
           {
             field: "name",
             headerName: "Full Name",
-            valueGetter: (params) =>
-              params.row.userDetail.firstName + " " + (params.row.userDetail.lastName || ""),
+            valueGetter: (params) => getFullNameFromUser(params.row),
             flex: 2
           },
           {
@@ -98,12 +98,7 @@ const PageAdminUserTable = ({
             field: "name",
             md: 6,
             lg: 6,
-            filterHandler: (data, value) =>
-              data.userDetail.firstName.toLowerCase().includes(value.toLowerCase()) ||
-              data.userDetail.lastName?.toLowerCase()?.includes(value.toLowerCase()) ||
-              `${data.userDetail.firstName} ${data.userDetail.lastName || ""}`
-                .toLowerCase()
-                .includes(value.toLowerCase())
+            filterHandler: (data, value) => searchFullNameByValue(value, data as User)
           },
           {
             type: "text-input",

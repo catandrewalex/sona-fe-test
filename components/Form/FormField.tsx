@@ -1,5 +1,7 @@
-import Grid, { GridProps } from "@mui/material/Grid";
+import { GridProps } from "@mui/material/Grid";
 import React from "react";
+
+import { Grid } from "@mui/material";
 
 /**
  * Chart Container prop types.

@@ -1,12 +1,9 @@
-import IconButton from "@mui/material/IconButton";
-import MuiModal from "@mui/material/Modal";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import React from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Fade from "./FadeAnimation";
 import { SxProps } from "@mui/system";
+
+import { IconButton, Modal as MuiModal, Paper, Typography, Box } from "@mui/material";
 
 /**
  * Chart Container prop types.

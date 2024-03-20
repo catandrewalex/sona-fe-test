@@ -1,9 +1,10 @@
-import TextField, { TextFieldProps } from "@mui/material/TextField";
-import Autocomplete, { AutocompleteProps } from "@mui/material/Autocomplete";
+import { TextFieldProps } from "@mui/material/TextField";
+import { AutocompleteProps } from "@mui/material/Autocomplete";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import React from "react";
 import FormFeedback from "@sonamusica-fe/components/Form/FormFeedback";
+import { CircularProgress, TextField, Autocomplete } from "@mui/material";
 
 /**
  * StandardSelect component prop types.
@@ -58,6 +59,17 @@ const StandardSelect = <
             fullWidth
             data-testid={`${testIdContext}-StandardSelect`}
             error={errorMsg !== "" && errorMsg !== undefined}
+            InputProps={{
+              ...params.InputProps,
+              ...inputProps?.InputProps,
+              endAdornment: (
+                <>
+                  {props.loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+              fullWidth: true
+            }}
             {...inputProps}
           />
         )}

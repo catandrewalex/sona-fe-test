@@ -1,8 +1,8 @@
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
-import Switch, { SwitchProps } from "@mui/material/Switch";
+import { SwitchProps } from "@mui/material/Switch";
 import React from "react";
 import { SxProps } from "@mui/system";
+
+import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 
 interface StandardSwitchProps extends SwitchProps {
   label?: string;

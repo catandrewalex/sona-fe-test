@@ -1,17 +1,22 @@
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import MuiDrawer from "@mui/material/Drawer";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import React, { useEffect } from "react";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import DrawerItem from "@sonamusica-fe/components/Navigation/DrawerItem";
 import styles, { drawerWidth } from "./styles";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import { useTheme, CSSObject } from "@mui/material/styles";
 import Image from "next/image";
 import { getLocalStorage, setLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
+
+import {
+  Button,
+  Divider,
+  Drawer as MuiDrawer,
+  Typography,
+  Box,
+  styled,
+  Theme
+} from "@mui/material";
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -102,7 +107,14 @@ const SideBar = (): JSX.Element => {
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
           <>
-            <Image src="/favicon.ico" width="48" height="48" className="mr-2" alt="logo" />
+            <Image
+              unoptimized
+              src="/favicon.ico"
+              width="48"
+              height="48"
+              className="mr-2"
+              alt="logo"
+            />
             <Typography variant="subtitle1" component="h6">
               Sonamusica
             </Typography>

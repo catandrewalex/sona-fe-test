@@ -1,4 +1,3 @@
-import { Cancel, Save } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
@@ -6,7 +5,8 @@ import useFormRenderer, {
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
 import { Teacher, UserType, User } from "@sonamusica-fe/types";
-import { TeacherInsertFormData } from "@sonamusica-fe/types/form/teacher";
+import { TeacherInsertFormData } from "@sonamusica-fe/types/form/admin/teacher";
+import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -70,8 +70,7 @@ const PageAdminTeacherForm = ({
       validations: [],
       selectProps: {
         options: users,
-        getOptionLabel: (option) =>
-          `${option.userDetail?.firstName} ${option.userDetail?.lastName || ""}`,
+        getOptionLabel: (option) => getFullNameFromUser(option),
         isOptionEqualToValue: (option, value) => option?.userId === value?.userId,
         onChange: (valueRef, errorRef, _e, value) => {
           setSelectedUser(value);
@@ -192,13 +191,9 @@ const PageAdminTeacherForm = ({
   const { formProperties, formRenderer } = useFormRenderer<TeacherInsertFormData>(
     {
       testIdContext: "TeacherUpsert",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
         onClick: onClose
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
       fields: insertFields,
       errorResponseMapping,
       submitHandler: async (formData, error) => {

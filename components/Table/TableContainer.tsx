@@ -1,7 +1,7 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import { Theme } from "@mui/material/styles";
 import { SxProps } from "@mui/system";
+
+import { Box, Theme } from "@mui/material";
 
 type TableContainerProps = {
   component?: typeof React.Component;

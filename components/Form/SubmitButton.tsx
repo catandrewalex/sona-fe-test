@@ -1,8 +1,8 @@
-import Grid, { GridProps } from "@mui/material/Grid";
-import Button, { ButtonProps } from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
+import { GridProps } from "@mui/material/Grid";
+import { ButtonProps } from "@mui/material/Button";
 import { merge } from "lodash";
 import React from "react";
+import { Grid, Button, CircularProgress } from "@mui/material";
 
 /**
  * Submit Button prop types.

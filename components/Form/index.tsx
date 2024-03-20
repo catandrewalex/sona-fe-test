@@ -1,8 +1,8 @@
-import Grid, { GridProps } from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import { GridProps } from "@mui/material/Grid";
 import SubmitButton from "@sonamusica-fe/components/Form/SubmitButton";
 import SubmitButtonContainer from "@sonamusica-fe/components/Form/SubmitButtonContainer";
 import React, { FormEvent } from "react";
+import { Grid, Box } from "@mui/material";
 
 /**
  * Form prop types.

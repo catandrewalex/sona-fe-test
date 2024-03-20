@@ -7,7 +7,12 @@ import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { Class, Student } from "@sonamusica-fe/types";
 import {
   advancedNumberFilter,
-  convertNumberToCurrencyString
+  convertNumberToCurrencyString,
+  getCourseName,
+  getFullNameFromStudent,
+  getFullNameFromTeacher,
+  searchCourseNameByValue,
+  searchFullNameByValue
 } from "@sonamusica-fe/utils/StringUtil";
 import React, { useState } from "react";
 
@@ -71,19 +76,13 @@ const PageAdminClassTable = ({
               field: "teacher",
               headerName: "Teacher",
               flex: 2,
-              valueGetter: (params) =>
-                params.row.teacher?.user?.userDetail?.firstName
-                  ? (params.row.teacher?.user?.userDetail?.firstName || "") +
-                    " " +
-                    (params.row.teacher?.user?.userDetail?.lastName || "")
-                  : "-"
+              valueGetter: (params) => getFullNameFromTeacher(params.row.teacher)
             },
             {
               field: "instrument-grade",
               headerName: "Course",
               flex: 2,
-              valueGetter: (params) =>
-                params.row.course.instrument.name + " - " + params.row.course.grade.name
+              valueGetter: (params) => getCourseName(params.row.course)
             },
             {
               field: "students",
@@ -132,19 +131,7 @@ const PageAdminClassTable = ({
               field: "teacher",
               md: 6,
               lg: 4,
-              filterHandler: (data, value) =>
-                data.teacher &&
-                (data.teacher.user.userDetail.firstName
-                  .toLowerCase()
-                  .includes(value.toLowerCase()) ||
-                  data.teacher.user.userDetail.lastName
-                    ?.toLowerCase()
-                    ?.includes(value.toLowerCase()) ||
-                  `${data.teacher.user.userDetail.firstName} ${
-                    data.teacher.user.userDetail.lastName || ""
-                  }`
-                    .toLowerCase()
-                    .includes(value.toLowerCase()))
+              filterHandler: (data, value) => searchFullNameByValue(value, data.teacher?.user)
             },
             {
               type: "text-input",
@@ -152,19 +139,13 @@ const PageAdminClassTable = ({
               columnLabel: "Course",
               md: 6,
               lg: 4,
-              filterHandler: (data, value) =>
-                data.course.grade.name.toLowerCase().includes(value.toLowerCase()) ||
-                data.course.instrument.name.toLowerCase().includes(value.toLowerCase()) ||
-                `${data.course.instrument.name} - ${data.course.grade.name}`
-                  .toLowerCase()
-                  .includes(value.toLowerCase())
+              filterHandler: (data, value) => searchCourseNameByValue(value, data.course)
             },
             {
               type: "select",
               data: studentData,
               field: "students",
-              getOptionLabel: (option) =>
-                option.user.userDetail.firstName + " " + option.user.userDetail.lastName ?? "",
+              getOptionLabel: (option) => getFullNameFromStudent(option),
               md: 6,
               lg: 4,
               filterHandler: (data, value) => {
@@ -202,20 +183,13 @@ const PageAdminClassTable = ({
       {selectedStudentDetail && (
         <ModalRenderer>
           <Typography variant="h5" sx={{ mb: 2 }}>
-            #{selectedStudentDetail.classId} {selectedStudentDetail.course.instrument.name} -{" "}
-            {selectedStudentDetail.course.grade.name}{" "}
-            {selectedStudentDetail.teacher?.user?.userDetail?.firstName
-              ? `(by ${selectedStudentDetail.teacher.user.userDetail.firstName} ${
-                  selectedStudentDetail.teacher.user.userDetail.lastName || ""
-                })`
-              : ""}
+            #{selectedStudentDetail.classId} {getCourseName(selectedStudentDetail.course)} (by{" "}
+            {getFullNameFromTeacher(selectedStudentDetail.teacher)})
           </Typography>
           <Typography variant="body1">Students:</Typography>
           <ol style={{ marginTop: 0 }}>
             {selectedStudentDetail.students.map((student) => (
-              <li key={student.studentId}>
-                {student.user.userDetail.firstName} {student.user.userDetail.lastName || ""}
-              </li>
+              <li key={student.studentId}>{getFullNameFromStudent(student)}</li>
             ))}
           </ol>
         </ModalRenderer>

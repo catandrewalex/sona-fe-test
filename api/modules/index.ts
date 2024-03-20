@@ -2,27 +2,37 @@ import { useUser } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { FailedResponse, SuccessResponse } from "api";
 import authModule from "./auth";
-import userModule from "./user";
+import userAdminModule from "./admin/user";
+import teacherAdminModule from "./admin/teacher";
+import studentAdminModule from "./admin/student";
+import gradeAdminModule from "./admin/grade";
+import courseAdminModule from "./admin/course";
+import instrumentAdminModule from "./admin/instrument";
+import classAdminModule from "./admin/class";
+import teacherSpecialFeeAdminModule from "./admin/teacher-special-fee";
+import studentLearningTokenAdminModule from "./admin/student-learning-token";
+import enrollmentPaymenAdminModule from "./admin/enrollment-payment";
+import paymentsModule from "./payments";
 import teacherModule from "./teacher";
 import studentModule from "./student";
-import gradeModule from "./grade";
 import courseModule from "./course";
-import instrumentModule from "./instrument";
-import classModule from "./class";
-import teacherSpecialFeeModule from "./teacher-special-fee";
-import studentLearningTokenModule from "./student-learning-token";
 
 export default {
   ...authModule,
-  ...userModule,
+  ...userAdminModule,
+  ...teacherAdminModule,
+  ...studentAdminModule,
+  ...gradeAdminModule,
+  ...courseAdminModule,
+  ...instrumentAdminModule,
+  ...classAdminModule,
+  ...teacherSpecialFeeAdminModule,
+  ...studentLearningTokenAdminModule,
+  ...enrollmentPaymenAdminModule,
+  ...paymentsModule,
   ...teacherModule,
   ...studentModule,
-  ...gradeModule,
-  ...courseModule,
-  ...instrumentModule,
-  ...classModule,
-  ...teacherSpecialFeeModule,
-  ...studentLearningTokenModule
+  ...courseModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

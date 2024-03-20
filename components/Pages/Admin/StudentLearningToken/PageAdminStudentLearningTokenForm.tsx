@@ -1,15 +1,15 @@
-import { Cancel, Save } from "@mui/icons-material";
 import { InputAdornment, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
-import { StudentLearningToken, StudentEnrollment, Course } from "@sonamusica-fe/types";
+import { StudentLearningToken, StudentEnrollment } from "@sonamusica-fe/types";
 import {
   StudentLearningTokenInsertFormData,
   StudentLearningTokenUpdateFormData
-} from "@sonamusica-fe/types/form/student-learning-token";
+} from "@sonamusica-fe/types/form/admin/student-learning-token";
+import { getCourseName, getFullNameFromStudent } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
@@ -41,15 +41,13 @@ const PageAdminStudentLearningTokenForm = ({
     {
       type: "select",
       name: "studentEnrollment",
-      label: "StudentEnrollment",
+      label: "Student Enrollment",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: { required: true },
       selectProps: {
         options: studentEnrollmentData,
         getOptionLabel: (option) =>
-          `${option.student.user.userDetail?.firstName} ${
-            option.student.user.userDetail?.lastName || ""
-          } | ${option.class.course.instrument.name} - ${option.class.course.grade.name}`
+          `${getFullNameFromStudent(option.student)} | ${getCourseName(option.class.course)}`
       },
       validations: [{ name: "required" }]
     },
@@ -104,13 +102,9 @@ const PageAdminStudentLearningTokenForm = ({
     ? useFormRenderer<StudentLearningTokenUpdateFormData>(
         {
           testIdContext: "StudentLearningTokenUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultUpdateFields,
           submitHandler: async ({ courseFeeValue, quota, transportFeeValue }, error) => {
             if (error.courseFeeValue || error.quota || error.transportFeeValue)
@@ -144,13 +138,9 @@ const PageAdminStudentLearningTokenForm = ({
     : useFormRenderer<StudentLearningTokenInsertFormData>(
         {
           testIdContext: "StudentLearningTokenUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultInsertFields,
           errorResponseMapping,
           submitHandler: async (

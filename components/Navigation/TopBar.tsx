@@ -1,9 +1,4 @@
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import IconButton from "@mui/material/IconButton";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip";
+import { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
@@ -11,9 +6,19 @@ import MenuList from "@sonamusica-fe/components/Profile/MenuList";
 import Profile from "@sonamusica-fe/components/Profile";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { drawerWidth } from "./styles";
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+
+import {
+  AppBar as MuiAppBar,
+  IconButton,
+  Box,
+  Toolbar,
+  Typography,
+  Tooltip,
+  styled
+} from "@mui/material";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { deleteCookie, getCookie } from "@sonamusica-fe/utils/BrowserUtil";
 
@@ -149,7 +150,7 @@ const API = {
         ...headers,
         ...apiVersionHeader
       },
-      ...(config?.params ? config.params : {})
+      params: config?.params ? config.params : {}
     });
     return httpResponseHandler(request);
   },
@@ -231,5 +232,27 @@ const API = {
     return httpResponseHandler(request);
   }
 };
+
+export enum AdminRoutes {
+  USER = "/admin/users",
+  TEACHER = "/admin/teachers",
+  STUDENT = "/admin/students",
+  INSTRUMENT = "/admin/instruments",
+  GRADE = "/admin/grades",
+  COURSE = "/admin/courses",
+  CLASS = "/admin/classes",
+  TEACHER_SPECIAL_FEE = "/admin/teacherSpecialFees",
+  STUDENT_LEARNING_TOKEN = "/admin/studentLearningTokens",
+  STUDENT_ENROLLMENT = "/admin/studentEnrollments",
+  ENROLLMENT_PAYMENT = "/admin/enrollmentPayments"
+}
+
+export enum Routes {
+  PAYMENT = "/enrollmentPayment",
+  TEACHER = "/teachers",
+  STUDENT = "/students",
+  COURSE = "/courses",
+  STUDENT_ENROLLMENT = "/studentEnrollments"
+}
 
 export default API;

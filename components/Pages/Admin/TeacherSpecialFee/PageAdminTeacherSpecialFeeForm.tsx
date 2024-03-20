@@ -1,4 +1,3 @@
-import { Cancel, Save } from "@mui/icons-material";
 import { InputAdornment, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
@@ -9,7 +8,8 @@ import { TeacherSpecialFee, Teacher, Course } from "@sonamusica-fe/types";
 import {
   TeacherSpecialFeeInsertFormData,
   TeacherSpecialFeeUpdateFormData
-} from "@sonamusica-fe/types/form/teacher-special-fee";
+} from "@sonamusica-fe/types/form/admin/teacher-special-fee";
+import { getCourseName, getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
@@ -49,8 +49,7 @@ const PageAdminTeacherSpecialFeeForm = ({
       inputProps: { required: true },
       selectProps: {
         options: teacherData,
-        getOptionLabel: (option) =>
-          `${option.user.userDetail?.firstName} ${option.user.userDetail?.lastName || ""}`
+        getOptionLabel: (option) => getFullNameFromTeacher(option)
       },
       validations: [{ name: "required" }]
     },
@@ -62,7 +61,7 @@ const PageAdminTeacherSpecialFeeForm = ({
       inputProps: { required: true },
       selectProps: {
         options: courseData,
-        getOptionLabel: (option) => `${option.instrument.name} ${option.grade.name}`
+        getOptionLabel: (option) => getCourseName(option)
       },
       validations: [{ name: "required" }]
     },
@@ -109,13 +108,9 @@ const PageAdminTeacherSpecialFeeForm = ({
     ? useFormRenderer<TeacherSpecialFeeUpdateFormData>(
         {
           testIdContext: "TeacherSpecialFeeUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultUpdateFields,
           submitHandler: async ({ fee }, error) => {
             if (error.fee) return Promise.reject();
@@ -142,13 +137,9 @@ const PageAdminTeacherSpecialFeeForm = ({
     : useFormRenderer<TeacherSpecialFeeInsertFormData>(
         {
           testIdContext: "TeacherSpecialFeeUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: defaultInsertFields,
           errorResponseMapping,
           submitHandler: async ({ fee, teacher, course }, error) => {

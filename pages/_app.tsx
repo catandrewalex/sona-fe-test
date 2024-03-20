@@ -1,10 +1,9 @@
-import Paper from "@mui/material/Paper";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect } from "react";
 import Providers from "@sonamusica-fe/providers/index";
 import "../styles/globals.scss";
-import Chip from "@mui/material/Chip";
+import { Paper, Chip } from "@mui/material";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   useEffect(() => {

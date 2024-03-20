@@ -4,9 +4,10 @@ import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableAct
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Student, UserType } from "@sonamusica-fe/types";
+import { getFullNameFromStudent, searchFullNameByValue } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "api";
 import moment from "moment";
-import React, { useMemo } from "react";
+import React from "react";
 
 type PageAdminStudentTableProps = {
   data: Student[];
@@ -43,9 +44,7 @@ const PageAdminStudentTable = ({
               showDialog(
                 {
                   title: "Delete Student",
-                  content: `Are you sure want to delete ${row.user.userDetail.firstName} ${
-                    row.user.userDetail.lastName || ""
-                  }?`
+                  content: `Are you sure want to delete ${getFullNameFromStudent(row)}?`
                 },
                 () => {
                   setLoading(true);
@@ -76,10 +75,7 @@ const PageAdminStudentTable = ({
           {
             field: "name",
             headerName: "Full Name",
-            valueGetter: (params) =>
-              params.row.user.userDetail.firstName +
-              " " +
-              (params.row.user.userDetail.lastName || ""),
+            valueGetter: (params) => getFullNameFromStudent(params.row),
             flex: 2
           },
           {
@@ -122,12 +118,7 @@ const PageAdminStudentTable = ({
             field: "name",
             md: 6,
             lg: 6,
-            filterHandler: (data, value) =>
-              data.user.userDetail.firstName.toLowerCase().includes(value.toLowerCase()) ||
-              data.user.userDetail.lastName?.toLowerCase()?.includes(value.toLowerCase()) ||
-              `${data.user.userDetail.firstName} ${data.user.userDetail.lastName || ""}`
-                .toLowerCase()
-                .includes(value.toLowerCase())
+            filterHandler: (data, value) => searchFullNameByValue(value, data.user)
           },
           {
             type: "text-input",

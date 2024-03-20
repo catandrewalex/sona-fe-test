@@ -6,7 +6,11 @@ import { Course } from "@sonamusica-fe/types";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";
-import { convertNumberToCurrencyString } from "@sonamusica-fe/utils/StringUtil";
+import {
+  convertNumberToCurrencyString,
+  getCourseName,
+  searchCourseNameByValue
+} from "@sonamusica-fe/utils/StringUtil";
 
 type PageAdminCourseTableProps = {
   data: Course[];
@@ -49,7 +53,7 @@ const PageAdminCourseTable = ({
               showDialog(
                 {
                   title: "Delete Course",
-                  content: `Are you sure want to delete ${row.grade.name} - ${row.instrument.name}?`
+                  content: `Are you sure want to delete ${getCourseName(row)}?`
                 },
                 () => {
                   setLoading(true);
@@ -75,7 +79,7 @@ const PageAdminCourseTable = ({
             field: "instrument-grade",
             headerName: "Instrument - Grade",
             flex: 1,
-            valueGetter: (params) => params.row.instrument.name + " - " + params.row.grade.name
+            valueGetter: (params) => getCourseName(params.row)
           },
           {
             field: "defaultFee",
@@ -100,12 +104,7 @@ const PageAdminCourseTable = ({
             columnLabel: "Instrument or Grade",
             md: 12,
             lg: 12,
-            filterHandler: (data, value) =>
-              data.grade.name.toLowerCase().includes(value.toLowerCase()) ||
-              data.instrument.name.toLowerCase().includes(value.toLowerCase()) ||
-              `${data.instrument.name} - ${data.grade.name}`
-                .toLowerCase()
-                .includes(value.toLowerCase())
+            filterHandler: (data, value) => searchCourseNameByValue(value, data as Course)
           }
         ]}
       />

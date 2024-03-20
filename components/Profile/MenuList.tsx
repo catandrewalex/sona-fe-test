@@ -14,10 +14,11 @@ import {
 import LogoutIcon from "@mui/icons-material/Logout";
 import { UserType } from "@sonamusica-fe/types";
 import Modal from "@sonamusica-fe/components/Modal";
-import { Cancel, PasswordOutlined, Save } from "@mui/icons-material";
+import { PasswordOutlined } from "@mui/icons-material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { FailedResponse } from "api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
+import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
 
 type MenuListProps = {
   anchorEl: Element | null;
@@ -56,13 +57,9 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
   const { formRenderer } = useFormRenderer<{ password: string; confirmPassword: string }>(
     {
       testIdContext: "ChangePassword",
-      submitContainerProps: { align: "space-between", spacing: 3 },
       cancelButtonProps: {
-        startIcon: <Cancel />,
         onClick: () => setShowChangePassword(false)
       },
-      promptCancelButtonDialog: true,
-      submitButtonProps: { endIcon: <Save /> },
       fields: [
         {
           type: "text",
@@ -117,12 +114,13 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
         <Card sx={{ width: 275 }}>
           <CardContent>
             <Avatar sx={{ m: "auto", width: 80, height: 80 }}>
-              {user?.userDetail.firstName.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || ""}
-              {user?.userDetail.lastName?.charAt(0)}
+              {user?.userDetail?.firstName?.charAt(0) ||
+                user?.email?.charAt(0)?.toUpperCase() ||
+                ""}
+              {user?.userDetail?.lastName?.charAt(0)}
             </Avatar>
             <Typography mt={1} textAlign="center" variant="h6">
-              {user?.userDetail.firstName}
-              {user?.userDetail.lastName || ""}
+              {getFullNameFromUser(user)}
             </Typography>
             <Typography
               sx={{ wordWrap: "break-word" }}

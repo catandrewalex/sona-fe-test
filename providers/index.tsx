@@ -1,12 +1,13 @@
 import React, { useRef } from "react";
 import SnackProvider from "@sonamusica-fe/providers/SnackProvider";
 import ThemeProvider from "@sonamusica-fe/providers/ThemeProvider";
-import DateAdapter from "@mui/lab/AdapterMoment";
-import { LocalizationProvider } from "@mui/lab";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AlertDialogProvider } from "./AlertDialogProvider";
 import { SnackbarKey, SnackbarProvider } from "notistack";
 import IconButton from "@mui/material/IconButton";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import "moment/locale/id";
 
 /**
  * Providers component prop types.
@@ -26,7 +27,7 @@ const Providers = ({ children }: ProvidersProps): JSX.Element => {
 
   return (
     <ThemeProvider>
-      <LocalizationProvider dateAdapter={DateAdapter}>
+      <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="id">
         <SnackbarProvider
           ref={notistackRef}
           maxSnack={1}

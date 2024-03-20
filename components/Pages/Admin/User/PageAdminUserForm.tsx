@@ -1,4 +1,3 @@
-import { Cancel, Save } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
@@ -11,7 +10,7 @@ import {
   UserUpdateFormData,
   UserUpdateFormRequest,
   UserInsertFormRequest
-} from "@sonamusica-fe/types/form/user";
+} from "@sonamusica-fe/types/form/admin/user";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
@@ -130,13 +129,9 @@ const PageAdminUserForm = ({
     ? useFormRenderer<UserUpdateFormData>(
         {
           testIdContext: "UserUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: updateFields,
           errorResponseMapping,
           submitHandler: async (formData, error) => {
@@ -175,13 +170,9 @@ const PageAdminUserForm = ({
     : useFormRenderer<UserInsertFormData>(
         {
           testIdContext: "UserUpsert",
-          submitContainerProps: { align: "space-between", spacing: 3 },
           cancelButtonProps: {
-            startIcon: <Cancel />,
             onClick: onClose
           },
-          promptCancelButtonDialog: true,
-          submitButtonProps: { endIcon: <Save /> },
           fields: insertFields,
           errorResponseMapping,
           submitHandler: async (formData, error) => {

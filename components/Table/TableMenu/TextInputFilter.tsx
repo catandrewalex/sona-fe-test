@@ -1,9 +1,11 @@
 import { SearchOutlined } from "@mui/icons-material";
-import Grid, { GridSize } from "@mui/material/Grid";
+import { GridSize } from "@mui/material/Grid";
 import React, { useEffect, useState } from "react";
 import { CSSProperties } from "@mui/styles";
 import { useGridApiContext } from "@mui/x-data-grid";
 import StandardTextInput from "@sonamusica-fe/components/Form/StandardTextInput";
+
+import { Grid } from "@mui/material";
 
 type TextInputFilterProps = {
   column: string;

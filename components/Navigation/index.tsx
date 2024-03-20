@@ -3,9 +3,8 @@ import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import TopBar from "@sonamusica-fe/components/Navigation/TopBar";
 import SideBar from "@sonamusica-fe/components/Navigation/SideBar";
 import Loader from "@sonamusica-fe/components/Loader";
-import Box from "@mui/material/Box";
 import styles from "./styles";
-import { useTheme } from "@mui/material/styles";
+import { Box, useTheme } from "@mui/material";
 
 /**
  * Navigation component prop types.
