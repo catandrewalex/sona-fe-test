@@ -46,8 +46,15 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
             onChange(value) {
               setStartDate(value);
               if (value && value.isValid() && endDate) {
-                const maxValidEndDate = min([moment(), moment(value).add(1, "year")]);
-                setEndDate(min([endDate, maxValidEndDate]));
+                let validatedEndDate = endDate;
+                if (validatedEndDate < value) {
+                  validatedEndDate = moment().endOf("month");
+                }
+
+                const maxValidEndDate = min([moment(), value.clone().add(1, "year")]);
+                validatedEndDate = min([endDate, maxValidEndDate]);
+
+                setEndDate(validatedEndDate);
               }
             }
           }
@@ -63,8 +70,15 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
             onChange(value) {
               setEndDate(value);
               if (value && value.isValid() && startDate) {
-                const minValidStartDate = moment(value).subtract(1, "year");
-                setStartDate(max([startDate, minValidStartDate]));
+                let validatedStartDate = startDate;
+                if (validatedStartDate > value) {
+                  validatedStartDate = value.clone().startOf("month");
+                } else {
+                  const minValidStartDate = value.clone().subtract(1, "year");
+                  validatedStartDate = max([startDate, minValidStartDate]);
+                }
+
+                setStartDate(validatedStartDate);
               }
             }
           }
