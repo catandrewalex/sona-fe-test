@@ -32,7 +32,7 @@ const PaymentDetailAction = ({ data, deleteHandler, editHandler }: PaymentDetail
           showDialog(
             {
               title: "Delete Payment",
-              content: `Are you sure want to delete ${getFullNameFromStudent(
+              content: `Are you sure to delete ${getFullNameFromStudent(
                 data.studentEnrollment.student
               )} payment for ${getCourseName(data.studentEnrollment.class.course)}?`
             },

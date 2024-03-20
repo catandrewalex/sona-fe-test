@@ -48,7 +48,7 @@ const PageAdminInstrumentTable = ({
               showDialog(
                 {
                   title: "Delete Instrument",
-                  content: `Are you sure want to delete ${row.name}?`
+                  content: `Are you sure to delete ${row.name}?`
                 },
                 () => {
                   setLoading(true);

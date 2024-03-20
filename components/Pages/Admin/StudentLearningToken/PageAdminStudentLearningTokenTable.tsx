@@ -64,7 +64,7 @@ const PageAdminStudentLearningTokenTable = ({
               showDialog(
                 {
                   title: "Delete Student Learning Token",
-                  content: `Are you sure want to delete ${getFullNameFromStudent(
+                  content: `Are you sure to delete ${getFullNameFromStudent(
                     row.studentEnrollment.student
                   )} learning token on ${getCourseName(row.studentEnrollment.class.course)}?`
                 },

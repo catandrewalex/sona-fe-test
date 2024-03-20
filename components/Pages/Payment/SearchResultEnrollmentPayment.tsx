@@ -48,7 +48,7 @@ const SearchResultEnrollmentPayment = ({
     showDialog(
       {
         title: "Move Page",
-        content: "Are you sure want to move to Add Enrollment Payment page?"
+        content: "Are you sure to move to Add Enrollment Payment page?"
       },
       () => router.push({ pathname: "/payment/new" })
     );

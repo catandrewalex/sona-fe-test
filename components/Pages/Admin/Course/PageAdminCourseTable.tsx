@@ -53,7 +53,7 @@ const PageAdminCourseTable = ({
               showDialog(
                 {
                   title: "Delete Course",
-                  content: `Are you sure want to delete ${getCourseName(row)}?`
+                  content: `Are you sure to delete ${getCourseName(row)}?`
                 },
                 () => {
                   setLoading(true);

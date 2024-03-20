@@ -67,7 +67,7 @@ const PageAdminPresenceTable = ({
               showDialog(
                 {
                   title: "Delete Presence",
-                  content: `Are you sure want to delete ${getFullNameFromStudent(
+                  content: `Are you sure to delete ${getFullNameFromStudent(
                     row.studentEnrollment.student
                   )} presence on ${getCourseName(row.studentEnrollment.class.course)}?`
                 },

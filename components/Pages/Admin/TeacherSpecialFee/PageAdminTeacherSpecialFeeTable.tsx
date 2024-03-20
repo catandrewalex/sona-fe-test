@@ -56,7 +56,7 @@ const PageAdminTeacherSpecialFeeTable = ({
               showDialog(
                 {
                   title: "Delete Teacher Special Fee",
-                  content: `Are you sure want to delete ${getFullNameFromTeacher(
+                  content: `Are you sure to delete ${getFullNameFromTeacher(
                     row.teacher
                   )} special fee on ${getCourseName(row.course)}?`
                 },
