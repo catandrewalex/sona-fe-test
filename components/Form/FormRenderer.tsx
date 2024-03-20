@@ -248,6 +248,7 @@ const useFormRenderer = <T extends unknown>(
                     errorRef={errorRef}
                     label={field.label}
                     field={field.name}
+                    disabled={loading}
                     validations={field.validations}
                     testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
                     {...field.inputProps}
@@ -266,6 +267,7 @@ const useFormRenderer = <T extends unknown>(
                     errorRef={errorRef}
                     label={field.label}
                     field={field.name}
+                    disabled={loading}
                     validations={field.validations}
                     testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
                     {...field.dateProps}

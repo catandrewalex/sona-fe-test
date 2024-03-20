@@ -48,7 +48,7 @@ const SearchResultEnrollmentPayment = ({
     showDialog(
       {
         title: "Move Page",
-        content: "Are you sure want to move to Add Enrollment Payment page?"
+        content: "Are you sure to move to Add Enrollment Payment page?"
       },
       () => router.push({ pathname: "/payment/new" })
     );
@@ -86,7 +86,7 @@ const SearchResultEnrollmentPayment = ({
           setCourseData((parsedResponse as ResponseMany<Course>).results);
         }
       } else {
-        showSnackbar("Failed to fetch teachers data!", "error");
+        showSnackbar("Failed to fetch courses data!", "error");
       }
     });
   }, [user]);
@@ -197,7 +197,6 @@ const SearchResultEnrollmentPayment = ({
       />
       <Divider sx={{ my: 1 }} />
       <SearchResult
-        maxHeight="70vh"
         data={displayData}
         getDataActions={(currData) => (
           <PaymentDetailAction

@@ -155,7 +155,7 @@ const SearchFilter = <T extends unknown>({
   });
 
   return (
-    <Box sx={{ px: 2 }}>
+    <Box sx={{ px: 2 }} id="search-filter-container">
       <Grid container>{content}</Grid>
     </Box>
   );

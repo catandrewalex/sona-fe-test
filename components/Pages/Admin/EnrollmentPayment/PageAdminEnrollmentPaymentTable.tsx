@@ -64,7 +64,7 @@ const PageAdminEnrollmentPaymentTable = ({
               showDialog(
                 {
                   title: "Delete Enrollment Payment",
-                  content: `Are you sure want to delete ${getFullNameFromStudent(
+                  content: `Are you sure to delete ${getFullNameFromStudent(
                     row.studentEnrollment.student
                   )} payment on ${getCourseName(row.studentEnrollment.class.course)}?`
                 },

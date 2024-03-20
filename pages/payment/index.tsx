@@ -37,7 +37,7 @@ const EnrollmentPaymentPage = (): JSX.Element => {
       />
     );
 
-  return <PageContainer navTitle="Enrollment Payment">{content}</PageContainer>;
+  return <PageContainer navTitle="Manage Enrollment Payment">{content}</PageContainer>;
 };
 
 export default EnrollmentPaymentPage;

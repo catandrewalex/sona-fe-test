@@ -21,6 +21,12 @@ const GetAllClass = ({
   });
 };
 
+const GetClassById = (id: number): Promise<FailedResponse | SuccessResponse<Class>> => {
+  return API.get<Class>({
+    url: `/admin/class/${id}`
+  });
+};
+
 const InsertClass = (
   data: ClassInsertFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Class>> => {
@@ -48,4 +54,4 @@ const DeleteClass = (
   });
 };
 
-export default { GetAllClass, InsertClass, UpdateClass, DeleteClass };
+export default { GetAllClass, GetClassById, InsertClass, UpdateClass, DeleteClass };

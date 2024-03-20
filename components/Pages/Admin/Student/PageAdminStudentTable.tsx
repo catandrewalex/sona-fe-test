@@ -44,7 +44,7 @@ const PageAdminStudentTable = ({
               showDialog(
                 {
                   title: "Delete Student",
-                  content: `Are you sure want to delete ${getFullNameFromStudent(row)}?`
+                  content: `Are you sure to delete ${getFullNameFromStudent(row)}?`
                 },
                 () => {
                   setLoading(true);
