@@ -1,6 +1,6 @@
 import { Add } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
-import PresenceDetailTabContainer from "@sonamusica-fe/components/Pages/Presence/PresenceDetail/PresenceDetailTabContainer";
+import AttendanceDetailTabContainer from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTabContainer";
 import FormDataViewerTable from "@sonamusica-fe/components/Table/FormDataViewerTable";
 import { Class } from "@sonamusica-fe/types";
 import {
@@ -10,11 +10,11 @@ import {
 } from "@sonamusica-fe/utils/StringUtil";
 import React from "react";
 
-type PresenceDetailContainerProps = {
+type AttendanceDetailContainerProps = {
   classData: Class;
 };
 
-const PresenceDetailContainer = ({ classData }: PresenceDetailContainerProps): JSX.Element => {
+const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps): JSX.Element => {
   return (
     <Box mt={1}>
       <Box display="flex">
@@ -42,11 +42,11 @@ const PresenceDetailContainer = ({ classData }: PresenceDetailContainerProps): J
         </Box>
         <Box width={200}>
           <Button startIcon={<Add />} fullWidth variant="outlined" color="info">
-            Add Presence
+            Add Attendance
           </Button>
         </Box>
       </Box>
-      <PresenceDetailTabContainer
+      <AttendanceDetailTabContainer
         teacherId={classData.teacher?.teacherId || 0}
         classId={classData.classId}
         studentsData={classData.students}
@@ -55,4 +55,4 @@ const PresenceDetailContainer = ({ classData }: PresenceDetailContainerProps): J
   );
 };
 
-export default PresenceDetailContainer;
+export default AttendanceDetailContainer;

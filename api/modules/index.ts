@@ -12,13 +12,13 @@ import classAdminModule from "./admin/class";
 import teacherSpecialFeeAdminModule from "./admin/teacher-special-fee";
 import studentLearningTokenAdminModule from "./admin/student-learning-token";
 import enrollmentPaymentAdminModule from "./admin/enrollment-payment";
-import presenceAdminModule from "./admin/presence";
+import attendanceAdminModule from "./admin/attendance";
 import paymentsModule from "./payments";
 import teacherModule from "./teacher";
 import studentModule from "./student";
 import courseModule from "./course";
 import classModule from "./class";
-import presenceModule from "./presence";
+import attendanceModule from "./attendance";
 
 export default {
   ...authModule,
@@ -32,13 +32,13 @@ export default {
   ...teacherSpecialFeeAdminModule,
   ...studentLearningTokenAdminModule,
   ...enrollmentPaymentAdminModule,
-  ...presenceAdminModule,
+  ...attendanceAdminModule,
   ...paymentsModule,
   ...teacherModule,
   ...studentModule,
   ...courseModule,
   ...classModule,
-  ...presenceModule
+  ...attendanceModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

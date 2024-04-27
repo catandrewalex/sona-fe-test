@@ -4,7 +4,7 @@ import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
 import { useUser } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { Course, Presence, Student, Teacher } from "@sonamusica-fe/types";
+import { Course, Attendance, Student, Teacher } from "@sonamusica-fe/types";
 import {
   convertMomentDateToRFC3339,
   getCourseName,
@@ -20,7 +20,7 @@ import { Search } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { ParsedUrlQueryInput } from "querystring";
 
-const SearchPresence = (): JSX.Element => {
+const SearchAttendance = (): JSX.Element => {
   const apiTransformer = useApiTransformer();
   const user = useUser((state) => state.user);
   const [loading, setLoading] = useState<boolean>(true);
@@ -95,7 +95,7 @@ const SearchPresence = (): JSX.Element => {
           ) : (
             <>
               <Typography variant="h5" align="center" sx={{ mb: 5 }}>
-                Search Presence
+                Search Attendance
               </Typography>
               <StandardSelect
                 options={teacherData}
@@ -150,7 +150,7 @@ const SearchPresence = (): JSX.Element => {
                   if (teacher) queryObj.teacher = teacher.teacherId;
                   if (student) queryObj.student = student.studentId;
                   if (selectedCourse) queryObj.course = selectedCourse.courseId;
-                  push({ pathname: "/presence", query: queryObj });
+                  push({ pathname: "/attendance", query: queryObj });
                 }}
               >
                 Search
@@ -163,4 +163,4 @@ const SearchPresence = (): JSX.Element => {
   );
 };
 
-export default SearchPresence;
+export default SearchAttendance;

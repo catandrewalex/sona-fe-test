@@ -41,8 +41,8 @@ const data: Array<SidebarSection> = [
       },
       {
         icon: People,
-        text: "Presence",
-        url: "/presence",
+        text: "Attendance",
+        url: "/attendance",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -140,8 +140,8 @@ const data: Array<SidebarSection> = [
       },
       {
         icon: People,
-        text: "Presence",
-        url: "/admin/presence",
+        text: "Attendance",
+        url: "/admin/attendance",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }

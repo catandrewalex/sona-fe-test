@@ -1,50 +1,50 @@
-import { Presence } from "@sonamusica-fe/types";
+import { Attendance } from "@sonamusica-fe/types";
 import {
-  PresenceUpdateFormRequest,
-  PresenceInsertFormRequest,
-  PresenceDeleteRequest
-} from "@sonamusica-fe/types/form/admin/presence";
+  AttendanceUpdateFormRequest,
+  AttendanceInsertFormRequest,
+  AttendanceDeleteRequest
+} from "@sonamusica-fe/types/form/admin/attendance";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
-const GetAllPresence = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<
-  FailedResponse | SuccessResponse<Presence>
+const GetAllAttendance = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<
+  FailedResponse | SuccessResponse<Attendance>
 > => {
-  return API.get<Presence>({
-    url: AdminRoutes.PRESENCE,
+  return API.get<Attendance>({
+    url: AdminRoutes.ATTENDANCE,
     config: { params: { page, resultsPerPage } }
   });
 };
 
-const UpdatePresence = (
-  data: PresenceUpdateFormRequest[]
-): Promise<FailedResponse | SuccessResponse<Presence>> => {
-  return API.put<Presence>({
-    url: AdminRoutes.PRESENCE,
+const UpdateAttendance = (
+  data: AttendanceUpdateFormRequest[]
+): Promise<FailedResponse | SuccessResponse<Attendance>> => {
+  return API.put<Attendance>({
+    url: AdminRoutes.ATTENDANCE,
     config: { data: { data } }
   });
 };
 
-const InsertPresence = (
-  data: PresenceInsertFormRequest[]
-): Promise<FailedResponse | SuccessResponse<Presence>> => {
-  return API.post<Presence>({
-    url: AdminRoutes.PRESENCE,
+const InsertAttendance = (
+  data: AttendanceInsertFormRequest[]
+): Promise<FailedResponse | SuccessResponse<Attendance>> => {
+  return API.post<Attendance>({
+    url: AdminRoutes.ATTENDANCE,
     config: { data: { data } }
   });
 };
 
-const DeletePresence = (
-  data: PresenceDeleteRequest[]
+const DeleteAttendance = (
+  data: AttendanceDeleteRequest[]
 ): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.delete<undefined>({
-    url: AdminRoutes.PRESENCE,
+    url: AdminRoutes.ATTENDANCE,
     config: { data: { data } }
   });
 };
 
 export default {
-  GetAllPresence,
-  InsertPresence,
-  UpdatePresence,
-  DeletePresence
+  GetAllAttendance,
+  InsertAttendance,
+  UpdateAttendance,
+  DeleteAttendance
 };

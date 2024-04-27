@@ -2,15 +2,15 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Tab, TableContainer } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
-import PresenceDetailTableView from "@sonamusica-fe/components/Pages/Presence/PresenceDetail/PresenceDetailTableView";
+import AttendanceDetailTableView from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTableView";
 import Pagination from "@sonamusica-fe/components/Pagination";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { Presence, Student } from "@sonamusica-fe/types";
+import { Attendance, Student } from "@sonamusica-fe/types";
 import { getFullNameFromStudent } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useCallback, useEffect, useState } from "react";
 
-type PresenceDetailTabContainerProps = {
+type AttendanceDetailTabContainerProps = {
   classId: number;
   teacherId: number;
   studentsData: Student[];
@@ -22,17 +22,17 @@ type PaginationConfig = {
   onChange?: (page: number) => void;
 };
 
-function filterPresenceByStudents(id: number, data: Presence[]) {
-  return data.filter((presence) => presence.student.studentId === id);
+function filterAttendanceByStudents(id: number, data: Attendance[]) {
+  return data.filter((attendance) => attendance.student.studentId === id);
 }
 
-const PresenceDetailTabContainer = ({
+const AttendanceDetailTabContainer = ({
   classId,
   teacherId,
   studentsData
-}: PresenceDetailTabContainerProps): JSX.Element => {
+}: AttendanceDetailTabContainerProps): JSX.Element => {
   const [tabValue, setTabValue] = useState<number>(studentsData[0].studentId);
-  const [presenceData, setPresenceData] = useState<Presence[]>([]);
+  const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
   const [paginationConfig, setPaginationConfig] = useState<PaginationConfig>({
     page: 1,
     maxPage: 1
@@ -52,9 +52,9 @@ const PresenceDetailTabContainer = ({
     [paginationConfig.maxPage]
   );
 
-  const fetchPresence = () => {
+  const fetchAttendance = () => {
     setLoading(true);
-    API.GetPresenceByClass({
+    API.GetAttendanceByClass({
       page: paginationConfig.page,
       resultsPerPage: studentsData.length * 10,
       classId
@@ -62,18 +62,18 @@ const PresenceDetailTabContainer = ({
       .then((response) => {
         const parsedResponse = apiTransformer(response, false);
         if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-          const results = parsedResponse as ResponseMany<Presence>;
-          setPresenceData(results.results);
+          const results = parsedResponse as ResponseMany<Attendance>;
+          setAttendanceData(results.results);
           setPaginationConfig({ ...paginationConfig, maxPage: results.totalPages });
         } else {
-          showSnackbar("Failed to fetch presence data!", "error");
+          showSnackbar("Failed to fetch attendance data!", "error");
         }
       })
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    fetchPresence();
+    fetchAttendance();
   }, [paginationConfig.page, tabValue]);
 
   return (
@@ -96,9 +96,9 @@ const PresenceDetailTabContainer = ({
               {loading ? (
                 <LoaderSimple />
               ) : (
-                <PresenceDetailTableView
+                <AttendanceDetailTableView
                   currPage={paginationConfig.page}
-                  data={filterPresenceByStudents(tabValue, presenceData)}
+                  data={filterAttendanceByStudents(tabValue, attendanceData)}
                   teacherId={teacherId}
                 />
               )}
@@ -115,4 +115,4 @@ const PresenceDetailTabContainer = ({
   );
 };
 
-export default PresenceDetailTabContainer;
+export default AttendanceDetailTabContainer;

@@ -14,7 +14,7 @@ const CellSemiColon = styled(TableCell)({
   align: "center"
 });
 
-const PresenceResultDetail = (data: Class): JSX.Element => {
+const AttendanceResultDetail = (data: Class): JSX.Element => {
   return (
     <Table
       size="small"
@@ -69,4 +69,4 @@ const PresenceResultDetail = (data: Class): JSX.Element => {
   );
 };
 
-export default PresenceResultDetail;
+export default AttendanceResultDetail;

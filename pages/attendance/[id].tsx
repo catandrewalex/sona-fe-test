@@ -2,7 +2,7 @@ import { Refresh } from "@mui/icons-material";
 import { Alert, Button, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import PageContainer from "@sonamusica-fe/components/PageContainer";
-import PresenceDetailContainer from "@sonamusica-fe/components/Pages/Presence/PresenceDetail";
+import AttendanceDetailContainer from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { Class } from "@sonamusica-fe/types";
@@ -11,7 +11,7 @@ import { FailedResponse } from "api";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 
-const PresenceDetailPage = (): JSX.Element => {
+const AttendanceDetailPage = (): JSX.Element => {
   const [classData, setClassData] = useState<Class>();
   const { query } = useRouter();
   const { finishLoading, startLoading } = useApp((state) => ({
@@ -41,9 +41,9 @@ const PresenceDetailPage = (): JSX.Element => {
   useEffect(fetchClassData, [query]);
 
   return (
-    <PageContainer navTitle="Presence Detail" pageTitle="Presence Detail">
+    <PageContainer navTitle="Attendance Detail" pageTitle="Attendance Detail">
       {classData ? (
-        <PresenceDetailContainer classData={classData} />
+        <AttendanceDetailContainer classData={classData} />
       ) : (
         <Alert severity="error" variant="filled" sx={{ mt: 2 }}>
           <Typography component="span">Failed to load class data!</Typography>
@@ -62,4 +62,4 @@ const PresenceDetailPage = (): JSX.Element => {
   );
 };
 
-export default PresenceDetailPage;
+export default AttendanceDetailPage;

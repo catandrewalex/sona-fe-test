@@ -2,7 +2,7 @@ import Table from "@sonamusica-fe/components/Table";
 import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
-import { Presence, Student, Teacher } from "@sonamusica-fe/types";
+import { Attendance, Student, Teacher } from "@sonamusica-fe/types";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";
@@ -15,18 +15,18 @@ import {
 } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
 
-type PageAdminPresenceTableProps = {
-  data: Presence[];
+type PageAdminAttendanceTableProps = {
+  data: Attendance[];
   studentData: Student[];
   teacherData: Teacher[];
-  setSelectedData: (newSelectedData?: Presence) => void;
+  setSelectedData: (newSelectedData?: Attendance) => void;
   openModal: () => void;
   loading: boolean;
   setLoading: (newData: boolean) => void;
-  setData: (newData: Presence[]) => void;
+  setData: (newData: Attendance[]) => void;
 };
 
-const PageAdminPresenceTable = ({
+const PageAdminAttendanceTable = ({
   data,
   studentData,
   teacherData,
@@ -35,21 +35,21 @@ const PageAdminPresenceTable = ({
   loading,
   setLoading,
   setData
-}: PageAdminPresenceTableProps): JSX.Element => {
+}: PageAdminAttendanceTableProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
   const { showDialog } = useAlertDialog();
 
   return (
     <TableContainer
-      testIdContext="AdminPresence"
+      testIdContext="AdminAttendance"
       height="calc(80vh - 8px)"
       width="calc(100vw - 360px)"
     >
       <Table
-        name="Presence"
-        testIdContext="AdminPresence"
+        name="Attendance"
+        testIdContext="AdminAttendance"
         loading={loading}
-        getRowId={(row) => row.presenceId}
+        getRowId={(row) => row.attendanceId}
         disableSelectionOnClick
         addItemToolbar
         addItemToolbarHandler={openModal}
@@ -60,24 +60,24 @@ const PageAdminPresenceTable = ({
         columns={[
           useTableActions({
             editHandler: ({ id }) => {
-              setSelectedData(data.filter((val) => val.presenceId === id)[0]);
+              setSelectedData(data.filter((val) => val.attendanceId === id)[0]);
               openModal();
             },
             deleteHandler: ({ id, row }) => {
               showDialog(
                 {
-                  title: "Delete Presence",
+                  title: "Delete Attendance",
                   content: `Are you sure to delete ${getFullNameFromStudent(
                     row.studentEnrollment.student
-                  )} presence on ${getCourseName(row.studentEnrollment.class.course)}?`
+                  )} attendance on ${getCourseName(row.studentEnrollment.class.course)}?`
                 },
                 () => {
                   setLoading(true);
-                  API.DeletePresence([{ presenceId: id as number }])
+                  API.DeleteAttendance([{ attendanceId: id as number }])
                     .then((response) => {
                       const parsedResponse = apiTransformer(response, true);
                       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype)
-                        setData(data.filter((value) => value.presenceId !== id));
+                        setData(data.filter((value) => value.attendanceId !== id));
                     })
                     .finally(() => setLoading(false));
                 }
@@ -85,7 +85,7 @@ const PageAdminPresenceTable = ({
             }
           }),
           {
-            field: "presenceId",
+            field: "attendanceId",
             headerName: "ID",
             width: 100,
             align: "center",
@@ -202,4 +202,4 @@ const PageAdminPresenceTable = ({
   );
 };
 
-export default PageAdminPresenceTable;
+export default PageAdminAttendanceTable;

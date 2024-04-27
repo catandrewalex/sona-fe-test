@@ -1,20 +1,20 @@
-import { Presence } from "@sonamusica-fe/types";
+import { Attendance } from "@sonamusica-fe/types";
 
 import API, { FailedResponse, GetRequestConfig, Routes, SuccessResponse } from "api";
 
-type GetPresenceRequestConfig = GetRequestConfig & {
+type GetAttendanceRequestConfig = GetRequestConfig & {
   classId: number;
 };
 
-const GetPresenceByClass = (
-  { page = 1, resultsPerPage = 10000, classId }: GetPresenceRequestConfig = { classId: 0 }
-): Promise<FailedResponse | SuccessResponse<Presence>> => {
-  return API.get<Presence>({
-    url: `${Routes.CLASS}/${classId}/presences`,
+const GetAttendanceByClass = (
+  { page = 1, resultsPerPage = 10000, classId }: GetAttendanceRequestConfig = { classId: 0 }
+): Promise<FailedResponse | SuccessResponse<Attendance>> => {
+  return API.get<Attendance>({
+    url: `${Routes.CLASS}/${classId}/attendances`,
     config: { params: { page, resultsPerPage } }
   });
 };
 
 export default {
-  GetPresenceByClass
+  GetAttendanceByClass
 };

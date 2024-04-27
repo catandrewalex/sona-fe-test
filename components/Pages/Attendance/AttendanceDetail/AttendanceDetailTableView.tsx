@@ -1,14 +1,14 @@
 import { Table, TableBody, TableCell, TableHead, TableRow, tableCellClasses } from "@mui/material";
 import { styled } from "@mui/system";
-import { Presence } from "@sonamusica-fe/types";
+import { Attendance } from "@sonamusica-fe/types";
 import { getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
 import React from "react";
 
-type PresenceDetailTableViewProps = {
+type AttendanceDetailTableViewProps = {
   currPage: number;
   teacherId: number;
-  data: Presence[];
+  data: Attendance[];
 };
 
 const RESULT_PER_PAGE = 12;
@@ -21,11 +21,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   }
 }));
 
-const PresenceDetailTableView = ({
+const AttendanceDetailTableView = ({
   data,
   currPage,
   teacherId
-}: PresenceDetailTableViewProps): JSX.Element => {
+}: AttendanceDetailTableViewProps): JSX.Element => {
   return (
     <Table sx={{ "& .MuiTableCell-root": { py: 1.5 } }}>
       <TableHead>
@@ -39,7 +39,7 @@ const PresenceDetailTableView = ({
       </TableHead>
       <TableBody>
         {data.map((item, idx) => (
-          <TableRow hover key={item.presenceId}>
+          <TableRow hover key={item.attendanceId}>
             <StyledTableCell sx={{ textAlign: "center", maxWidth: 50 }}>
               {(currPage - 1) * RESULT_PER_PAGE + (idx + 1)}
             </StyledTableCell>
@@ -60,4 +60,4 @@ const PresenceDetailTableView = ({
   );
 };
 
-export default PresenceDetailTableView;
+export default AttendanceDetailTableView;

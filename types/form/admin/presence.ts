@@ -1,9 +1,9 @@
-import { Presence, Student, StudentLearningToken, Teacher, Class } from "@sonamusica-fe/types";
+import { Attendance, Student, StudentLearningToken, Teacher, Class } from "@sonamusica-fe/types";
 import { Moment } from "moment";
 
-export type PresenceInsertFormData = Omit<
-  Presence,
-  "presenceId" | "class" | "teacher" | "student" | "studentLearningToken" | "date"
+export type AttendanceInsertFormData = Omit<
+  Attendance,
+  "attendanceId" | "class" | "teacher" | "student" | "studentLearningToken" | "date"
 > & {
   class: Class | null;
   teacher: Teacher | null;
@@ -12,9 +12,9 @@ export type PresenceInsertFormData = Omit<
   date: Moment;
 };
 
-export type PresenceInsertFormRequest = Omit<
-  Presence,
-  "presenceId" | "class" | "teacher" | "student" | "studentLearningToken"
+export type AttendanceInsertFormRequest = Omit<
+  Attendance,
+  "attendanceId" | "class" | "teacher" | "student" | "studentLearningToken"
 > & {
   classId: number;
   teacherId: number;
@@ -22,12 +22,12 @@ export type PresenceInsertFormRequest = Omit<
   studentLearningTokenId: number;
 };
 
-export type PresenceUpdateFormData = PresenceInsertFormData;
+export type AttendanceUpdateFormData = AttendanceInsertFormData;
 
-export type PresenceUpdateFormRequest = PresenceInsertFormRequest & {
-  presenceId: number;
+export type AttendanceUpdateFormRequest = AttendanceInsertFormRequest & {
+  attendanceId: number;
 };
 
-export type PresenceDeleteRequest = {
-  presenceId: number;
+export type AttendanceDeleteRequest = {
+  attendanceId: number;
 };

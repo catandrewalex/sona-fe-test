@@ -100,8 +100,8 @@ export type EnrollmentPaymentInvoice = Omit<
   "enrollmentPaymentId" | "studentEnrollment" | "paymentDate"
 >;
 
-export interface Presence {
-  presenceId: number;
+export interface Attendance {
+  attendanceId: number;
   class: Class;
   teacher: Teacher;
   student: Student;

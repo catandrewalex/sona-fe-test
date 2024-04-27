@@ -245,7 +245,7 @@ export enum AdminRoutes {
   STUDENT_LEARNING_TOKEN = "/admin/studentLearningTokens",
   STUDENT_ENROLLMENT = "/admin/studentEnrollments",
   ENROLLMENT_PAYMENT = "/admin/enrollmentPayments",
-  PRESENCE = "/admin/presences"
+  ATTENDANCE = "/admin/attendances"
 }
 
 export enum Routes {
@@ -255,7 +255,7 @@ export enum Routes {
   COURSE = "/courses",
   CLASS = "/class",
   STUDENT_ENROLLMENT = "/studentEnrollments",
-  PRESENCE = "/presences"
+  ATTENDANCE = "/attendances"
 }
 
 export default API;

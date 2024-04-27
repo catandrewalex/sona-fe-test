@@ -4,11 +4,11 @@ import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
-import { Presence, Class, StudentLearningToken, Teacher, Student } from "@sonamusica-fe/types";
+import { Attendance, Class, StudentLearningToken, Teacher, Student } from "@sonamusica-fe/types";
 import {
-  PresenceInsertFormData,
-  PresenceUpdateFormData
-} from "@sonamusica-fe/types/form/admin/presence";
+  AttendanceInsertFormData,
+  AttendanceUpdateFormData
+} from "@sonamusica-fe/types/form/admin/attendance";
 import {
   convertMomentDateToRFC3339,
   convertNumberToCurrencyString,
@@ -20,14 +20,14 @@ import { FailedResponse, ResponseMany } from "api";
 import moment from "moment";
 import React, { useEffect } from "react";
 
-type PageAdminPresenceFormProps = {
-  data: Presence[];
+type PageAdminAttendanceFormProps = {
+  data: Attendance[];
   classData: Class[];
   studentLearningTokenData: StudentLearningToken[];
   teacherData: Teacher[];
   studentData: Student[];
-  setData: (newData: Presence[]) => void;
-  selectedData: Presence | undefined;
+  setData: (newData: Attendance[]) => void;
+  selectedData: Attendance | undefined;
   onClose: () => void;
   open: boolean;
 };
@@ -40,7 +40,7 @@ const errorResponseMapping = {
   studentLearningToken: "studentLearningTokenId"
 };
 
-const PageAdminPresenceForm = ({
+const PageAdminAttendanceForm = ({
   data,
   setData,
   selectedData,
@@ -50,10 +50,10 @@ const PageAdminPresenceForm = ({
   studentLearningTokenData,
   teacherData,
   studentData
-}: PageAdminPresenceFormProps): JSX.Element => {
+}: PageAdminAttendanceFormProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
 
-  const defaultFields: FormFieldType<PresenceInsertFormData>[] = [
+  const defaultFields: FormFieldType<AttendanceInsertFormData>[] = [
     {
       type: "select",
       name: "student",
@@ -147,7 +147,7 @@ const PageAdminPresenceForm = ({
     }
   ];
 
-  const defaultFieldValue: PresenceUpdateFormData = {
+  const defaultFieldValue: AttendanceUpdateFormData = {
     class: null,
     teacher: null,
     student: null,
@@ -159,9 +159,9 @@ const PageAdminPresenceForm = ({
   };
 
   const { formProperties, formRenderer } = selectedData
-    ? useFormRenderer<PresenceUpdateFormData>(
+    ? useFormRenderer<AttendanceUpdateFormData>(
         {
-          testIdContext: "PresenceUpsert",
+          testIdContext: "AttendanceUpsert",
           cancelButtonProps: {
             onClick: onClose
           },
@@ -191,9 +191,9 @@ const PageAdminPresenceForm = ({
             )
               return Promise.reject();
 
-            const response = await API.UpdatePresence([
+            const response = await API.UpdateAttendance([
               {
-                presenceId: selectedData?.presenceId || 0,
+                attendanceId: selectedData?.attendanceId || 0,
                 usedStudentTokenQuota,
                 date: convertMomentDateToRFC3339(date),
                 note,
@@ -208,9 +208,9 @@ const PageAdminPresenceForm = ({
             if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
               return parsedResponse as FailedResponse;
             } else {
-              const responseData = (parsedResponse as ResponseMany<Presence>).results[0];
+              const responseData = (parsedResponse as ResponseMany<Attendance>).results[0];
               const newData = data.map((val) => {
-                if (val.presenceId === responseData.presenceId) {
+                if (val.attendanceId === responseData.attendanceId) {
                   return responseData;
                 }
                 return val;
@@ -221,9 +221,9 @@ const PageAdminPresenceForm = ({
         },
         defaultFieldValue
       )
-    : useFormRenderer<PresenceInsertFormData>(
+    : useFormRenderer<AttendanceInsertFormData>(
         {
-          testIdContext: "PresenceUpsert",
+          testIdContext: "AttendanceUpsert",
           cancelButtonProps: {
             onClick: onClose
           },
@@ -253,7 +253,7 @@ const PageAdminPresenceForm = ({
               error.note
             )
               return Promise.reject();
-            const response = await API.InsertPresence([
+            const response = await API.InsertAttendance([
               {
                 usedStudentTokenQuota,
                 date: convertMomentDateToRFC3339(date),
@@ -269,7 +269,7 @@ const PageAdminPresenceForm = ({
             if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
               return parsedResponse as FailedResponse;
             } else {
-              const responseData = (parsedResponse as ResponseMany<Presence>).results[0];
+              const responseData = (parsedResponse as ResponseMany<Attendance>).results[0];
               setData([...data, responseData]);
             }
           }
@@ -289,18 +289,18 @@ const PageAdminPresenceForm = ({
         class: selectedData.class,
         studentLearningToken: selectedData.studentLearningToken
       };
-      formProperties.errorRef.current = {} as Record<keyof PresenceUpdateFormData, string>;
+      formProperties.errorRef.current = {} as Record<keyof AttendanceUpdateFormData, string>;
     }
   }, [selectedData]);
 
   return (
     <Modal open={open} onClose={onClose}>
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
-        {selectedData ? "Update" : "Add"} Presence
+        {selectedData ? "Update" : "Add"} Attendance
       </Typography>
       {formRenderer()}
     </Modal>
   );
 };
 
-export default PageAdminPresenceForm;
+export default PageAdminAttendanceForm;

@@ -3,17 +3,17 @@ import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
-import { Presence, StudentLearningToken, Student, Teacher, Class } from "@sonamusica-fe/types";
-import PageAdminPresenceTable from "@sonamusica-fe/components/Pages/Admin/Presence/PageAdminPresenceTable";
-import PageAdminPresenceForm from "@sonamusica-fe/components/Pages/Admin/Presence/PageAdminPresenceForm";
+import { Attendance, StudentLearningToken, Student, Teacher, Class } from "@sonamusica-fe/types";
+import PageAdminAttendanceTable from "@sonamusica-fe/components/Pages/Admin/Attendance/PageAdminAttendanceTable";
+import PageAdminAttendanceForm from "@sonamusica-fe/components/Pages/Admin/Attendance/PageAdminAttendanceForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import WarningCRUD from "@sonamusica-fe/components/WarningCRUD";
 
-const PresencePage = (): JSX.Element => {
-  const [data, setData] = useState<Array<Presence>>([]);
+const AttendancePage = (): JSX.Element => {
+  const [data, setData] = useState<Array<Attendance>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedData, setSelectedData] = useState<Presence>();
+  const [selectedData, setSelectedData] = useState<Attendance>();
   const [studentLearningTokenData, setStudentLearningTokenData] = useState<StudentLearningToken[]>(
     []
   );
@@ -38,7 +38,7 @@ const PresencePage = (): JSX.Element => {
   useEffect(() => {
     if (user) {
       const promises = [
-        API.GetAllPresence(),
+        API.GetAllAttendance(),
         API.GetAllStudentLearningToken(),
         API.GetAllStudent(),
         API.GetAllTeacher(),
@@ -46,13 +46,13 @@ const PresencePage = (): JSX.Element => {
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
-          const response = value[0].value as SuccessResponse<Presence>;
+          const response = value[0].value as SuccessResponse<Attendance>;
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setData((parsedResponse as ResponseMany<Presence>).results);
+            setData((parsedResponse as ResponseMany<Attendance>).results);
           }
         } else {
-          showSnackbar("Failed to fetch presence data!", "error");
+          showSnackbar("Failed to fetch attendance data!", "error");
         }
         if (value[1].status === "fulfilled") {
           const response = value[1].value as SuccessResponse<StudentLearningToken>;
@@ -100,9 +100,9 @@ const PresencePage = (): JSX.Element => {
   }, [user]);
 
   return (
-    <PageContainer navTitle="Presence">
-      <WarningCRUD link="/presence" />
-      <PageAdminPresenceTable
+    <PageContainer navTitle="Attendance">
+      <WarningCRUD link="/attendance" />
+      <PageAdminAttendanceTable
         data={data}
         studentData={studentData}
         teacherData={teacherData}
@@ -112,7 +112,7 @@ const PresencePage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminPresenceForm
+      <PageAdminAttendanceForm
         selectedData={selectedData}
         studentLearningTokenData={studentLearningTokenData}
         teacherData={teacherData}
@@ -127,4 +127,4 @@ const PresencePage = (): JSX.Element => {
   );
 };
 
-export default PresencePage;
+export default AttendancePage;

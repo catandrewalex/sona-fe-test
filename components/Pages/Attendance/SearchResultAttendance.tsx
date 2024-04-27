@@ -1,4 +1,11 @@
-import { Class, Course, Presence, SearchClassConfig, Student, Teacher } from "@sonamusica-fe/types";
+import {
+  Class,
+  Course,
+  Attendance,
+  SearchClassConfig,
+  Student,
+  Teacher
+} from "@sonamusica-fe/types";
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Button, Divider, IconButton, Typography } from "@mui/material";
 import { Add, ArrowBack, Details, Visibility } from "@mui/icons-material";
@@ -22,14 +29,16 @@ import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { useRouter } from "next/router";
 import EditPaymentForm from "@sonamusica-fe/components/Pages/Payment/EditPaymentForm";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import PresenceResultDetail from "@sonamusica-fe/components/Pages/Presence/PresenceResultDetail";
+import AttendanceResultDetail from "@sonamusica-fe/components/Pages/Attendance/AttendanceResultDetail";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
 
-type SearchResultPresenceProps = {
+type SearchResultAttendanceProps = {
   backButtonHandler: () => void;
 };
 
-const SearchResultPresence = ({ backButtonHandler }: SearchResultPresenceProps): JSX.Element => {
+const SearchResultAttendance = ({
+  backButtonHandler
+}: SearchResultAttendanceProps): JSX.Element => {
   const [displayData, setDisplayData] = useState<Array<Class>>([]);
   const [data, setData] = useState<Array<Class>>([]);
   const [studentData, setStudentData] = useState<Student[]>([]);
@@ -168,7 +177,7 @@ const SearchResultPresence = ({ backButtonHandler }: SearchResultPresenceProps):
           getDataActions={(currData) => (
             <Button
               onClick={() => {
-                push("/presence/" + currData.classId);
+                push("/attendance/" + currData.classId);
                 startLoading();
               }}
               variant="contained"
@@ -179,7 +188,7 @@ const SearchResultPresence = ({ backButtonHandler }: SearchResultPresenceProps):
               View Detail
             </Button>
           )}
-          getDataContent={PresenceResultDetail}
+          getDataContent={AttendanceResultDetail}
           getDataKey={(data) => data.classId}
           getDataTitle={(data) => (
             <>
@@ -194,4 +203,4 @@ const SearchResultPresence = ({ backButtonHandler }: SearchResultPresenceProps):
     </Box>
   );
 };
-export default SearchResultPresence;
+export default SearchResultAttendance;

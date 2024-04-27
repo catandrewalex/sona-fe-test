@@ -1,6 +1,6 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
-import SearchPresence from "@sonamusica-fe/components/Pages/Presence/SearchPresence";
-import SearchResultPresence from "@sonamusica-fe/components/Pages/Presence/SearchResultPresence";
+import SearchAttendance from "@sonamusica-fe/components/Pages/Attendance/SearchAttendance";
+import SearchResultAttendance from "@sonamusica-fe/components/Pages/Attendance/SearchResultAttendance";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useCallback } from "react";
@@ -11,7 +11,7 @@ enum Page {
   RESULT_DETAIL
 }
 
-const PresencePage = (): JSX.Element => {
+const AttendancePage = (): JSX.Element => {
   const [page, setPage] = useState<Page>(Page.SEARCH);
   const { query, replace } = useRouter();
 
@@ -35,11 +35,11 @@ const PresencePage = (): JSX.Element => {
 
   const content =
     page === Page.SEARCH ? (
-      <SearchPresence />
+      <SearchAttendance />
     ) : (
-      <SearchResultPresence backButtonHandler={navigateToSearchPage} />
+      <SearchResultAttendance backButtonHandler={navigateToSearchPage} />
     );
-  return <PageContainer navTitle="Manage Presence">{content}</PageContainer>;
+  return <PageContainer navTitle="Manage Attendance">{content}</PageContainer>;
 };
 
-export default PresencePage;
+export default AttendancePage;
