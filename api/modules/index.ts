@@ -19,6 +19,7 @@ import studentModule from "./student";
 import courseModule from "./course";
 import classModule from "./class";
 import attendanceModule from "./attendance";
+import teacherPaymentModule from "./teacher-payment";
 
 export default {
   ...authModule,
@@ -38,7 +39,8 @@ export default {
   ...studentModule,
   ...courseModule,
   ...classModule,
-  ...attendanceModule
+  ...attendanceModule,
+  ...teacherPaymentModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

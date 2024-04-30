@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Cancel, Save } from "@mui/icons-material";
 import { TextFieldProps } from "@mui/material";

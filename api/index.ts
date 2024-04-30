@@ -255,7 +255,8 @@ export enum Routes {
   COURSE = "/courses",
   CLASS = "/class",
   STUDENT_ENROLLMENT = "/studentEnrollments",
-  ATTENDANCE = "/attendances"
+  ATTENDANCE = "/attendances",
+  TEACHER_SALARY = "/teacherPayments"
 }
 
 export default API;

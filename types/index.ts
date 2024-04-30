@@ -110,10 +110,42 @@ export interface Attendance {
   usedStudentTokenQuota: number;
   duration: number;
   note: string;
+  isPaid: boolean;
 }
 
 export interface SearchClassConfig {
   studentId?: number;
   teacherId?: number;
   courseId?: number;
+}
+
+export type TeacherPaymentInvoiceItem = Omit<Class, "student"> & {
+  students: Array<TeacherPaymentInvoiceItemStudent>;
+};
+
+export type TeacherPaymentInvoiceItemStudent = Pick<Student, "studentId" | "user"> & {
+  studentLearningTokens: Array<TeacherPaymentInvoiceItemStudentLearningToken>;
+};
+
+export type TeacherPaymentInvoiceItemStudentLearningToken = Omit<
+  StudentLearningToken,
+  "studentEnrollment" | "quota"
+> & {
+  attendances: Array<TeacherPaymentInvoiceItemAttendance>;
+};
+
+export type TeacherPaymentInvoiceItemAttendance = Omit<
+  Attendance,
+  "class" | "student" | "studentLearningToken"
+> & {
+  grossCourseFeeValue: number;
+  grossTransportFeeValue: number;
+  courseFeeSharingPercentage: number;
+  transportFeeSharingPercentage: number;
+};
+
+export interface TeacherPaymentInvoiceItemSubmit {
+  attendanceId: number;
+  paidCourseFeeValue: number;
+  paidTransportFeeValue: number;
 }

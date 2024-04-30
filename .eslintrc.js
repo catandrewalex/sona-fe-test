@@ -27,6 +27,7 @@ module.exports = {
     "plugin:jsx-a11y/recommended",
     "plugin:@next/next/recommended",
     "plugin:testcafe/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:prettier/recommended" // Make this the last element so prettier config overrides other formatting rules
   ],
   ignorePatterns: ["node_modules/", "tests/", "**/*.js"],

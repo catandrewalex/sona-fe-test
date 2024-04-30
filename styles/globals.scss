@@ -140,3 +140,9 @@ a {
   color: #aaa;
   background-color: #eeeeee9e;
 }
+
+.header-break .MuiDataGrid-columnHeaderTitle {
+  white-space: break-spaces;
+  line-height: normal;
+  text-align: center;
+}

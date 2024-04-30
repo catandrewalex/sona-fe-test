@@ -76,6 +76,12 @@ export const convertNumberToCurrencyStringWithoutPrefixAndSuffix = (value: numbe
   return result.substring(3, result.length - 3);
 };
 
+export const convertNumberToPercentage = (value: number, useComma?: boolean): string => {
+  const result = `${value} %`;
+  if (useComma) return result.replaceAll(".", ",");
+  return result;
+};
+
 export const getFullNameFromUser = (user?: User): string => {
   return user
     ? `${user.userDetail.firstName}${
