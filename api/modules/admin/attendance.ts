@@ -6,6 +6,8 @@ import {
 } from "@sonamusica-fe/types/form/admin/attendance";
 import API, { AdminRoutes, FailedResponse, GetRequestConfig, SuccessResponse } from "api";
 
+//TODO: Add prefix Admin.. to EVERY function on this folder. For reference, check api/moduls/admin/class.ts
+
 const GetAllAttendance = ({ page = 1, resultsPerPage = 10000 }: GetRequestConfig = {}): Promise<
   FailedResponse | SuccessResponse<Attendance>
 > => {

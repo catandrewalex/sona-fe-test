@@ -32,7 +32,7 @@ const GetPaymentInvoice = (
   id: number
 ): Promise<FailedResponse | SuccessResponse<EnrollmentPaymentInvoice>> => {
   return API.get<EnrollmentPaymentInvoice>({
-    url: `${Routes.PAYMENT}/invoice/${id}`
+    url: `${Routes.PAYMENT}/invoice/studentEnrollment/${id}`
   });
 };
 

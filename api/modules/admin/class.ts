@@ -10,7 +10,7 @@ interface GetClassConfig extends GetRequestConfig {
   includeDeactivated?: boolean;
 }
 
-const GetAllClass = ({
+const AdminGetAllClass = ({
   page = 1,
   resultsPerPage = 10000,
   includeDeactivated = true
@@ -21,13 +21,13 @@ const GetAllClass = ({
   });
 };
 
-const GetClassById = (id: number): Promise<FailedResponse | SuccessResponse<Class>> => {
+const AdminGetClassById = (id: number): Promise<FailedResponse | SuccessResponse<Class>> => {
   return API.get<Class>({
-    url: `/admin/class/${id}`
+    url: `${AdminRoutes.CLASS}/${id}`
   });
 };
 
-const InsertClass = (
+const AdminInsertClass = (
   data: ClassInsertFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Class>> => {
   return API.post<Class>({
@@ -36,7 +36,7 @@ const InsertClass = (
   });
 };
 
-const UpdateClass = (
+const AdminUpdateClass = (
   data: ClassUpdateFormRequest[]
 ): Promise<FailedResponse | SuccessResponse<Class>> => {
   return API.put<Class>({
@@ -45,7 +45,7 @@ const UpdateClass = (
   });
 };
 
-const DeleteClass = (
+const AdminDeleteClass = (
   data: ClassDeleteRequest[]
 ): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.delete<undefined>({
@@ -54,4 +54,10 @@ const DeleteClass = (
   });
 };
 
-export default { GetAllClass, GetClassById, InsertClass, UpdateClass, DeleteClass };
+export default {
+  AdminGetAllClass,
+  AdminGetClassById,
+  AdminInsertClass,
+  AdminUpdateClass,
+  AdminDeleteClass
+};
