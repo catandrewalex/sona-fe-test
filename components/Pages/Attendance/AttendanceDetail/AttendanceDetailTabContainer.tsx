@@ -1,84 +1,79 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Tab, TableContainer } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
 import AttendanceDetailTableView from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTableView";
 import Pagination from "@sonamusica-fe/components/Pagination";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { Attendance, Student } from "@sonamusica-fe/types";
 import { getFullNameFromStudent } from "@sonamusica-fe/utils/StringUtil";
-import { FailedResponse, ResponseMany } from "api";
 import React, { useCallback, useEffect, useState } from "react";
+import useAttendanceFetch from "../useAttendanceFetch";
 
 type AttendanceDetailTabContainerProps = {
+  studentsData: Student[];
   classId: number;
   teacherId: number;
-  studentsData: Student[];
+  openForm: (data: Attendance) => void;
+  preSelectedStudentId: number;
 };
 
-type PaginationConfig = {
-  page: number;
-  maxPage: number;
-  onChange?: (page: number) => void;
-};
+const resultPerPage = 12;
 
-function filterAttendanceByStudents(id: number, data: Attendance[]) {
-  return data.filter((attendance) => attendance.student.studentId === id);
+function isIdExistOnStudents(id: number, students: Student[]): boolean {
+  return students.findIndex((student) => student.studentId === id) !== -1;
 }
 
 const AttendanceDetailTabContainer = ({
+  studentsData,
   classId,
   teacherId,
-  studentsData
+  openForm,
+  preSelectedStudentId
 }: AttendanceDetailTabContainerProps): JSX.Element => {
-  const [tabValue, setTabValue] = useState<number>(studentsData[0].studentId);
-  const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
-  const [paginationConfig, setPaginationConfig] = useState<PaginationConfig>({
-    page: 1,
-    maxPage: 1
-  });
-  const [loading, setLoading] = useState<boolean>(true);
-  const apiTransformer = useApiTransformer();
   const { showSnackbar } = useSnack();
+  const [currentStudentId, setCurrentStudentId] = useState<number>(
+    isIdExistOnStudents(preSelectedStudentId, studentsData)
+      ? preSelectedStudentId
+      : studentsData[0].studentId
+  );
 
-  const handleTabChange = useCallback((_e, newValue) => {
-    setTabValue(parseInt(newValue));
-  }, []);
+  const {
+    data: attendanceData,
+    paginationResult: paginationConfig,
+    error,
+    isLoading: loading,
+    refetch
+  } = useAttendanceFetch(classId, currentStudentId, resultPerPage);
+
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, "error");
+    }
+  }, [error]);
+
+  const handleTabChange = useCallback(
+    (_e, newValue) => {
+      const newStudentId = parseInt(newValue);
+      setCurrentStudentId(newStudentId);
+      refetch(newStudentId, paginationConfig.page);
+    },
+    [setCurrentStudentId, paginationConfig.page]
+  );
 
   const handlePageChange = useCallback(
     (_event: React.ChangeEvent<unknown>, page: number) => {
-      setPaginationConfig({ ...paginationConfig, page });
+      refetch(currentStudentId, page);
     },
-    [paginationConfig.maxPage]
+    [refetch, currentStudentId]
   );
 
-  const fetchAttendance = () => {
-    setLoading(true);
-    API.GetAttendanceByClass({
-      page: paginationConfig.page,
-      resultsPerPage: studentsData.length * 10,
-      classId
-    })
-      .then((response) => {
-        const parsedResponse = apiTransformer(response, false);
-        if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-          const results = parsedResponse as ResponseMany<Attendance>;
-          setAttendanceData(results.results);
-          setPaginationConfig({ ...paginationConfig, maxPage: results.totalPages });
-        } else {
-          showSnackbar("Failed to fetch attendance data!", "error");
-        }
-      })
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(() => {
-    fetchAttendance();
-  }, [paginationConfig.page, tabValue]);
+  const onDelete = useCallback(() => {
+    refetch(currentStudentId, paginationConfig.page);
+  }, [paginationConfig.page, currentStudentId]);
 
   return (
     <Box mt={1}>
-      <TabContext value={tabValue + ""}>
+      <TabContext value={currentStudentId + ""}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleTabChange}>
             {studentsData.map((student) => (
@@ -96,10 +91,13 @@ const AttendanceDetailTabContainer = ({
               {loading ? (
                 <LoaderSimple />
               ) : (
+                // TODO: edit the table header to be sticky(?). currently, when the table is long, it has its own vertical scrollbar,
+                // and the table header gets hidden after we scroll down. WE NEED THE HEADER TO BE ALWAYS VISIBLE
                 <AttendanceDetailTableView
-                  currPage={paginationConfig.page}
-                  data={filterAttendanceByStudents(tabValue, attendanceData)}
+                  data={attendanceData}
                   teacherId={teacherId}
+                  openForm={openForm}
+                  onDelete={onDelete}
                 />
               )}
             </TableContainer>

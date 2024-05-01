@@ -2,6 +2,12 @@ import { Class, SearchClassConfig } from "@sonamusica-fe/types";
 
 import API, { FailedResponse, Routes, SuccessResponse } from "api";
 
+const GetClassById = (id: number): Promise<FailedResponse | SuccessResponse<Class>> => {
+  return API.get<Class>({
+    url: `${Routes.CLASS}/${id}`
+  });
+};
+
 const SearchClassByTeacherStudentCourse = ({
   studentId,
   teacherId,
@@ -14,5 +20,6 @@ const SearchClassByTeacherStudentCourse = ({
 };
 
 export default {
+  GetClassById,
   SearchClassByTeacherStudentCourse
 };

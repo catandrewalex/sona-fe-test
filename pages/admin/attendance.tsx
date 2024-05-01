@@ -42,7 +42,7 @@ const AttendancePage = (): JSX.Element => {
         API.GetAllStudentLearningToken(),
         API.GetAllStudent(),
         API.GetAllTeacher(),
-        API.GetAllClass()
+        API.AdminGetAllClass()
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {

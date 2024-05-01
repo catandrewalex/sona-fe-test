@@ -35,7 +35,7 @@ const ClassPage = (): JSX.Element => {
   useEffect(() => {
     if (user) {
       const promises = [
-        API.GetAllClass(),
+        API.AdminGetAllClass(),
         API.GetAllStudent(),
         API.GetAllTeacher(),
         API.GetAllCourse()

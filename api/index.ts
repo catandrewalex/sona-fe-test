@@ -249,11 +249,11 @@ export enum AdminRoutes {
 }
 
 export enum Routes {
-  PAYMENT = "/enrollmentPayment",
+  PAYMENT = "/enrollmentPayments",
   TEACHER = "/teachers",
   STUDENT = "/students",
   COURSE = "/courses",
-  CLASS = "/class",
+  CLASS = "/classes",
   STUDENT_ENROLLMENT = "/studentEnrollments",
   ATTENDANCE = "/attendances",
   TEACHER_SALARY = "/teacherPayments"

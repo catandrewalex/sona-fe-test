@@ -119,6 +119,19 @@ export interface SearchClassConfig {
   courseId?: number;
 }
 
+// PaginationConfig is used internally for various frontend usecase
+export interface PaginationConfig {
+  maxPage: number;
+  page: number;
+}
+
+// PaginationResult is backend's direct output
+export interface PaginationResult {
+  totalPages: number;
+  totalResults: number;
+  currentPage: number;
+}
+
 export type TeacherPaymentInvoiceItem = Omit<Class, "student"> & {
   students: Array<TeacherPaymentInvoiceItemStudent>;
 };

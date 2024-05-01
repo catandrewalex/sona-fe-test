@@ -152,6 +152,14 @@ const PageAdminAttendanceTable = ({
             valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
           },
           {
+            field: "isPaid",
+            headerName: "Is Paid",
+            type: "boolean",
+            width: 125,
+            align: "center",
+            headerAlign: "center"
+          },
+          {
             field: "note",
             headerName: "Notes",
             width: 350
@@ -164,7 +172,7 @@ const PageAdminAttendanceTable = ({
             field: "students",
             getOptionLabel: (option) => getFullNameFromStudent(option),
             md: 6,
-            lg: 4,
+            lg: 3,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.student.studentId === val.studentId;
@@ -179,7 +187,7 @@ const PageAdminAttendanceTable = ({
             field: "teachers",
             getOptionLabel: (option) => getFullNameFromTeacher(option),
             md: 6,
-            lg: 4,
+            lg: 3,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.teacher.teacherId === val.teacherId;
@@ -192,9 +200,25 @@ const PageAdminAttendanceTable = ({
             type: "text-input",
             field: "instrument-grade",
             columnLabel: "Course",
-            md: 6,
+            md: 8,
             lg: 4,
             filterHandler: (data, value) => searchCourseNameByValue(value, data.class.course)
+          },
+          {
+            type: "select",
+            data: [true, false],
+            field: "isPaid",
+            getOptionLabel: (option) => (option ? "Yes" : "No"),
+            md: 4,
+            lg: 2,
+            filterHandler: (data, value) => {
+              console.log(value);
+              for (const val of value) {
+                const result = data.isPaid === val;
+                if (result) return true;
+              }
+              return false;
+            }
           }
         ]}
       />
