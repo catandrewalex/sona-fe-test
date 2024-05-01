@@ -1,4 +1,4 @@
-import { InputAdornment, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
@@ -144,6 +144,13 @@ const PageAdminAttendanceForm = ({
         multiline: true
       },
       validations: []
+    },
+    {
+      type: "switch",
+      name: "isPaid",
+      label: "Is Paid",
+      formFieldProps: { lg: 12, md: 12, sx: { pt: "8px !important" } },
+      validations: []
     }
   ];
 
@@ -155,7 +162,8 @@ const PageAdminAttendanceForm = ({
     usedStudentTokenQuota: 1,
     duration: 30,
     note: "",
-    date: moment()
+    date: moment(),
+    isPaid: false
   };
 
   const { formProperties, formRenderer } = selectedData
@@ -175,6 +183,7 @@ const PageAdminAttendanceForm = ({
               date,
               note,
               duration,
+              isPaid,
               class: classData
             },
             error
@@ -187,7 +196,8 @@ const PageAdminAttendanceForm = ({
               error.usedStudentTokenQuota ||
               error.date ||
               error.duration ||
-              error.note
+              error.note ||
+              error.isPaid
             )
               return Promise.reject();
 
@@ -198,6 +208,7 @@ const PageAdminAttendanceForm = ({
                 date: convertMomentDateToRFC3339(date),
                 note,
                 duration,
+                isPaid: isPaid,
                 classId: classData?.classId || 0,
                 studentId: student?.studentId || 0,
                 teacherId: teacher?.teacherId || 0,
@@ -238,7 +249,8 @@ const PageAdminAttendanceForm = ({
               usedStudentTokenQuota,
               date,
               note,
-              duration
+              duration,
+              isPaid
             },
             error
           ) => {
@@ -249,8 +261,9 @@ const PageAdminAttendanceForm = ({
               error.studentLearningToken ||
               error.usedStudentTokenQuota ||
               error.date ||
+              error.note ||
               error.duration ||
-              error.note
+              error.isPaid
             )
               return Promise.reject();
             const response = await API.InsertAttendance([
@@ -259,6 +272,7 @@ const PageAdminAttendanceForm = ({
                 date: convertMomentDateToRFC3339(date),
                 note,
                 duration,
+                isPaid: isPaid,
                 classId: classData?.classId || 0,
                 studentId: student?.studentId || 0,
                 teacherId: teacher?.teacherId || 0,
@@ -282,6 +296,7 @@ const PageAdminAttendanceForm = ({
       formProperties.valueRef.current = {
         usedStudentTokenQuota: selectedData.usedStudentTokenQuota,
         duration: selectedData.duration,
+        isPaid: selectedData.isPaid,
         note: selectedData.note,
         date: moment(selectedData.date),
         teacher: selectedData.teacher,

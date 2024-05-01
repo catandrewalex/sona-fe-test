@@ -1,19 +1,11 @@
-import {
-  Class,
-  Course,
-  Attendance,
-  SearchClassConfig,
-  Student,
-  Teacher
-} from "@sonamusica-fe/types";
-import React, { useCallback, useEffect, useState } from "react";
+import { Class, Course, SearchClassConfig, Student, Teacher } from "@sonamusica-fe/types";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Divider, IconButton, Typography } from "@mui/material";
-import { Add, ArrowBack, Details, Visibility } from "@mui/icons-material";
+import { ArrowBack, Visibility } from "@mui/icons-material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 
 import SearchResult from "@sonamusica-fe/components/Search/SearchResult";
 import {
-  advancedNumberFilter,
   getCourseName,
   getFullNameFromStudent,
   getFullNameFromTeacher,
@@ -21,13 +13,8 @@ import {
 } from "@sonamusica-fe/utils/StringUtil";
 import SearchFilter from "@sonamusica-fe/components/Search/SearchFilter";
 import { SuccessResponse, FailedResponse, ResponseMany } from "api";
-import moment from "moment";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import PaymentDetail from "@sonamusica-fe/components/Pages/Payment/PaymentDetail";
-import PaymentDetailAction from "@sonamusica-fe/components/Pages/Payment/PaymentDetailAction";
-import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { useRouter } from "next/router";
-import EditPaymentForm from "@sonamusica-fe/components/Pages/Payment/EditPaymentForm";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import AttendanceResultDetail from "@sonamusica-fe/components/Pages/Attendance/AttendanceResultDetail";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";

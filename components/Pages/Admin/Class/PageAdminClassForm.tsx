@@ -129,7 +129,7 @@ const PageAdminClassForm = ({
           )
             return Promise.reject();
 
-          const response = await API.UpdateClass([
+          const response = await API.AdminUpdateClass([
             {
               courseId: course?.courseId || 0,
               studentIds: students.map((student) => student.studentId),
@@ -169,7 +169,7 @@ const PageAdminClassForm = ({
         if (error.course || error.teacher || error.students || error.transportFee)
           return Promise.reject();
 
-        const response = await API.InsertClass([
+        const response = await API.AdminInsertClass([
           {
             courseId: course?.courseId || 0,
             studentIds: students.map((student) => student.studentId),

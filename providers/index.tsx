@@ -7,7 +7,6 @@ import { SnackbarKey, SnackbarProvider } from "notistack";
 import IconButton from "@mui/material/IconButton";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import "moment/locale/id";
 
 /**
  * Providers component prop types.
@@ -27,7 +26,7 @@ const Providers = ({ children }: ProvidersProps): JSX.Element => {
 
   return (
     <ThemeProvider>
-      <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="id">
+      <LocalizationProvider dateAdapter={AdapterMoment}>
         <SnackbarProvider
           ref={notistackRef}
           maxSnack={1}
