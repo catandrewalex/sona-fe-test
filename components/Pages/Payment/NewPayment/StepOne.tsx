@@ -42,7 +42,7 @@ const NewPaymentStepOne = ({
 
   useEffect(() => {
     if (user) {
-      const promises = [API.GetStudentDropdownOptions(), API.GetAllStudentEnrollment()];
+      const promises = [API.GetStudentDropdownOptions(), API.GetStudentEnrollmentDropdownOptions()];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
           const response = value[0].value as SuccessResponse<Student>;

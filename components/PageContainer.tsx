@@ -4,7 +4,7 @@ import Loader from "@sonamusica-fe/components/Loader";
 import PageInfo from "@sonamusica-fe/components/PageInfo";
 import LoginForm from "@sonamusica-fe/components/LoginForm";
 import { getCookie, getLocalStorage } from "@sonamusica-fe/utils/BrowserUtil";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import API, { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { User } from "@sonamusica-fe/types";
 import Navigation from "@sonamusica-fe/components/Navigation";
 import Error403 from "@sonamusica-fe/components/Error/Error403";
@@ -88,7 +88,8 @@ const PageContainer = ({
       const userId = getCookie("SNMC_ID");
 
       if (authToken && userId) {
-        API.GetUserData(parseInt(userId)).then((response) => {
+        // TODO(FerdiantJoshua) WOY BELOM ADA API BUKAN ADMINNYA NIH <----
+        ADMIN_API.GetUserData(parseInt(userId)).then((response) => {
           const loggedInUser = apiTransformer(response, false) as User;
           setUser(loggedInUser);
         });

@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -40,7 +40,7 @@ const errorResponseMapping = {
   studentLearningToken: "studentLearningTokenId"
 };
 
-const PageAdminAttendanceForm = ({
+const PageAdminAttendanceModalForm = ({
   data,
   setData,
   selectedData,
@@ -201,7 +201,7 @@ const PageAdminAttendanceForm = ({
             )
               return Promise.reject();
 
-            const response = await API.UpdateAttendance([
+            const response = await ADMIN_API.UpdateAttendance([
               {
                 attendanceId: selectedData?.attendanceId || 0,
                 usedStudentTokenQuota,
@@ -266,7 +266,7 @@ const PageAdminAttendanceForm = ({
               error.isPaid
             )
               return Promise.reject();
-            const response = await API.InsertAttendance([
+            const response = await ADMIN_API.InsertAttendance([
               {
                 usedStudentTokenQuota,
                 date: convertMomentDateToRFC3339(date),
@@ -318,4 +318,4 @@ const PageAdminAttendanceForm = ({
   );
 };
 
-export default PageAdminAttendanceForm;
+export default PageAdminAttendanceModalForm;

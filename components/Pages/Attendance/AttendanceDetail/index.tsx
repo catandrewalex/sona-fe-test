@@ -3,7 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import AttendanceDetailTabContainer from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTabContainer";
 import FormDataViewerTable from "@sonamusica-fe/components/Table/FormDataViewerTable";
-import AttendanceForm from "@sonamusica-fe/pages/attendance/AttendanceForm";
+import AttendanceModalForm from "@sonamusica-fe/components/Pages/Attendance/AttendanceModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { Attendance, Class, Teacher } from "@sonamusica-fe/types";
 import {
@@ -106,14 +106,14 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
         openForm={openForm}
         preSelectedStudentId={preSelectedStudentId}
       />
-      <AttendanceForm
+      <AttendanceModalForm
         data={selectedData}
         classData={classData}
         teacherOptions={teacherOptions}
         onClose={closeForm}
         open={open}
         onSubmit={() => forceRender()}
-      ></AttendanceForm>
+      ></AttendanceModalForm>
     </Box>
   );
 };

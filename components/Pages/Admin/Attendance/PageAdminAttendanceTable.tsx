@@ -3,7 +3,7 @@ import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableAct
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Attendance, Student, Teacher } from "@sonamusica-fe/types";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";
 import {
@@ -73,7 +73,7 @@ const PageAdminAttendanceTable = ({
                 },
                 () => {
                   setLoading(true);
-                  API.DeleteAttendance([{ attendanceId: id as number }])
+                  ADMIN_API.DeleteAttendance([{ attendanceId: id as number }])
                     .then((response) => {
                       const parsedResponse = apiTransformer(response, true);
                       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype)

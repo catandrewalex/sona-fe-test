@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { Course, Grade, Instrument } from "@sonamusica-fe/types";
 import PageAdminCourseTable from "@sonamusica-fe/components/Pages/Admin/Course/PageAdminCourseTable";
-import PageAdminCourseForm from "@sonamusica-fe/components/Pages/Admin/Course/PageAdminCourseForm";
+import PageAdminCourseModalForm from "@sonamusica-fe/components/Pages/Admin/Course/PageAdminCourseModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 
 const CoursePage = (): JSX.Element => {
@@ -32,7 +32,11 @@ const CoursePage = (): JSX.Element => {
 
   useEffect(() => {
     if (user) {
-      const promises = [API.GetAllCourse(), API.GetAllGrade(), API.GetAllInstrument()];
+      const promises = [
+        ADMIN_API.GetAllCourse(),
+        ADMIN_API.GetAllGrade(),
+        ADMIN_API.GetAllInstrument()
+      ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
           const response = value[0].value as SuccessResponse<Course>;
@@ -78,7 +82,7 @@ const CoursePage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminCourseForm
+      <PageAdminCourseModalForm
         selectedData={selectedData}
         instrumentData={instrumentData}
         gradeData={gradeData}

@@ -1,18 +1,18 @@
 import { Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
-import { Teacher, UserType, User } from "@sonamusica-fe/types";
-import { TeacherInsertFormData } from "@sonamusica-fe/types/form/admin/teacher";
+import { Student, UserType, User } from "@sonamusica-fe/types";
+import { StudentInsertFormData } from "@sonamusica-fe/types/form/admin/student";
 import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import React, { useEffect, useMemo, useState } from "react";
 
-type PageAdminTeacherFormProps = {
-  data: Teacher[];
-  setData: (newData: Teacher[]) => void;
+type PageAdminStudentFormProps = {
+  data: Student[];
+  setData: (newData: Student[]) => void;
   onClose: () => void;
   open: boolean;
 };
@@ -25,18 +25,18 @@ const errorResponseMapping = {
   firstName: "firstName"
 };
 
-const PageAdminTeacherForm = ({
+const PageAdminStudentModalForm = ({
   data,
   setData,
   onClose,
   open
-}: PageAdminTeacherFormProps): JSX.Element => {
+}: PageAdminStudentFormProps): JSX.Element => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const apiTransformer = useApiTransformer();
 
   useEffect(() => {
-    API.GetAllUser({ filter: "NOT_TEACHER" }).then((response) => {
+    ADMIN_API.GetAllUser({ filter: "NOT_STUDENT" }).then((response) => {
       const parsedResponse = apiTransformer(response, false);
       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
         setUsers((parsedResponse as ResponseMany<User>).results);
@@ -61,7 +61,7 @@ const PageAdminTeacherForm = ({
     setSelectedUser(null);
   }, [open]);
 
-  const insertFields: FormFieldType<TeacherInsertFormData>[] = [
+  const insertFields: FormFieldType<StudentInsertFormData>[] = [
     {
       type: "select",
       name: "userId",
@@ -152,7 +152,7 @@ const PageAdminTeacherForm = ({
               { name: "match", parameters: { matcherField: "password", matcherLabel: "Password" } }
             ]
           }
-        ] as FormFieldType<TeacherInsertFormData>[])
+        ] as FormFieldType<StudentInsertFormData>[])
       : []),
     {
       type: "text",
@@ -188,9 +188,9 @@ const PageAdminTeacherForm = ({
     }
   ];
 
-  const { formProperties, formRenderer } = useFormRenderer<TeacherInsertFormData>(
+  const { formProperties, formRenderer } = useFormRenderer<StudentInsertFormData>(
     {
-      testIdContext: "TeacherUpsert",
+      testIdContext: "StudentUpsert",
       cancelButtonProps: {
         onClick: onClose
       },
@@ -207,12 +207,12 @@ const PageAdminTeacherForm = ({
         )
           return Promise.reject();
 
-        let request: Promise<FailedResponse | SuccessResponse<Teacher>>;
+        let request: Promise<FailedResponse | SuccessResponse<Student>>;
 
         if (selectedUser && formData.userId) {
-          request = API.InsertTeacher([{ userId: formData.userId.userId }]);
+          request = ADMIN_API.InsertStudent([{ userId: formData.userId.userId }]);
         } else {
-          request = API.InsertTeacherNewUser([
+          request = ADMIN_API.InsertStudentNewUser([
             {
               email: formData.email,
               username: formData.username,
@@ -230,7 +230,7 @@ const PageAdminTeacherForm = ({
         if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
           return parsedResponse as FailedResponse;
         } else {
-          const responseData = (parsedResponse as ResponseMany<Teacher>).results[0];
+          const responseData = (parsedResponse as ResponseMany<Student>).results[0];
           const newData = [...data, responseData];
           setData(newData);
         }
@@ -242,11 +242,11 @@ const PageAdminTeacherForm = ({
   return (
     <Modal open={open} onClose={onClose}>
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
-        Add Teacher
+        Add Student
       </Typography>
       {formRenderer()}
     </Modal>
   );
 };
 
-export default PageAdminTeacherForm;
+export default PageAdminStudentModalForm;

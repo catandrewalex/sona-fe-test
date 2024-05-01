@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -106,7 +106,7 @@ updateFields.push({
   validations: [{ name: "required" }]
 });
 
-const PageAdminUserForm = ({
+const PageAdminUserModalForm = ({
   data,
   setData,
   selectedData,
@@ -149,7 +149,7 @@ const PageAdminUserForm = ({
               },
               isDeactivated: !formData.isActive
             };
-            const response = await API.UpdateUser([payload]);
+            const response = await ADMIN_API.UpdateUser([payload]);
             const parsedResponse = apiTransformer(response, true);
             if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
               return parsedResponse as FailedResponse;
@@ -196,7 +196,7 @@ const PageAdminUserForm = ({
                 lastName: formData.lastName
               }
             };
-            const response = await API.CreateUser([payload]);
+            const response = await ADMIN_API.CreateUser([payload]);
             const parsedResponse = apiTransformer(response, true);
             if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
               return parsedResponse as FailedResponse;
@@ -234,4 +234,4 @@ const PageAdminUserForm = ({
   );
 };
 
-export default PageAdminUserForm;
+export default PageAdminUserModalForm;

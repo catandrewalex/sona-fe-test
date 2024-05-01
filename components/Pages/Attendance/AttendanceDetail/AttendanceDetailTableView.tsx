@@ -98,7 +98,7 @@ const AttendanceDetailTableView = ({
   };
 
   return (
-    <Table sx={{ "& .MuiTableCell-root": { py: 1.5 } }}>
+    <Table stickyHeader sx={{ "& .MuiTableCell-root": { py: 1.5 } }}>
       <TableHead>
         <TableRow>
           <StyledTableCell sx={{ maxWidth: 64 }}></StyledTableCell>

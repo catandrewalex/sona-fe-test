@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -33,7 +33,7 @@ const errorResponseMapping = {
   balanceTopUp: "balanceTopUp"
 };
 
-const PageAdminEnrollmentPaymentForm = ({
+const PageAdminEnrollmentPaymentModalForm = ({
   data,
   setData,
   selectedData,
@@ -159,7 +159,7 @@ const PageAdminEnrollmentPaymentForm = ({
               error.paymentDate
             )
               return Promise.reject();
-            const response = await API.UpdateEnrollmentPayment([
+            const response = await ADMIN_API.UpdateEnrollmentPayment([
               {
                 penaltyFeeValue,
                 balanceTopUp,
@@ -213,7 +213,7 @@ const PageAdminEnrollmentPaymentForm = ({
               error.penaltyFeeValue
             )
               return Promise.reject();
-            const response = await API.InsertEnrollmentPayment([
+            const response = await ADMIN_API.InsertEnrollmentPayment([
               {
                 courseFeeValue,
                 transportFeeValue,
@@ -258,4 +258,4 @@ const PageAdminEnrollmentPaymentForm = ({
   );
 };
 
-export default PageAdminEnrollmentPaymentForm;
+export default PageAdminEnrollmentPaymentModalForm;

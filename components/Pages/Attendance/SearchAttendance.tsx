@@ -39,7 +39,7 @@ const SearchAttendance = (): JSX.Element => {
       const promises = [
         API.GetStudentDropdownOptions(),
         API.GetTeacherDropdownOptions(),
-        API.GetAllCourse()
+        API.GetCourseDropdownOptions()
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {

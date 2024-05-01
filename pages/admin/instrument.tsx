@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { Instrument } from "@sonamusica-fe/types";
 import PageAdminInstrumentTable from "@sonamusica-fe/components/Pages/Admin/Instrument/PageAdminInstrumentTable";
-import PageAdminInstrumentForm from "@sonamusica-fe/components/Pages/Admin/Instrument/PageAdminInstrumentForm";
+import PageAdminInstrumentModalForm from "@sonamusica-fe/components/Pages/Admin/Instrument/PageAdminInstrumentModalForm";
 
 const InstrumentPage = (): JSX.Element => {
   const [data, setData] = useState<Array<Instrument>>([]);
@@ -28,7 +28,7 @@ const InstrumentPage = (): JSX.Element => {
 
   useEffect(() => {
     if (user) {
-      API.GetAllInstrument()
+      ADMIN_API.GetAllInstrument()
         .then((response) => {
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
@@ -52,7 +52,7 @@ const InstrumentPage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminInstrumentForm
+      <PageAdminInstrumentModalForm
         selectedData={selectedData}
         data={data}
         open={open}

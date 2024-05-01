@@ -13,16 +13,28 @@ import teacherSpecialFeeAdminModule from "./admin/teacher-special-fee";
 import studentLearningTokenAdminModule from "./admin/student-learning-token";
 import enrollmentPaymentAdminModule from "./admin/enrollment-payment";
 import attendanceAdminModule from "./admin/attendance";
-import paymentsModule from "./payments";
+import paymentsModule from "./payment";
 import teacherModule from "./teacher";
 import studentModule from "./student";
 import courseModule from "./course";
+import studentEnrollmentModule from "./student-enrollment";
 import classModule from "./class";
 import attendanceModule from "./attendance";
 import teacherPaymentModule from "./teacher-payment";
 
 export default {
   ...authModule,
+  ...paymentsModule,
+  ...teacherModule,
+  ...studentModule,
+  ...courseModule,
+  ...studentEnrollmentModule,
+  ...classModule,
+  ...attendanceModule,
+  ...teacherPaymentModule
+};
+
+export const ADMIN_API = {
   ...userAdminModule,
   ...teacherAdminModule,
   ...studentAdminModule,
@@ -33,14 +45,7 @@ export default {
   ...teacherSpecialFeeAdminModule,
   ...studentLearningTokenAdminModule,
   ...enrollmentPaymentAdminModule,
-  ...attendanceAdminModule,
-  ...paymentsModule,
-  ...teacherModule,
-  ...studentModule,
-  ...courseModule,
-  ...classModule,
-  ...attendanceModule,
-  ...teacherPaymentModule
+  ...attendanceAdminModule
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

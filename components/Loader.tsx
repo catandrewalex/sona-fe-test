@@ -29,25 +29,27 @@ type LoaderPropsType = {
 const Loader = ({ animation = false, testIdContext }: LoaderPropsType): JSX.Element => {
   const finishAppLoading = useApp((state) => state.appFinishLoading);
   const [loaderVisible, setLoaderVisible] = useState(!animation);
-  const props = animation
-    ? useSpring({
-        to: { opacity: 1 },
-        from: { opacity: 0 },
-        config: { duration: 2000 },
-        onRest: () => setLoaderVisible(true)
-      })
-    : {};
+  const props = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+    config: { duration: 2000 },
+    onRest: () => setLoaderVisible(true)
+  });
 
-  if (animation) {
-    useEffect(() => {
-      const timeout = setTimeout(finishAppLoading, 5000);
+  useEffect(() => {
+    if (animation) {
+      const timeout = setTimeout(finishAppLoading, 3000);
       return () => clearTimeout(timeout);
-    }, []);
-  }
+    }
+  }, [animation, finishAppLoading]);
 
   return (
     <>
-      <animated.div style={props} className="container" data-testid={`${testIdContext}-Loader`}>
+      <animated.div
+        style={animation ? props : {}}
+        className="container"
+        data-testid={`${testIdContext}-Loader`}
+      >
         <Image unoptimized src="/logo.png" width="500" height="287" />
         <CircularProgress
           className={clsx("m-5", {

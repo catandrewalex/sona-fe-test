@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -27,7 +27,7 @@ const errorResponseMapping = {
   course: "course"
 };
 
-const PageAdminClassForm = ({
+const PageAdminClassModalForm = ({
   data,
   setData,
   selectedData,
@@ -129,7 +129,7 @@ const PageAdminClassForm = ({
           )
             return Promise.reject();
 
-          const response = await API.AdminUpdateClass([
+          const response = await ADMIN_API.AdminUpdateClass([
             {
               courseId: course?.courseId || 0,
               studentIds: students.map((student) => student.studentId),
@@ -169,7 +169,7 @@ const PageAdminClassForm = ({
         if (error.course || error.teacher || error.students || error.transportFee)
           return Promise.reject();
 
-        const response = await API.AdminInsertClass([
+        const response = await ADMIN_API.AdminInsertClass([
           {
             courseId: course?.courseId || 0,
             studentIds: students.map((student) => student.studentId),
@@ -212,4 +212,4 @@ const PageAdminClassForm = ({
   );
 };
 
-export default PageAdminClassForm;
+export default PageAdminClassModalForm;

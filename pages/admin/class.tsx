@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { Class, Course, Student, Teacher } from "@sonamusica-fe/types";
 import PageAdminClassTable from "@sonamusica-fe/components/Pages/Admin/Class/PageAdminClassTable";
-import PageAdminClassForm from "@sonamusica-fe/components/Pages/Admin/Class/PageAdminClassForm";
+import PageAdminClassModalForm from "@sonamusica-fe/components/Pages/Admin/Class/PageAdminClassModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 // import PageAdminClassForm from "@sonamusica-fe/components/Pages/Admin/Class/PageAdminClassForm";
 
@@ -35,10 +35,10 @@ const ClassPage = (): JSX.Element => {
   useEffect(() => {
     if (user) {
       const promises = [
-        API.AdminGetAllClass(),
-        API.GetAllStudent(),
-        API.GetAllTeacher(),
-        API.GetAllCourse()
+        ADMIN_API.AdminGetAllClass(),
+        ADMIN_API.GetAllStudent(),
+        ADMIN_API.GetAllTeacher(),
+        ADMIN_API.GetAllCourse()
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
@@ -95,7 +95,7 @@ const ClassPage = (): JSX.Element => {
         setSelectedData={setSelectedData}
         studentData={studentData}
       />
-      <PageAdminClassForm
+      <PageAdminClassModalForm
         data={data}
         open={open}
         setData={setData}

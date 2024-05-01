@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -27,7 +27,7 @@ const errorResponseMapping = {
   studentEnrollment: "studentEnrollmentId"
 };
 
-const PageAdminStudentLearningTokenForm = ({
+const PageAdminStudentLearningTokenModalForm = ({
   data,
   setData,
   selectedData,
@@ -109,7 +109,7 @@ const PageAdminStudentLearningTokenForm = ({
           submitHandler: async ({ courseFeeValue, quota, transportFeeValue }, error) => {
             if (error.courseFeeValue || error.quota || error.transportFeeValue)
               return Promise.reject();
-            const response = await API.UpdateStudentLearningToken([
+            const response = await ADMIN_API.UpdateStudentLearningToken([
               {
                 quota,
                 courseFeeValue,
@@ -154,7 +154,7 @@ const PageAdminStudentLearningTokenForm = ({
               error.studentEnrollment
             )
               return Promise.reject();
-            const response = await API.InsertStudentLearningToken([
+            const response = await ADMIN_API.InsertStudentLearningToken([
               {
                 courseFeeValue,
                 transportFeeValue,
@@ -199,4 +199,4 @@ const PageAdminStudentLearningTokenForm = ({
   );
 };
 
-export default PageAdminStudentLearningTokenForm;
+export default PageAdminStudentLearningTokenModalForm;

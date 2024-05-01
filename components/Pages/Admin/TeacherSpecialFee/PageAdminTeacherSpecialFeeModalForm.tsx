@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -29,7 +29,7 @@ const errorResponseMapping = {
   fee: "fee"
 };
 
-const PageAdminTeacherSpecialFeeForm = ({
+const PageAdminTeacherSpecialFeeModalForm = ({
   data,
   setData,
   selectedData,
@@ -114,7 +114,7 @@ const PageAdminTeacherSpecialFeeForm = ({
           fields: defaultUpdateFields,
           submitHandler: async ({ fee }, error) => {
             if (error.fee) return Promise.reject();
-            const response = await API.UpdateTeacherSpecialFee([
+            const response = await ADMIN_API.UpdateTeacherSpecialFee([
               { teacherSpecialFeeId: selectedData.teacherSpecialFeeId, fee }
             ]);
             const parsedResponse = apiTransformer(response, true);
@@ -144,7 +144,7 @@ const PageAdminTeacherSpecialFeeForm = ({
           errorResponseMapping,
           submitHandler: async ({ fee, teacher, course }, error) => {
             if (error.fee || error.teacher || error.course) return Promise.reject();
-            const response = await API.InsertTeacherSpecialFee([
+            const response = await ADMIN_API.InsertTeacherSpecialFee([
               {
                 fee,
                 teacherId: teacher?.teacherId || 0,
@@ -183,4 +183,4 @@ const PageAdminTeacherSpecialFeeForm = ({
   );
 };
 
-export default PageAdminTeacherSpecialFeeForm;
+export default PageAdminTeacherSpecialFeeModalForm;

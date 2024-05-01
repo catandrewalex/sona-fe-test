@@ -15,7 +15,7 @@ type EditPaymentFormProps = {
   onClose: () => void;
 };
 
-const EditPaymentForm = ({ data, onSubmit, onClose }: EditPaymentFormProps): JSX.Element => {
+const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(false);
   const onCloseInternal = useCallback(() => {
     setOpen(false);
@@ -91,4 +91,4 @@ const EditPaymentForm = ({ data, onSubmit, onClose }: EditPaymentFormProps): JSX
   );
 };
 
-export default EditPaymentForm;
+export default EditPaymentModalForm;

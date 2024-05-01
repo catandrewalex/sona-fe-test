@@ -19,7 +19,7 @@ import PaymentDetail from "@sonamusica-fe/components/Pages/Payment/PaymentDetail
 import PaymentDetailAction from "@sonamusica-fe/components/Pages/Payment/PaymentDetailAction";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { useRouter } from "next/router";
-import EditPaymentForm from "@sonamusica-fe/components/Pages/Payment/EditPaymentForm";
+import EditPaymentModalForm from "@sonamusica-fe/components/Pages/Payment/EditPaymentModalForm";
 import { useUser } from "@sonamusica-fe/providers/AppProvider";
 
 type SearchResultEnrollmentPaymentProps = {
@@ -224,7 +224,7 @@ const SearchResultEnrollmentPayment = ({
         )}
         getDataSubTitle={(data) => moment(data.paymentDate).format("DD MMMM YYYY")}
       />
-      <EditPaymentForm
+      <EditPaymentModalForm
         data={selectedData}
         onClose={() => setSelectedData(undefined)}
         onSubmit={(newData) => {

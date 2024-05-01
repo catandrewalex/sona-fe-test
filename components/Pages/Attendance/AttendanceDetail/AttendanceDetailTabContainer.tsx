@@ -91,8 +91,6 @@ const AttendanceDetailTabContainer = ({
               {loading ? (
                 <LoaderSimple />
               ) : (
-                // TODO: edit the table header to be sticky(?). currently, when the table is long, it has its own vertical scrollbar,
-                // and the table header gets hidden after we scroll down. WE NEED THE HEADER TO BE ALWAYS VISIBLE
                 <AttendanceDetailTableView
                   data={attendanceData}
                   teacherId={teacherId}

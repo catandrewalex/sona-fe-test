@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { Teacher } from "@sonamusica-fe/types";
 import PageAdminTeacherTable from "@sonamusica-fe/components/Pages/Admin/Teacher/PageAdminTeacherTable";
-import PageAdminTeacherForm from "@sonamusica-fe/components/Pages/Admin/Teacher/PageAdminTeacherForm";
+import PageAdminTeacherModalForm from "@sonamusica-fe/components/Pages/Admin/Teacher/PageAdminTeacherModalForm";
 
 const TeacherPage = (): JSX.Element => {
   const [data, setData] = useState<Array<Teacher>>([]);
@@ -26,7 +26,7 @@ const TeacherPage = (): JSX.Element => {
 
   useEffect(() => {
     if (user) {
-      API.GetAllTeacher()
+      ADMIN_API.GetAllTeacher()
         .then((response) => {
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
@@ -49,7 +49,7 @@ const TeacherPage = (): JSX.Element => {
         setLoading={setLoading}
         setData={setData}
       />
-      <PageAdminTeacherForm data={data} open={open} setData={setData} onClose={closeForm} />
+      <PageAdminTeacherModalForm data={data} open={open} setData={setData} onClose={closeForm} />
     </PageContainer>
   );
 };

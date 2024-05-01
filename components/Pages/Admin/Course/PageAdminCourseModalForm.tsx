@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -19,7 +19,7 @@ type PageAdminCourseFormProps = {
   open: boolean;
 };
 
-const PageAdminCourseForm = ({
+const PageAdminCourseModalForm = ({
   data,
   setData,
   selectedData,
@@ -111,7 +111,7 @@ const PageAdminCourseForm = ({
           },
           submitHandler: async ({ defaultDurationMinute, defaultFee }, error) => {
             if (error.defaultDurationMinute || error.defaultFee) return Promise.reject();
-            const response = await API.UpdateCourse([
+            const response = await ADMIN_API.UpdateCourse([
               { courseId: selectedData.courseId, defaultFee, defaultDurationMinute }
             ]);
             const parsedResponse = apiTransformer(response, true);
@@ -150,7 +150,7 @@ const PageAdminCourseForm = ({
           ) => {
             if (error.defaultDurationMinute || error.defaultFee || error.grade || error.instrument)
               return Promise.reject();
-            const response = await API.InsertCourse([
+            const response = await ADMIN_API.InsertCourse([
               {
                 defaultDurationMinute,
                 defaultFee,
@@ -191,4 +191,4 @@ const PageAdminCourseForm = ({
   );
 };
 
-export default PageAdminCourseForm;
+export default PageAdminCourseModalForm;
