@@ -30,7 +30,7 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended" // Make this the last element so prettier config overrides other formatting rules
   ],
-  ignorePatterns: ["node_modules/", "tests/", "**/*.js"],
+  ignorePatterns: ["node_modules/", "build/", "tests/", "**/*.js"],
   rules: {
     "prettier/prettier": ["error", { endOfLine: "auto" }, { usePrettierrc: true }], // Use our .prettierrc file as source
     "react/react-in-jsx-scope": "off",
