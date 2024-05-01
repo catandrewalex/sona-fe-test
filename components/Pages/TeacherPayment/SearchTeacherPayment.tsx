@@ -1,7 +1,11 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { useApiTransformer } from "@sonamusica-fe/api";
+import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
+import { useApp } from "@sonamusica-fe/providers/AppProvider";
+import { TeacherPaymentUnpaidListItem } from "@sonamusica-fe/types";
+import { FailedResponse, ResponseMany } from "api";
 import moment from "moment";
+import { useRouter } from "next/router";
 import React from "react";
 
 const monthOptions = [
@@ -24,8 +28,14 @@ type SearchTeacherPaymentFormData = {
   year: number;
 };
 
-const SearchTeacherPayment = () => {
+interface SearchTeacherPaymentProps {
+  onSearchComplete: (data: TeacherPaymentUnpaidListItem[]) => void;
+}
+
+const SearchTeacherPayment = ({ onSearchComplete }: SearchTeacherPaymentProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
+  const { replace } = useRouter();
+
   const yearOptions: number[] = [];
   for (let now = moment().year(), i = now - 10; i <= now + 10; i++) {
     yearOptions.push(i);
@@ -71,19 +81,18 @@ const SearchTeacherPayment = () => {
       ],
       submitHandler: async ({ month, year }, err) => {
         if (err.month || err.year) return Promise.reject();
-        // const response = await API.SearchPayments({
-        //   startDateTime: convertMomentDateToRFC3339(startDate),
-        //   endDateTime: convertMomentDateToRFC3339(endDate)
-        // });
-        // const parsedResponse = apiTransformer(response, false);
-        // if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-        //   return parsedResponse as FailedResponse;
-        // } else {
-        //   onSearchSubmit((parsedResponse as ResponseMany<EnrollmentPayment>).results);
-        // }
+        const response = await API.GetUnpaidTeacherPaymentByMonthAndYear({ month: month.id, year });
+        const parsedResponse = apiTransformer(response, false);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        } else {
+          onSearchComplete((parsedResponse as ResponseMany<TeacherPaymentUnpaidListItem>).results);
+
+          replace({ query: { month: month.id, year } });
+        }
       }
     },
-    { month: monthOptions[moment().month() - 1], year: moment().year() }
+    { month: monthOptions[moment().month()], year: moment().year() }
   );
   return (
     <Box

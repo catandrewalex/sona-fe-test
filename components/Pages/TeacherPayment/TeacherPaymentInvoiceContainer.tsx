@@ -28,7 +28,7 @@ const TeacherPaymentInvoiceContainer = ({
           }
           sx={{ pb: 0, borderBottom: "5px solid rgba(0,0,0,0.1)" }}
         />
-        <CardContent sx={{ py: 0, maxHeight: "calc(100vh - 280px)", overflowY: "scroll" }}>
+        <CardContent sx={{ py: 0, maxHeight: "calc(100vh - 340px)", overflowY: "scroll" }}>
           {children}
         </CardContent>
         <CardActions

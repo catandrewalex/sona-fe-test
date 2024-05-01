@@ -33,9 +33,9 @@ const TeacherPaymentItemDetails = ({
   const drawerOpen = useApp((state) => state.drawerOpen);
   const { showSnackbar } = useSnack();
   return (
-    <Box sx={{ width: drawerOpen ? "calc(100vw - 400px)" : "calc(100vw - 150px)" }}>
+    <Box sx={{ width: drawerOpen ? "calc(100vw - 340px)" : "calc(100vw - 150px)" }}>
       <DataGrid
-        sx={{ width: "100%", overflowX: "auto" }}
+        sx={{ width: "100%", overflowX: "auto", "& .MuiDataGrid-cell": { px: 0 } }}
         rows={data}
         columns={[
           {
@@ -43,7 +43,7 @@ const TeacherPaymentItemDetails = ({
             valueGetter(params) {
               return moment(params.value).unix();
             },
-            width: 150,
+            width: 125,
             headerAlign: "center",
             align: "center",
             headerName: "Date",
@@ -54,26 +54,18 @@ const TeacherPaymentItemDetails = ({
             }
           },
           {
-            field: "usedStudentTokenQuota",
+            field: "usedStudentTokenQuotaAndDuration",
             type: "number",
-            headerName: "Quota Used",
-            width: 70,
+            headerName: "Quota Used (Duration)",
+            width: 100,
             headerAlign: "center",
             align: "center",
             sortable: false,
             disableColumnMenu: true,
-            headerClassName: "header-break"
-          },
-          {
-            field: "duration",
-            type: "number",
-            headerName: "Duration (min)",
-            width: 80,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break"
+            headerClassName: "header-break",
+            valueGetter(params) {
+              return `${params.row.usedStudentTokenQuota} (${params.row.duration} min)`;
+            }
           },
           {
             field: "note",
@@ -89,7 +81,7 @@ const TeacherPaymentItemDetails = ({
             field: "grossCourseFeeValue",
             type: "number",
             headerName: "Gross Course Fee",
-            width: 130,
+            width: 110,
             headerAlign: "center",
             align: "center",
             sortable: false,
@@ -103,7 +95,7 @@ const TeacherPaymentItemDetails = ({
             field: "paidCourseFeeValue",
             type: "number",
             headerName: "Paid Course Fee",
-            width: 130,
+            width: 110,
             headerAlign: "center",
             align: "center",
             sortable: false,
@@ -122,7 +114,7 @@ const TeacherPaymentItemDetails = ({
           {
             field: "courseFeeSharingPercentage",
             type: "number",
-            headerName: "Percentage Course Fee",
+            headerName: "(%) Course Fee",
             width: 100,
             headerAlign: "center",
             align: "center",
@@ -139,11 +131,26 @@ const TeacherPaymentItemDetails = ({
             },
             editable: true
           },
+
+          {
+            field: "grossTransportFeeValue",
+            type: "number",
+            headerName: "Gross Transport Fee",
+            width: 110,
+            headerAlign: "center",
+            align: "center",
+            sortable: false,
+            disableColumnMenu: true,
+            headerClassName: "header-break",
+            valueFormatter(params) {
+              return convertNumberToCurrencyString(params.value);
+            }
+          },
           {
             field: "paidTransportFeeValue",
             type: "number",
             headerName: "Paid Transport Fee",
-            width: 130,
+            width: 110,
             headerAlign: "center",
             align: "center",
             sortable: false,
@@ -162,8 +169,8 @@ const TeacherPaymentItemDetails = ({
           {
             field: "transportFeeSharingPercentage",
             type: "number",
-            headerName: "Percentage Transport Fee",
-            width: 100,
+            headerName: "(%) Transport Fee",
+            width: 110,
             headerAlign: "center",
             align: "center",
             sortable: false,
@@ -190,6 +197,7 @@ const TeacherPaymentItemDetails = ({
           }
         }}
         processRowUpdate={(updatedRow, originalRow) => {
+          console.log(updatedRow, originalRow);
           if (
             originalRow.paidCourseFeeValue !== updatedRow.paidCourseFeeValue &&
             updatedRow.paidCourseFeeValue !== undefined
@@ -200,6 +208,7 @@ const TeacherPaymentItemDetails = ({
               updatedRow.courseFeeSharingPercentage =
                 updatedRow.paidCourseFeeValue / updatedRow.grossCourseFeeValue;
 
+              console.log("kuda", updatedRow.paidCourseFeeValue, updatedRow.grossCourseFeeValue);
               handleSubmitDataChange(
                 updatedRow.attendanceId,
                 updatedRow.paidCourseFeeValue
@@ -265,8 +274,10 @@ const TeacherPaymentItemDetails = ({
             if (updatedRow.paidTransportFeeValue > updatedRow.grossTransportFeeValue) {
               showSnackbar("Paid Transport Fee can not bigger than Gross Transport Fee!", "error");
             } else {
-              updatedRow.transportFeeSharingPercentage =
-                updatedRow.paidTransportFeeValue / updatedRow.grossTransportFeeValue;
+              if (updatedRow.grossTransportFeeValue !== 0) {
+                updatedRow.transportFeeSharingPercentage =
+                  updatedRow.paidTransportFeeValue / updatedRow.grossTransportFeeValue;
+              }
 
               handleSubmitDataChange(
                 updatedRow.attendanceId,
@@ -280,6 +291,7 @@ const TeacherPaymentItemDetails = ({
               return updatedRow;
             }
           }
+          console.log("kuda", originalRow);
           return originalRow;
         }}
       />

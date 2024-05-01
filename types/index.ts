@@ -149,3 +149,9 @@ export interface TeacherPaymentInvoiceItemSubmit {
   paidCourseFeeValue: number;
   paidTransportFeeValue: number;
 }
+
+export interface TeacherPaymentUnpaidListItem {
+  teacherId: number;
+  user: User;
+  totalUnpaidAttendances: number;
+}

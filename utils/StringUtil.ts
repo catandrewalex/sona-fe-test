@@ -1,4 +1,4 @@
-import { Course, Student, Teacher, User } from "@sonamusica-fe/types";
+import { Course, Student, Teacher, User, UserDetail } from "@sonamusica-fe/types";
 import { Moment } from "moment";
 
 const currencyFormatter = new Intl.NumberFormat("id", {
@@ -83,10 +83,12 @@ export const convertNumberToPercentage = (value: number, useComma?: boolean): st
 };
 
 export const getFullNameFromUser = (user?: User): string => {
-  return user
-    ? `${user.userDetail.firstName}${
-        user.userDetail.lastName ? " " + user.userDetail.lastName : ""
-      }`
+  return getFullNameFromUserDetail(user?.userDetail);
+};
+
+export const getFullNameFromUserDetail = (userDetail?: UserDetail): string => {
+  return userDetail
+    ? `${userDetail.firstName}${userDetail.lastName ? " " + userDetail.lastName : ""}`
     : "";
 };
 

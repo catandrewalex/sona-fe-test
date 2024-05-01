@@ -237,7 +237,7 @@ const SingleLevel = ({
         disabled={disabled}
         className={hidden ? "hide" : ""}
         sx={merge(
-          { transition: "none", flex: 0 },
+          { transition: "none", flex: 0, py: 0.7 },
           router.route === url ? styles.active : styles.item,
           inset ? { pl: 4 } : {}
         )}

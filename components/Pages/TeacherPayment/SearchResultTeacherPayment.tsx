@@ -1,30 +1,69 @@
+import { ArrowBack } from "@mui/icons-material";
 import { Masonry } from "@mui/lab";
-import { Box, Card, CardActions, CardContent, CardHeader } from "@mui/material";
-import React from "react";
+import { Box, Button, Card, CardActions, CardContent, CardHeader, Typography } from "@mui/material";
+import { TeacherPaymentUnpaidListItem } from "@sonamusica-fe/types";
+import { getFullNameFromUser, getFullNameFromUserDetail } from "@sonamusica-fe/utils/StringUtil";
+import { useRouter } from "next/router";
+import React, { useCallback } from "react";
 
-const SearchResultTeacherPayment = () => {
+interface SearchResultTeacherPaymentProps {
+  data: TeacherPaymentUnpaidListItem[];
+}
+
+const SearchResultTeacherPayment = ({ data }: SearchResultTeacherPaymentProps): JSX.Element => {
+  const { push, replace, query } = useRouter();
+
+  const handleBackAction = useCallback(() => {
+    replace({ query: undefined });
+  }, [replace]);
+
+  const onCardClick = useCallback(
+    (teacherId: number) => {
+      return () => push({ pathname: "/teacher-payment/" + teacherId, query });
+    },
+    [push, query]
+  );
+
   return (
-    <Box sx={{ mt: 2, p: 2, height: "calc(100vh - 200px)", overflowY: "auto" }}>
-      <Masonry spacing={3} columns={{ md: 2, xl: 4, lg: 3 }}>
-        <Card
-          //   key={getDataKey(item)}
-          elevation={3}
-          //   sx={onCardClick ? { cursor: "pointer" } : {}}
-          //   onClick={() => onCardClick?.(item)}
-        >
-          <CardHeader
-            title={"TODO"}
-            sx={{ py: 0.5, borderBottom: "1px solid rgba(0,0,0,0.15)" }}
-            titleTypographyProps={{ variant: "h6" }}
-            subheader={"TODO"}
-            subheaderTypographyProps={{ variant: "caption" }}
-          />
-          <CardContent sx={{ py: 1, "&:last-child": { pb: 1 } }}>
-            <div>asdf</div>
-          </CardContent>
-        </Card>
-      </Masonry>
-    </Box>
+    <>
+      <Button
+        onClick={handleBackAction}
+        color="error"
+        sx={{ mt: 2 }}
+        variant="outlined"
+        startIcon={<ArrowBack />}
+      >
+        Back
+      </Button>
+      <Box sx={{ mt: 2, p: 2, height: "calc(100vh - 200px)", overflowY: "auto" }}>
+        <Masonry spacing={3} columns={{ md: 3, xl: 5, lg: 4 }}>
+          {data.map((teacherPayment) => (
+            <Card
+              key={teacherPayment.teacherId}
+              elevation={3}
+              sx={{ cursor: "pointer" }}
+              onClick={onCardClick(teacherPayment.teacherId)}
+            >
+              <CardHeader
+                title={getFullNameFromUser(teacherPayment.user)}
+                sx={{ py: 0.5, borderBottom: "1px solid rgba(0,0,0,0.15)" }}
+                titleTypographyProps={{ variant: "h6" }}
+                subheader={`Username: ${teacherPayment.user.username || "-"}`}
+                subheaderTypographyProps={{ variant: "caption" }}
+              />
+              <CardContent sx={{ py: 1, "&:last-child": { pb: 1 } }}>
+                <Typography variant="subtitle2" fontWeight="300" component="span">
+                  Unpaid Attendances:
+                </Typography>
+                <Typography variant="subtitle2" component="span" fontWeight="bold" sx={{ ml: 1 }}>
+                  {teacherPayment.totalUnpaidAttendances}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
+        </Masonry>
+      </Box>
+    </>
   );
 };
 

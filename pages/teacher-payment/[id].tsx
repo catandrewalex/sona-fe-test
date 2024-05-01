@@ -21,12 +21,13 @@ import TeacherPaymentClassContainer from "@sonamusica-fe/components/Pages/Teache
 import TeacherPaymentItemContainer from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentItem/TeacherPaymentItemContainer";
 import { FailedResponse, ResponseMany } from "api";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
+import { ArrowBack } from "@mui/icons-material";
 
 const TeacherPaymentDetailPage = (): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   const { showDialog } = useAlertDialog();
 
-  const { query, isReady } = useRouter();
+  const { query, isReady, back } = useRouter();
   const { finishLoading, startLoading } = useApp((state) => ({
     finishLoading: state.finishLoading,
     startLoading: state.startLoading
@@ -73,6 +74,10 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
     });
   };
 
+  const handleBackAction = useCallback(() => {
+    back();
+  }, [back]);
+
   useEffect(() => {
     if (isReady && query.id && typeof query.id === "string") {
       startLoading();
@@ -115,36 +120,48 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
       }
     >
       {page === 0 && rawData ? (
-        <Box>
-          <TeacherPaymentInvoiceContainer totalPaidValue={calculateGrandTotal()}>
-            {rawData.map((classData, idx, arr) => (
-              <TeacherPaymentClassContainer
-                key={classData.classId}
-                courseName={getCourseName(classData.course)}
-                divider={idx !== arr.length - 1}
-              >
-                {classData.students.map(
-                  (
-                    studentData: Pick<Student, "studentId" | "user"> & {
-                      studentLearningTokens: Array<TeacherPaymentInvoiceItemStudentLearningToken>;
-                    }
-                  ) => (
-                    <TeacherPaymentItemContainer
-                      handleSubmitDataChange={handleSubmitDataChange}
-                      key={studentData.studentId}
-                      data={studentData}
-                    />
-                  )
-                )}
-              </TeacherPaymentClassContainer>
-            ))}
-          </TeacherPaymentInvoiceContainer>
-          <Box display="flex" justifyContent="flex-end" mt={2}>
-            <Button variant="contained" color="primary" size="large" onClick={handleSubmit}>
-              Pay Now
-            </Button>
+        <>
+          <Button
+            onClick={handleBackAction}
+            color="error"
+            sx={{ mt: 2 }}
+            variant="outlined"
+            startIcon={<ArrowBack />}
+          >
+            Back
+          </Button>
+          <Box>
+            <TeacherPaymentInvoiceContainer totalPaidValue={calculateGrandTotal()}>
+              {rawData.map((classData, idx, arr) => (
+                <TeacherPaymentClassContainer
+                  key={classData.classId}
+                  courseName={getCourseName(classData.course)}
+                  divider={idx !== arr.length - 1}
+                >
+                  {classData.students.map(
+                    (
+                      studentData: Pick<Student, "studentId" | "user"> & {
+                        studentLearningTokens: Array<TeacherPaymentInvoiceItemStudentLearningToken>;
+                      }
+                    ) => (
+                      <TeacherPaymentItemContainer
+                        handleSubmitDataChange={handleSubmitDataChange}
+                        key={studentData.studentId}
+                        data={studentData}
+                        classId={classData.classId}
+                      />
+                    )
+                  )}
+                </TeacherPaymentClassContainer>
+              ))}
+            </TeacherPaymentInvoiceContainer>
+            <Box display="flex" justifyContent="flex-end" mt={2}>
+              <Button variant="contained" color="primary" size="large" onClick={handleSubmit}>
+                Pay Now
+              </Button>
+            </Box>
           </Box>
-        </Box>
+        </>
       ) : (
         <></>
       )}

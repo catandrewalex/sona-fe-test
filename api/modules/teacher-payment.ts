@@ -1,5 +1,28 @@
-import { TeacherPaymentInvoiceItem, TeacherPaymentInvoiceItemSubmit } from "@sonamusica-fe/types";
-import API, { FailedResponse, Routes, SuccessResponse } from "api";
+import {
+  TeacherPaymentInvoiceItem,
+  TeacherPaymentInvoiceItemSubmit,
+  TeacherPaymentUnpaidListItem
+} from "@sonamusica-fe/types";
+import API, { FailedResponse, GetRequestConfig, Routes, SuccessResponse } from "api";
+
+type GetUnpaidTeacherPaymentByMonthAndYearConfig = GetRequestConfig & {
+  month: number;
+  year: number;
+};
+
+const GetUnpaidTeacherPaymentByMonthAndYear = ({
+  month,
+  year,
+  page = 1,
+  resultsPerPage = 1000
+}: GetUnpaidTeacherPaymentByMonthAndYearConfig): Promise<
+  FailedResponse | SuccessResponse<TeacherPaymentUnpaidListItem>
+> => {
+  return API.get<TeacherPaymentUnpaidListItem>({
+    url: `${Routes.TEACHER_SALARY}/unpaidTeachers`,
+    config: { params: { page, resultsPerPage, month, year } }
+  });
+};
 
 const GetTeacherPaymentInvoice = (
   id: number
@@ -18,4 +41,8 @@ const SubmitTeacherPaymentInvoice = (
   });
 };
 
-export default { GetTeacherPaymentInvoice, SubmitTeacherPaymentInvoice };
+export default {
+  GetTeacherPaymentInvoice,
+  SubmitTeacherPaymentInvoice,
+  GetUnpaidTeacherPaymentByMonthAndYear
+};
