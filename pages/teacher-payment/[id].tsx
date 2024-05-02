@@ -81,8 +81,11 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
   useEffect(() => {
     if (isReady && query.id && typeof query.id === "string") {
       startLoading();
-      // TODO: invoke endpoint with filter parameters: year & month
-      API.GetTeacherPaymentInvoice(parseInt(query.id)).then((response) => {
+      API.GetTeacherPaymentInvoice(
+        parseInt(query.id),
+        parseInt(query.year),
+        parseInt(query.month)
+      ).then((response) => {
         const result = apiTransformer(response, false);
         const tempRawData = (result as ResponseMany<TeacherPaymentInvoiceItem>).results;
 
