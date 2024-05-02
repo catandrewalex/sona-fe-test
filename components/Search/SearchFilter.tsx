@@ -107,6 +107,7 @@ const SearchFilter = <T extends unknown>({
       case "text":
         return (
           <SearchText
+            key={filter.label}
             xs={filter.xs}
             sm={filter.sm}
             md={filter.md}
@@ -122,6 +123,7 @@ const SearchFilter = <T extends unknown>({
       case "select":
         return (
           <SearchDropdown
+            key={filter.label}
             xs={filter.xs}
             sm={filter.sm}
             md={filter.md}
@@ -139,6 +141,7 @@ const SearchFilter = <T extends unknown>({
       case "arithmetic":
         return (
           <SearchArithmetic
+            key={filter.label}
             xs={filter.xs}
             sm={filter.sm}
             md={filter.md}

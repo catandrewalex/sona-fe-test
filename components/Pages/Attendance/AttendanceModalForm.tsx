@@ -46,7 +46,7 @@ const AttendanceModalForm = ({
   const formFields: FormFieldType<AddAttendanceFormData>[] = [
     // TODO: use DateTime instead of Date
     {
-      type: "date",
+      type: "date-time",
       name: "date",
       label: "Date",
       formFieldProps: { lg: 6, md: 6 },

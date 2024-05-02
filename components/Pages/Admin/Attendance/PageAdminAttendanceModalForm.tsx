@@ -127,7 +127,7 @@ const PageAdminAttendanceModalForm = ({
       validations: []
     },
     {
-      type: "date",
+      type: "date-time",
       name: "date",
       label: "Date",
       formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },

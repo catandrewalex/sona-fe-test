@@ -87,7 +87,7 @@ const PageAdminAttendanceTable = ({
           {
             field: "attendanceId",
             headerName: "ID",
-            width: 100,
+            width: 75,
             align: "center",
             headerAlign: "center"
           },
@@ -112,26 +112,28 @@ const PageAdminAttendanceTable = ({
           {
             field: "usedStudentTokenQuota",
             headerName: "Quota Used",
-            width: 125,
+            width: 100,
             align: "center",
             headerAlign: "center",
+            headerClassName: "header-break",
             valueGetter: (params) => params.row.usedStudentTokenQuota
           },
           {
             field: "duration",
             headerName: "Duration (Minute)",
-            width: 150,
+            width: 110,
             align: "center",
             headerAlign: "center",
+            headerClassName: "header-break",
             valueGetter: (params) => params.row.duration
           },
           {
             field: "date",
             headerName: "Date",
-            width: 120,
+            width: 200,
             align: "center",
             headerAlign: "center",
-            valueGetter: (params) => moment(params.row.date).format("DD MMMM YYYY")
+            valueGetter: (params) => moment(params.row.date).format("DD MMMM YYYY HH:mm")
           },
           {
             field: "courseFee",
