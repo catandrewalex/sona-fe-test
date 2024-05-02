@@ -98,103 +98,102 @@ const PageAdminStudentLearningTokenModalForm = ({
     transportFeeValue: 0
   };
 
-  const { formProperties, formRenderer } = selectedData
-    ? useFormRenderer<StudentLearningTokenUpdateFormData>(
-        {
-          testIdContext: "StudentLearningTokenUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultUpdateFields,
-          submitHandler: async ({ courseFeeValue, quota, transportFeeValue }, error) => {
-            if (error.courseFeeValue || error.quota || error.transportFeeValue)
-              return Promise.reject();
-            const response = await ADMIN_API.UpdateStudentLearningToken([
-              {
-                quota,
-                courseFeeValue,
-                transportFeeValue,
-                studentLearningTokenId: selectedData.studentLearningTokenId
-              }
-            ]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<StudentLearningToken>)
-                .results[0];
-              const newData = data.map((val) => {
-                if (val.studentLearningTokenId === responseData.studentLearningTokenId) {
-                  return responseData;
-                }
-                return val;
-              });
-              setData(newData);
-            }
-          }
+  const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
+    useFormRenderer<StudentLearningTokenUpdateFormData>(
+      {
+        testIdContext: "StudentLearningTokenUpsert",
+        cancelButtonProps: {
+          onClick: onClose
         },
-        defaultFieldValue
-      )
-    : useFormRenderer<StudentLearningTokenInsertFormData>(
-        {
-          testIdContext: "StudentLearningTokenUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultInsertFields,
-          errorResponseMapping,
-          submitHandler: async (
-            { courseFeeValue, quota, studentEnrollment, transportFeeValue },
-            error
-          ) => {
-            if (
-              error.courseFeeValue ||
-              error.quota ||
-              error.transportFeeValue ||
-              error.studentEnrollment
-            )
-              return Promise.reject();
-            const response = await ADMIN_API.InsertStudentLearningToken([
-              {
-                courseFeeValue,
-                transportFeeValue,
-                quota,
-                studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
-              }
-            ]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<StudentLearningToken>)
-                .results[0];
-              setData([...data, responseData]);
+        fields: defaultUpdateFields,
+        submitHandler: async ({ courseFeeValue, quota, transportFeeValue }, error) => {
+          if (error.courseFeeValue || error.quota || error.transportFeeValue)
+            return Promise.reject();
+          const response = await ADMIN_API.UpdateStudentLearningToken([
+            {
+              quota,
+              courseFeeValue,
+              transportFeeValue,
+              studentLearningTokenId: selectedData?.studentLearningTokenId || 0
             }
+          ]);
+          const parsedResponse = apiTransformer(response, true);
+          if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+            return parsedResponse as FailedResponse;
+          } else {
+            const responseData = (parsedResponse as ResponseMany<StudentLearningToken>).results[0];
+            const newData = data.map((val) => {
+              if (val.studentLearningTokenId === responseData.studentLearningTokenId) {
+                return responseData;
+              }
+              return val;
+            });
+            setData(newData);
           }
-        },
-        { ...defaultFieldValue, studentEnrollment: null }
-      );
+        }
+      },
+      defaultFieldValue
+    );
+
+  const { formRenderer: insertFormRenderer } = useFormRenderer<StudentLearningTokenInsertFormData>(
+    {
+      testIdContext: "StudentLearningTokenUpsert",
+      cancelButtonProps: {
+        onClick: onClose
+      },
+      fields: defaultInsertFields,
+      errorResponseMapping,
+      submitHandler: async (
+        { courseFeeValue, quota, studentEnrollment, transportFeeValue },
+        error
+      ) => {
+        if (
+          error.courseFeeValue ||
+          error.quota ||
+          error.transportFeeValue ||
+          error.studentEnrollment
+        )
+          return Promise.reject();
+        const response = await ADMIN_API.InsertStudentLearningToken([
+          {
+            courseFeeValue,
+            transportFeeValue,
+            quota,
+            studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
+          }
+        ]);
+        const parsedResponse = apiTransformer(response, true);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        } else {
+          const responseData = (parsedResponse as ResponseMany<StudentLearningToken>).results[0];
+          setData([...data, responseData]);
+        }
+      }
+    },
+    { ...defaultFieldValue, studentEnrollment: null }
+  );
 
   useEffect(() => {
     if (selectedData) {
-      formProperties.valueRef.current = {
+      updateFormProperties.valueRef.current = {
         quota: selectedData.quota,
         transportFeeValue: selectedData.transportFeeValue,
         courseFeeValue: selectedData.courseFeeValue
       };
-      formProperties.errorRef.current = {} as Record<
+      updateFormProperties.errorRef.current = {} as Record<
         keyof StudentLearningTokenUpdateFormData,
         string
       >;
     }
-  }, [selectedData]);
+  }, [selectedData, updateFormProperties.errorRef, updateFormProperties.valueRef]);
 
   return (
     <Modal open={open} onClose={onClose}>
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} Student Learning Token
       </Typography>
-      {formRenderer()}
+      {selectedData ? updateFormRenderer : insertFormRenderer()}
     </Modal>
   );
 };

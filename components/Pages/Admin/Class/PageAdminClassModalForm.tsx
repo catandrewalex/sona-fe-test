@@ -110,7 +110,7 @@ const PageAdminClassModalForm = ({
     isActive: true
   };
 
-  const { formProperties: formPropertiesUpdate, formRenderer: formRendererUpdate } =
+  const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
     useFormRenderer<ClassUpdateFormData>(
       {
         testIdContext: "ClassUpsert",
@@ -157,7 +157,7 @@ const PageAdminClassModalForm = ({
       defaultUpdateFieldValue
     );
 
-  const { formRenderer: formRendererInsert } = useFormRenderer<ClassInsertFormData>(
+  const { formRenderer: insertFormRenderer } = useFormRenderer<ClassInsertFormData>(
     {
       testIdContext: "ClassUpsert",
       cancelButtonProps: {
@@ -191,14 +191,14 @@ const PageAdminClassModalForm = ({
 
   useEffect(() => {
     if (selectedData) {
-      formPropertiesUpdate.valueRef.current = {
+      updateFormProperties.valueRef.current = {
         course: selectedData.course,
         teacher: selectedData.teacher || null,
         students: selectedData.students,
         transportFee: selectedData.transportFee,
         isActive: !selectedData.isDeactivated
       };
-      formPropertiesUpdate.errorRef.current = {} as Record<keyof ClassUpdateFormData, string>;
+      updateFormProperties.errorRef.current = {} as Record<keyof ClassUpdateFormData, string>;
     }
   }, [selectedData]);
 
@@ -207,7 +207,7 @@ const PageAdminClassModalForm = ({
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} Class
       </Typography>
-      {selectedData ? formRendererUpdate() : formRendererInsert()}
+      {selectedData ? updateFormRenderer() : insertFormRenderer()}
     </Modal>
   );
 };
