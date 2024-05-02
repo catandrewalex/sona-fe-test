@@ -17,6 +17,7 @@ interface TeacherPaymentItemProps {
   ) => void;
 }
 
+// TODO: fix: when we're on this page, the navigation bar (Teacher Payment tab) is not highlighted
 const TeacherPaymentItem = React.memo(
   ({ data, handleSubmitDataChange }: TeacherPaymentItemProps): JSX.Element => {
     const [internalSubmitData, setInternalSubmitData] = useState<
