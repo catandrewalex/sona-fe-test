@@ -77,7 +77,7 @@ const AttendanceDetailTabContainer = ({
 
   const onDelete = useCallback(() => {
     refetch(currentStudentId, paginationResult.currentPage);
-  }, [refetch, currentStudentId, paginationResult.currentPage]);
+  }, [currentStudentId, paginationResult.currentPage]);
 
   return (
     <Box mt={1}>
@@ -120,4 +120,4 @@ const AttendanceDetailTabContainer = ({
   );
 };
 
-export default AttendanceDetailTabContainer;
+export default React.memo(AttendanceDetailTabContainer);
