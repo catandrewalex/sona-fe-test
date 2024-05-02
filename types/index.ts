@@ -113,23 +113,17 @@ export interface Attendance {
   isPaid: boolean;
 }
 
-export interface SearchClassConfig {
-  studentId?: number;
-  teacherId?: number;
-  courseId?: number;
-}
-
-// PaginationConfig is used internally for various frontend usecase
-export interface PaginationConfig {
-  maxPage: number;
-  page: number;
-}
-
 // PaginationResult is backend's direct output
 export interface PaginationResult {
   totalPages: number;
   totalResults: number;
   currentPage: number;
+}
+
+export interface SearchClassConfig {
+  studentId?: number;
+  teacherId?: number;
+  courseId?: number;
 }
 
 export type TeacherPaymentInvoiceItem = Omit<Class, "student"> & {

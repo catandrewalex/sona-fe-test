@@ -23,7 +23,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
   const [selectedData, setSelectedData] = useState<Attendance>();
   const [teacherOptions, setTeacherOptions] = useState<Teacher[]>([]);
   // we switch this true/false to force render on AttendanceDetailTabContainer, whenever the AttendanceForm is submitted
-  const [, forceRender] = useReducer((prev) => prev + 1, 0);
+  const [forceRenderCounter, forceRender] = useReducer((prev) => prev + 1, 0);
 
   const { query } = useRouter();
 
@@ -57,6 +57,8 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
       }
     });
   }, [setTeacherOptions]);
+
+  const onSubmit = useCallback(() => forceRender(), [forceRender]);
 
   useEffect(fetchTeacherOptions, [setTeacherOptions]);
 
@@ -105,6 +107,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
         classId={classData.classId}
         openForm={openForm}
         preSelectedStudentId={preSelectedStudentId}
+        forceRenderCounter={forceRenderCounter}
       />
       <AttendanceModalForm
         data={selectedData}
@@ -112,7 +115,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
         teacherOptions={teacherOptions}
         onClose={closeForm}
         open={open}
-        onSubmit={() => forceRender()}
+        onSubmit={onSubmit}
       ></AttendanceModalForm>
     </Box>
   );

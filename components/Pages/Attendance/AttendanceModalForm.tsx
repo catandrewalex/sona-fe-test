@@ -14,7 +14,7 @@ import {
 import { getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "../../../api";
 import moment from "moment";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 type AttendanceFormProps = {
   data?: Attendance;
@@ -198,4 +198,4 @@ const AttendanceModalForm = ({
   );
 };
 
-export default AttendanceModalForm;
+export default React.memo(AttendanceModalForm);

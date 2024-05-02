@@ -1,4 +1,4 @@
-import { Attendance, PaginationConfig, PaginationResult } from "@sonamusica-fe/types";
+import { Attendance, PaginationResult } from "@sonamusica-fe/types";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
@@ -8,7 +8,7 @@ const default_ResultsPerPage = 12;
 
 type useAttendanceFetchResult = {
   data: Attendance[];
-  paginationResult: PaginationConfig;
+  paginationResult: PaginationResult;
   error: string;
   isLoading: boolean;
   refetch: (studentId: number, page: number) => void;
@@ -20,9 +20,10 @@ const useAttendanceFetch = (
   resultPerPage: number = default_ResultsPerPage
 ): useAttendanceFetchResult => {
   const [data, setData] = useState<Attendance[]>([]);
-  const [paginationResult, setPaginationResult] = useState<PaginationConfig>({
-    maxPage: 0,
-    page: 1
+  const [paginationResult, setPaginationResult] = useState<PaginationResult>({
+    totalPages: 0,
+    totalResults: 0,
+    currentPage: 1
   });
   const [error, setError] = useState<string>("");
   const [isLoading, setLoading] = useState(false);
@@ -43,8 +44,9 @@ const useAttendanceFetch = (
           const results = parsedResponse as ResponseMany<Attendance>;
           setData(results.results);
           setPaginationResult({
-            maxPage: results.totalPages,
-            page: results.currentPage
+            totalPages: results.totalPages,
+            totalResults: results.totalResults,
+            currentPage: results.currentPage
           });
         } else {
           setError("Failed to fetch attendance data!");
