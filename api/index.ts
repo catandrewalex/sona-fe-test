@@ -249,6 +249,7 @@ export enum AdminRoutes {
 }
 
 export enum Routes {
+  USER = "/users",
   PAYMENT = "/enrollmentPayments",
   TEACHER = "/teachers",
   STUDENT = "/students",

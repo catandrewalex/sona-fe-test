@@ -13,6 +13,7 @@ import teacherSpecialFeeAdminModule from "./admin/teacher-special-fee";
 import studentLearningTokenAdminModule from "./admin/student-learning-token";
 import enrollmentPaymentAdminModule from "./admin/enrollment-payment";
 import attendanceAdminModule from "./admin/attendance";
+import userModule from "./user";
 import paymentsModule from "./payment";
 import teacherModule from "./teacher";
 import studentModule from "./student";
@@ -24,6 +25,7 @@ import teacherPaymentModule from "./teacher-payment";
 
 export default {
   ...authModule,
+  ...userModule,
   ...paymentsModule,
   ...teacherModule,
   ...studentModule,

@@ -88,8 +88,7 @@ const PageContainer = ({
       const userId = getCookie("SNMC_ID");
 
       if (authToken && userId) {
-        // TODO(FerdiantJoshua) WOY BELOM ADA API BUKAN ADMINNYA NIH <----
-        ADMIN_API.GetUserData(parseInt(userId)).then((response) => {
+        API.GetUserData(parseInt(userId)).then((response) => {
           const loggedInUser = apiTransformer(response, false) as User;
           setUser(loggedInUser);
         });
