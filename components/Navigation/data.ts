@@ -10,6 +10,7 @@ export type SidebarItem = {
   url?: string;
   userHasAccess: (userType?: UserType) => boolean;
   subMenu?: SidebarItem[];
+  useSubstringIncludeForMarkSelected?: boolean;
 };
 
 export type SidebarSection = {
@@ -53,7 +54,8 @@ const data: Array<SidebarSection> = [
         url: "/teacher-payment",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
-        }
+        },
+        useSubstringIncludeForMarkSelected: true
       }
     ],
     userHasAccess: (userType?: UserType): boolean => {

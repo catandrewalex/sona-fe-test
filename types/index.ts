@@ -142,7 +142,7 @@ export type TeacherPaymentInvoiceItemStudent = Pick<Student, "studentId" | "user
 
 export type TeacherPaymentInvoiceItemStudentLearningToken = Omit<
   StudentLearningToken,
-  "studentEnrollment" | "quota"
+  "studentEnrollment"
 > & {
   attendances: Array<TeacherPaymentInvoiceItemAttendance>;
 };
