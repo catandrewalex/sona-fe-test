@@ -17,7 +17,6 @@ interface TeacherPaymentItemProps {
   ) => void;
 }
 
-// TODO: fix: when we're on this page, the navigation bar (Teacher Payment tab) is not highlighted
 const TeacherPaymentItem = React.memo(
   ({ data, handleSubmitDataChange }: TeacherPaymentItemProps): JSX.Element => {
     const [internalSubmitData, setInternalSubmitData] = useState<
@@ -91,8 +90,17 @@ const TeacherPaymentItem = React.memo(
           expandIcon={<ExpandMoreIcon sx={{ fontSize: "0.9rem" }} />}
         >
           <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", pr: 2 }}>
-            {/* TODO: display remaining quota */}
-            <Typography>Used Quota: {calculateTotalUsedQuotaFromAttendances()}</Typography>
+            <Box>
+              <Typography component="span" sx={{ mr: 1 }}>
+                Used Quota: {calculateTotalUsedQuotaFromAttendances()}
+              </Typography>
+              <Typography fontSize={24} component="span" sx={{ mr: 0.5, ml: 0.5 }}>
+                |
+              </Typography>
+              <Typography sx={{ ml: 1 }} component="span">
+                Remaining Quota: {data.quota}
+              </Typography>
+            </Box>
             <Typography align="center" sx={{ width: "200px" }}>
               {convertNumberToCurrencyString(calculateTotalFromAttendances)}
             </Typography>
