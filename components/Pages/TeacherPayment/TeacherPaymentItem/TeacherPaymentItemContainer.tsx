@@ -27,9 +27,8 @@ const TeacherPaymentItemContainer = React.memo(
     const onAttendanceDetailClick = useCallback(() => {
       showDialog(
         {
-          title: "Redirect Page",
-          content:
-            "All your changes will be lost. Are you sure you want to redirect and lost the changes?"
+          title: "Going to student's attendance detail...",
+          content: "All changes in this page will be lost. Proceed?"
         },
         () => {
           push({
@@ -46,7 +45,7 @@ const TeacherPaymentItemContainer = React.memo(
           {getFullNameFromUser(data.user)}
         </Typography>
         <Button size="small" onClick={onAttendanceDetailClick} variant="text">
-          &gt;&gt; Go to Attendance Detail
+          <small>View Detail</small>
         </Button>
         <Box>
           {data.studentLearningTokens.map((val) => (

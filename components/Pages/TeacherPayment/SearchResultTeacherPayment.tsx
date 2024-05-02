@@ -19,6 +19,7 @@ const SearchResultTeacherPayment = ({ data }: SearchResultTeacherPaymentProps): 
 
   const onCardClick = useCallback(
     (teacherId: number) => {
+      // TODO: this causes whole page refresh, most likely due to: pages\teacher-payment\index.tsx subscribe on router.query. Thus changing query = refreshing the page.
       return () => push({ pathname: "/teacher-payment/" + teacherId, query });
     },
     [push, query]

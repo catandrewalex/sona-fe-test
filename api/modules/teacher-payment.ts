@@ -25,10 +25,13 @@ const GetUnpaidTeacherPaymentByMonthAndYear = ({
 };
 
 const GetTeacherPaymentInvoice = (
-  id: number
+  id: number,
+  year?: number,
+  month?: number
 ): Promise<FailedResponse | SuccessResponse<TeacherPaymentInvoiceItem>> => {
   return API.get<TeacherPaymentInvoiceItem>({
-    url: `${Routes.TEACHER_SALARY}/invoiceItems/teacher/${id}`
+    url: `${Routes.TEACHER_SALARY}/invoiceItems/teacher/${id}`,
+    config: { params: { year, month } }
   });
 };
 

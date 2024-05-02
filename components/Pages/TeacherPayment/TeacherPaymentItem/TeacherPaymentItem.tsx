@@ -90,6 +90,7 @@ const TeacherPaymentItem = React.memo(
           expandIcon={<ExpandMoreIcon sx={{ fontSize: "0.9rem" }} />}
         >
           <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", pr: 2 }}>
+            {/* TODO: display remaining quota */}
             <Typography>Used Quota: {calculateTotalUsedQuotaFromAttendances()}</Typography>
             <Typography align="center" sx={{ width: "200px" }}>
               {convertNumberToCurrencyString(calculateTotalFromAttendances)}

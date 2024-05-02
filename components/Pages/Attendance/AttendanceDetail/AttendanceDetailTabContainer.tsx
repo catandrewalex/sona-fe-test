@@ -91,6 +91,7 @@ const AttendanceDetailTabContainer = ({
               {loading ? (
                 <LoaderSimple />
               ) : (
+                // TODO(FerdiantJoshua): in each student tab, show latest SLT quota & all non-latest non-zero SLT quota
                 <AttendanceDetailTableView
                   data={attendanceData}
                   teacherId={teacherId}
