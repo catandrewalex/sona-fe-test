@@ -80,6 +80,7 @@ const PageAdminClassModalForm = ({
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         placeholder: "0",
+        // TODO: validate to only allow value >= 0
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },

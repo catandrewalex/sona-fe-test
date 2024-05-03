@@ -44,7 +44,6 @@ const AttendanceModalForm = ({
   };
 
   const formFields: FormFieldType<AddAttendanceFormData>[] = [
-    // TODO: use DateTime instead of Date
     {
       type: "date-time",
       name: "date",
@@ -59,6 +58,7 @@ const AttendanceModalForm = ({
       label: "Used Quota",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number",
         required: true
       },
@@ -70,6 +70,7 @@ const AttendanceModalForm = ({
       label: "Duration (minute)",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number",
         required: true
       },

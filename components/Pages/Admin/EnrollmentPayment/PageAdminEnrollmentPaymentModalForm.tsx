@@ -63,6 +63,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       label: "Course Fee",
       formFieldProps: { lg: 3, md: 6 },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
@@ -74,6 +75,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       label: "Transport Fee",
       formFieldProps: { lg: 3, md: 6 },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
@@ -96,6 +98,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       label: "Balance Top Up",
       formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number",
         required: true
       },

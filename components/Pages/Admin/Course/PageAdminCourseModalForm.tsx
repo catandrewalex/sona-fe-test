@@ -62,6 +62,7 @@ const PageAdminCourseModalForm = ({
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
+        // TODO: validate to only allow value >= 0
         type: "number",
         endAdornment: <InputAdornment position="end">minute(s)</InputAdornment>
       },
@@ -74,6 +75,7 @@ const PageAdminCourseModalForm = ({
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
+        // TODO: validate to only allow value >= 0
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },

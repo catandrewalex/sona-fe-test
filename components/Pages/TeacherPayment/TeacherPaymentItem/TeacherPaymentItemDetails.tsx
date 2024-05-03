@@ -208,7 +208,6 @@ const TeacherPaymentItemDetails = ({
               updatedRow.courseFeeSharingPercentage =
                 updatedRow.paidCourseFeeValue / updatedRow.grossCourseFeeValue;
 
-              console.log("kuda", updatedRow.paidCourseFeeValue, updatedRow.grossCourseFeeValue);
               handleSubmitDataChange(
                 updatedRow.attendanceId,
                 updatedRow.paidCourseFeeValue
@@ -291,7 +290,6 @@ const TeacherPaymentItemDetails = ({
               return updatedRow;
             }
           }
-          console.log("kuda", originalRow);
           return originalRow;
         }}
       />

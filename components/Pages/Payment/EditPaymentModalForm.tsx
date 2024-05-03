@@ -37,6 +37,7 @@ const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps)
           label: "Balance Top Up",
           formFieldProps: { lg: 6, md: 6 },
           inputProps: {
+            // TODO: validate to only allow value >= 0
             type: "number",
             required: true
           },
