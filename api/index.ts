@@ -250,6 +250,7 @@ export enum AdminRoutes {
 
 export enum Routes {
   USER = "/users",
+  USER_PROFILE = "/userProfile",
   PAYMENT = "/enrollmentPayments",
   TEACHER = "/teachers",
   STUDENT = "/students",
