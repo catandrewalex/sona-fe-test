@@ -163,6 +163,7 @@ const SearchResultAttendance = ({
           data={displayData}
           getDataActions={(currData) => (
             <Button
+              disabled={currData.students.length === 0}
               onClick={() => {
                 push("/attendance/" + currData.classId);
                 startLoading();

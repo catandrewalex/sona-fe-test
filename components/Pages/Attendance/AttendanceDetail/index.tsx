@@ -91,6 +91,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
         </Box>
         <Box width={200}>
           <Button
+            disabled={classData.students.length === 0}
             onClick={() => openForm()}
             startIcon={<Add />}
             fullWidth
@@ -101,14 +102,16 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
           </Button>
         </Box>
       </Box>
-      <AttendanceDetailTabContainer
-        studentsData={classData.students}
-        teacherId={classData.teacher?.teacherId || 0}
-        classId={classData.classId}
-        openForm={openForm}
-        preSelectedStudentId={preSelectedStudentId}
-        forceRenderCounter={forceRenderCounter}
-      />
+      {classData.students.length > 0 && (
+        <AttendanceDetailTabContainer
+          studentsData={classData.students}
+          teacherId={classData.teacher?.teacherId || 0}
+          classId={classData.classId}
+          openForm={openForm}
+          preSelectedStudentId={preSelectedStudentId}
+          forceRenderCounter={forceRenderCounter}
+        />
+      )}
       <AttendanceModalForm
         data={selectedData}
         classData={classData}

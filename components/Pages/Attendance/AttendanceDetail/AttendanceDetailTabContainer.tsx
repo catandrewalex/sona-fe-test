@@ -18,7 +18,7 @@ type AttendanceDetailTabContainerProps = {
   forceRenderCounter: number;
 };
 
-const resultPerPage = 12;
+const RESULT_PER_PAGE = 12;
 
 function isIdExistOnStudents(id: number, students: Student[]): boolean {
   return students.findIndex((student) => student.studentId === id) !== -1;
@@ -45,7 +45,7 @@ const AttendanceDetailTabContainer = ({
     error,
     isLoading: loading,
     refetch
-  } = useAttendanceFetch(classId, currentStudentId, resultPerPage);
+  } = useAttendanceFetch(classId, currentStudentId, RESULT_PER_PAGE);
 
   useEffect(() => {
     if (error) {
