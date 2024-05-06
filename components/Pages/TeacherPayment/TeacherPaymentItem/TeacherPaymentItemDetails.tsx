@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { TeacherPaymentInvoiceItemAttendance } from "@sonamusica-fe/types";
@@ -8,7 +8,7 @@ import {
   convertNumberToPercentage
 } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
-import React from "react";
+import React, { useCallback } from "react";
 
 type TeacherPaymentInvoiceItemAttendanceEditable = TeacherPaymentInvoiceItemAttendance & {
   paidCourseFeeValue?: number;
@@ -32,6 +32,25 @@ const TeacherPaymentItemDetails = ({
 }: TeacherPaymentItemDetailsProps): JSX.Element => {
   const drawerOpen = useApp((state) => state.drawerOpen);
   const { showSnackbar } = useSnack();
+
+  // we need this to colorize the editable cell (currently it is yellow)
+  const renderEditableCell = useCallback((params: GridRenderCellParams) => {
+    return (
+      <Box
+        sx={{
+          backgroundColor: "rgba(255, 248, 140, 0.55)",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
+        {params.formattedValue}
+      </Box>
+    );
+  }, []);
+
   return (
     <Box sx={{ width: drawerOpen ? "calc(100vw - 340px)" : "calc(100vw - 150px)" }}>
       <DataGrid
@@ -109,6 +128,7 @@ const TeacherPaymentItemDetails = ({
             valueFormatter(params) {
               return convertNumberToCurrencyString(params.value);
             },
+            renderCell: renderEditableCell,
             editable: true
           },
           {
@@ -129,6 +149,7 @@ const TeacherPaymentItemDetails = ({
             valueFormatter(params) {
               return convertNumberToPercentage(params.value.toFixed(2), true);
             },
+            renderCell: renderEditableCell,
             editable: true
           },
 
@@ -164,6 +185,7 @@ const TeacherPaymentItemDetails = ({
             valueFormatter(params) {
               return convertNumberToCurrencyString(params.value);
             },
+            renderCell: renderEditableCell,
             editable: true
           },
           {
@@ -184,6 +206,7 @@ const TeacherPaymentItemDetails = ({
             valueFormatter(params) {
               return convertNumberToPercentage(params.value.toFixed(2), true);
             },
+            renderCell: renderEditableCell,
             editable: true
           }
         ]}
@@ -198,25 +221,30 @@ const TeacherPaymentItemDetails = ({
         }}
         processRowUpdate={(updatedRow, originalRow) => {
           console.log(updatedRow, originalRow);
+          const invokeHandleSubmit = () => {
+            handleSubmitDataChange(
+              updatedRow.attendanceId,
+              updatedRow.paidCourseFeeValue
+                ? updatedRow.paidCourseFeeValue
+                : updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage,
+              updatedRow.paidTransportFeeValue
+                ? updatedRow.paidTransportFeeValue
+                : updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage
+            );
+          };
+
           if (
             originalRow.paidCourseFeeValue !== updatedRow.paidCourseFeeValue &&
             updatedRow.paidCourseFeeValue !== undefined
           ) {
             if (updatedRow.paidCourseFeeValue > updatedRow.grossCourseFeeValue) {
-              showSnackbar("Paid Course Fee can not bigger than Gross Course Fee!", "error");
+              showSnackbar("Paid Course Fee must be less than Gross Course Fee!", "error");
+            } else if (updatedRow.paidCourseFeeValue < 0) {
+              showSnackbar("Paid Course Fee must be greater than 0!", "error");
             } else {
               updatedRow.courseFeeSharingPercentage =
                 updatedRow.paidCourseFeeValue / updatedRow.grossCourseFeeValue;
-
-              handleSubmitDataChange(
-                updatedRow.attendanceId,
-                updatedRow.paidCourseFeeValue
-                  ? updatedRow.paidCourseFeeValue
-                  : updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage,
-                updatedRow.paidTransportFeeValue
-                  ? updatedRow.paidTransportFeeValue
-                  : updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage
-              );
+              invokeHandleSubmit();
               return updatedRow;
             }
           } else if (
@@ -224,21 +252,14 @@ const TeacherPaymentItemDetails = ({
             updatedRow.courseFeeSharingPercentage !== undefined
           ) {
             if (updatedRow.courseFeeSharingPercentage > 100) {
-              showSnackbar("Percentage Course Fee can not bigger than 100%!", "error");
+              showSnackbar("Percentage Course Fee must be less than 100%!", "error");
+            } else if (updatedRow.courseFeeSharingPercentage < 0) {
+              showSnackbar("Percentange Course Fee must be greater than 0%!", "error");
             } else {
               updatedRow.paidCourseFeeValue =
                 (updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage) / 100;
               updatedRow.courseFeeSharingPercentage = updatedRow.courseFeeSharingPercentage / 100;
-
-              handleSubmitDataChange(
-                updatedRow.attendanceId,
-                updatedRow.paidCourseFeeValue
-                  ? updatedRow.paidCourseFeeValue
-                  : updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage,
-                updatedRow.paidTransportFeeValue
-                  ? updatedRow.paidTransportFeeValue
-                  : updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage
-              );
+              invokeHandleSubmit();
               return updatedRow;
             }
           } else if (
@@ -247,23 +268,16 @@ const TeacherPaymentItemDetails = ({
             updatedRow.transportFeeSharingPercentage !== undefined
           ) {
             if (updatedRow.transportFeeSharingPercentage > 100) {
-              showSnackbar("Percentage Transport Fee can not bigger than 100%!", "error");
+              showSnackbar("Percentage Transport Fee must be less than 100%!", "error");
+            } else if (updatedRow.transportFeeSharingPercentage < 0) {
+              showSnackbar("Percentange Transport Fee must be greater than 0%!", "error");
             } else {
               updatedRow.paidTransportFeeValue =
                 (updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage) /
                 100;
               updatedRow.transportFeeSharingPercentage =
                 updatedRow.transportFeeSharingPercentage / 100;
-
-              handleSubmitDataChange(
-                updatedRow.attendanceId,
-                updatedRow.paidCourseFeeValue
-                  ? updatedRow.paidCourseFeeValue
-                  : updatedRow.grossCourseFeeValue * updatedRow.transportFeeSharingPercentage,
-                updatedRow.paidTransportFeeValue
-                  ? updatedRow.paidTransportFeeValue
-                  : updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage
-              );
+              invokeHandleSubmit();
               return updatedRow;
             }
           } else if (
@@ -271,22 +285,15 @@ const TeacherPaymentItemDetails = ({
             updatedRow.paidTransportFeeValue !== undefined
           ) {
             if (updatedRow.paidTransportFeeValue > updatedRow.grossTransportFeeValue) {
-              showSnackbar("Paid Transport Fee can not bigger than Gross Transport Fee!", "error");
+              showSnackbar("Paid Transport Fee must be less than Gross Transport Fee!", "error");
+            } else if (updatedRow.paidTransportFeeValue < 0) {
+              showSnackbar("Paid Transport Fee must be greater than 0!", "error");
             } else {
               if (updatedRow.grossTransportFeeValue !== 0) {
                 updatedRow.transportFeeSharingPercentage =
                   updatedRow.paidTransportFeeValue / updatedRow.grossTransportFeeValue;
               }
-
-              handleSubmitDataChange(
-                updatedRow.attendanceId,
-                updatedRow.paidCourseFeeValue
-                  ? updatedRow.paidCourseFeeValue
-                  : updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage,
-                updatedRow.paidTransportFeeValue
-                  ? updatedRow.paidTransportFeeValue
-                  : updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage
-              );
+              invokeHandleSubmit();
               return updatedRow;
             }
           }
