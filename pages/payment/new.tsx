@@ -24,6 +24,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
   const [invoiceData, setInvoiceData] = useState<EnrollmentPaymentInvoice>();
   const [loading, setLoading] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [recalculateInvoice, setRecalculateInvoice] = useState<boolean>(true);
 
   const apiTransformer = useApiTransformer();
   const { showDialog } = useAlertDialog();
@@ -72,6 +73,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
         content = (
           <NewPaymentStepOne
             setStudentEnrollment={setStudentEnrollment}
+            setRecalculateInvoice={setRecalculateInvoice}
             defaultClass={studentEnrollment?.class}
             defaultStudent={studentEnrollment?.student}
           />
@@ -85,6 +87,8 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
             studentEnrollmentData={studentEnrollment}
             setInvoiceData={setInvoiceData}
             invoiceData={invoiceData}
+            setRecalculateInvoice={setRecalculateInvoice}
+            recalculateInvoiceData={recalculateInvoice}
           />
         );
       }

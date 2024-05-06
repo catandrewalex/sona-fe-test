@@ -6,7 +6,7 @@ const GetStudentEnrollmentDropdownOptions = ({
   resultsPerPage = 10000
 }: GetRequestConfig = {}): Promise<FailedResponse | SuccessResponse<StudentEnrollment>> => {
   return API.get<StudentEnrollment>({
-    url: Routes.STUDENT,
+    url: Routes.STUDENT_ENROLLMENT,
     config: { params: { page, resultsPerPage } }
   });
 };

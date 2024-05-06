@@ -98,7 +98,10 @@ export interface EnrollmentPayment {
 export type EnrollmentPaymentInvoice = Omit<
   EnrollmentPayment,
   "enrollmentPaymentId" | "studentEnrollment" | "paymentDate"
->;
+> & {
+  lastPaymentDate?: string;
+  daysLate?: number;
+};
 
 export interface Attendance {
   attendanceId: number;

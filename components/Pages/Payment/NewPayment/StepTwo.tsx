@@ -16,18 +16,23 @@ import {
   removeNonNumericCharacter
 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "api";
+import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 
 type NewPaymentStepTwoProps = {
   studentEnrollmentData?: StudentEnrollment;
   invoiceData?: EnrollmentPaymentInvoice;
   setInvoiceData: (data: EnrollmentPaymentInvoice) => void;
+  setRecalculateInvoice: (value: boolean) => void;
+  recalculateInvoiceData: boolean;
 };
 
 const NewPaymentStepTwo = ({
   studentEnrollmentData,
   setInvoiceData,
-  invoiceData
+  invoiceData,
+  setRecalculateInvoice,
+  recalculateInvoiceData
 }: NewPaymentStepTwoProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -35,7 +40,7 @@ const NewPaymentStepTwo = ({
   const apiTransformer = useApiTransformer();
 
   useEffect(() => {
-    if (studentEnrollmentData && !invoiceData) {
+    if (studentEnrollmentData && recalculateInvoiceData) {
       API.GetPaymentInvoice(studentEnrollmentData.studentEnrollmentId)
         .then((response) => {
           const parsedResponse = apiTransformer(response, false);
@@ -46,8 +51,11 @@ const NewPaymentStepTwo = ({
               balanceTopUp: invoiceData.balanceTopUp,
               courseFeeValue: invoiceData.courseFeeValue,
               transportFeeValue: invoiceData.transportFeeValue,
-              penaltyFeeValue: invoiceData.penaltyFeeValue
+              penaltyFeeValue: invoiceData.penaltyFeeValue,
+              lastPaymentDate: invoiceData.lastPaymentDate,
+              daysLate: invoiceData.daysLate
             });
+            setRecalculateInvoice(false);
           } else {
             showSnackbar("Failed to fetch invoice data!", "error");
           }
@@ -77,6 +85,22 @@ const NewPaymentStepTwo = ({
     }
     return [];
   }, []);
+
+  const getLastPaymentDataDisplay = useCallback(
+    (data?: EnrollmentPaymentInvoice): FormDataViewerTableConfig[] => {
+      if (data) {
+        const date = data.lastPaymentDate ? moment(data.lastPaymentDate) : undefined;
+        const daysLate = data.daysLate ?? 0;
+        return [
+          { title: "Date", value: date ? date.format("DD MMMM YYYY") : "-" },
+          { title: "Days Late", value: daysLate > 0 ? daysLate.toString() : "-" }
+        ];
+      }
+      return [];
+    },
+    []
+  );
+
   const getInvoiceDataDisplay = useCallback((data?: EnrollmentPaymentInvoice) => {
     if (data) {
       return [
@@ -127,7 +151,7 @@ const NewPaymentStepTwo = ({
                   )
                 })
               }
-              type="number"
+              type="text"
               margin="dense"
               size="small"
               startAdornment="Rp"
@@ -147,7 +171,7 @@ const NewPaymentStepTwo = ({
                   )
                 })
               }
-              type="number"
+              type="text"
               margin="dense"
               size="small"
               startAdornment="Rp"
@@ -182,6 +206,13 @@ const NewPaymentStepTwo = ({
           tableProps={{ size: "small" }}
           dataTitle="Class Data"
           data={getClassDataDisplay(studentEnrollmentData?.class)}
+        />
+      </Box>
+      <Box mb={2}>
+        <FormDataViewerTable
+          tableProps={{ size: "small" }}
+          dataTitle="Last Payment"
+          data={getLastPaymentDataDisplay(invoiceData)}
         />
       </Box>
       <Box>

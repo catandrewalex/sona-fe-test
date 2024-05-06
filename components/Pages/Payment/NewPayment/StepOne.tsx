@@ -16,12 +16,14 @@ import React, { useEffect, useState } from "react";
 
 type NewPaymentStepOneProps = {
   setStudentEnrollment: (data?: StudentEnrollment) => void;
+  setRecalculateInvoice: (value: boolean) => void;
   defaultStudent?: Student;
   defaultClass?: Class;
 };
 
 const NewPaymentStepOne = ({
   setStudentEnrollment,
+  setRecalculateInvoice,
   defaultClass,
   defaultStudent
 }: NewPaymentStepOneProps): JSX.Element => {
@@ -84,6 +86,7 @@ const NewPaymentStepOne = ({
     );
     if (filteredStudentEnrollment.length > 0) {
       setStudentEnrollment(filteredStudentEnrollment[0]);
+      setRecalculateInvoice(true);
       setError("");
     } else {
       setError("Student Enrollment not found!");
