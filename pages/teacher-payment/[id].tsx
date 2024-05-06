@@ -81,11 +81,9 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
   useEffect(() => {
     if (isReady && query.id && typeof query.id === "string") {
       startLoading();
-      API.GetTeacherPaymentInvoice(
-        parseInt(query.id),
-        parseInt(query.year),
-        parseInt(query.month)
-      ).then((response) => {
+      const year = typeof query.year == "string" ? parseInt(query.year) : undefined;
+      const month = typeof query.month == "string" ? parseInt(query.month) : undefined;
+      API.GetTeacherPaymentInvoice(parseInt(query.id), year, month).then((response) => {
         const result = apiTransformer(response, false);
         const tempRawData = (result as ResponseMany<TeacherPaymentInvoiceItem>).results;
 

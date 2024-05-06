@@ -245,7 +245,7 @@ const SingleLevel = ({
         className={hidden ? "hide" : ""}
         sx={merge(
           { transition: "none", flex: 0, py: 0.7 },
-          (useSubstringIncludeForMarkSelected === true && router.route.includes(url)) ||
+          (useSubstringIncludeForMarkSelected === true && router.route.includes(url ?? "")) ||
             router.route === url
             ? styles.active
             : styles.item,
