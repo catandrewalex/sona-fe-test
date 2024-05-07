@@ -100,6 +100,7 @@ const AttendanceDetailTabContainer = ({
                 <LoaderSimple />
               ) : (
                 // TODO(FerdiantJoshua): in each student tab, show latest SLT quota & all non-latest non-zero SLT quota
+                // TODO(FerdiantJoshua): add class default price (default course fee, default transport fee)
                 <AttendanceDetailTableView
                   data={attendanceData}
                   teacherId={teacherId}

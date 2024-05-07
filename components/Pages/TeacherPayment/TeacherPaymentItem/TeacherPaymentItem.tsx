@@ -105,6 +105,7 @@ const TeacherPaymentItem = React.memo(
             <Typography align="center" sx={{ width: "200px" }}>
               {convertNumberToCurrencyString(calculateTotalFromAttendances)}
             </Typography>
+            {/* TODO: add SLT's gross value (total course fee & total transport fee) */}
           </Box>
         </AccordionSummary>
         <TeacherPaymentItemDetails
