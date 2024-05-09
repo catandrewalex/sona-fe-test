@@ -3,7 +3,7 @@ import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableAct
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Attendance, Student, Teacher } from "@sonamusica-fe/types";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";
 import {
@@ -73,7 +73,7 @@ const PageAdminAttendanceTable = ({
                 },
                 () => {
                   setLoading(true);
-                  API.DeleteAttendance([{ attendanceId: id as number }])
+                  ADMIN_API.DeleteAttendance([{ attendanceId: id as number }])
                     .then((response) => {
                       const parsedResponse = apiTransformer(response, true);
                       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype)
@@ -87,7 +87,7 @@ const PageAdminAttendanceTable = ({
           {
             field: "attendanceId",
             headerName: "ID",
-            width: 100,
+            width: 75,
             align: "center",
             headerAlign: "center"
           },
@@ -112,26 +112,28 @@ const PageAdminAttendanceTable = ({
           {
             field: "usedStudentTokenQuota",
             headerName: "Quota Used",
-            width: 125,
+            width: 100,
             align: "center",
             headerAlign: "center",
+            headerClassName: "header-break",
             valueGetter: (params) => params.row.usedStudentTokenQuota
           },
           {
             field: "duration",
             headerName: "Duration (Minute)",
-            width: 150,
+            width: 110,
             align: "center",
             headerAlign: "center",
+            headerClassName: "header-break",
             valueGetter: (params) => params.row.duration
           },
           {
             field: "date",
             headerName: "Date",
-            width: 120,
+            width: 200,
             align: "center",
             headerAlign: "center",
-            valueGetter: (params) => moment(params.row.date).format("DD MMMM YYYY")
+            valueGetter: (params) => moment(params.row.date).format("DD MMMM YYYY HH:mm")
           },
           {
             field: "courseFee",

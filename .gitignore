@@ -42,3 +42,8 @@ docs/
 
 tests/screenshots
 tests/videos
+
+.idea
+
+.space
+temp

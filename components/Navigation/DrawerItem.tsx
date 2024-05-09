@@ -41,6 +41,7 @@ type DrawerItemSingleLevelProps = {
   parentText?: string;
   hidden?: boolean;
   testIdContext: string;
+  useSubstringIncludeForMarkSelected?: boolean;
 };
 
 type DrawerItemMultiLevelProps = {
@@ -73,7 +74,10 @@ const DrawerItem = (): JSX.Element => {
 
   const lists = data.map((section, idx) => {
     const innerItem = section.items.map(
-      ({ text, icon: Icon, url, userHasAccess, subMenu }, innerIdx) => {
+      (
+        { text, useSubstringIncludeForMarkSelected, icon: Icon, url, userHasAccess, subMenu },
+        innerIdx
+      ) => {
         if (subMenu) {
           const subMenuItem = subMenu.map(
             (
@@ -90,6 +94,7 @@ const DrawerItem = (): JSX.Element => {
                   key={`sidebar-item-submenu-${subMenuIdx}`}
                   text={subMenuText}
                   parentText={text}
+                  useSubstringIncludeForMarkSelected={useSubstringIncludeForMarkSelected}
                   icon={subMenuIcon}
                   url={subMenuUrl}
                   inset={drawerOpen}
@@ -120,6 +125,7 @@ const DrawerItem = (): JSX.Element => {
             key={`sidebar-item-${innerIdx}`}
             text={text}
             icon={Icon}
+            useSubstringIncludeForMarkSelected={useSubstringIncludeForMarkSelected}
             testIdContext={text.replaceAll(" ", "")}
             url={url}
             disabled={isLoading}
@@ -201,7 +207,8 @@ const SingleLevel = ({
   disabled,
   inset,
   hidden,
-  testIdContext
+  testIdContext,
+  useSubstringIncludeForMarkSelected
 }: DrawerItemSingleLevelProps) => {
   const { drawerOpen, startLoading } = useApp((state) => ({
     startLoading: state.startLoading,
@@ -237,8 +244,11 @@ const SingleLevel = ({
         disabled={disabled}
         className={hidden ? "hide" : ""}
         sx={merge(
-          { transition: "none", flex: 0 },
-          router.route === url ? styles.active : styles.item,
+          { transition: "none", flex: 0, py: 0.7 },
+          (useSubstringIncludeForMarkSelected === true && router.route.includes(url ?? "")) ||
+            router.route === url
+            ? styles.active
+            : styles.item,
           inset ? { pl: 4 } : {}
         )}
       >

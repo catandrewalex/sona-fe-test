@@ -1,6 +1,6 @@
 import { Theme } from "@mui/material";
 
-export const drawerWidth = 300;
+export const drawerWidth = 240;
 
 const styles = (theme: Theme) =>
   ({

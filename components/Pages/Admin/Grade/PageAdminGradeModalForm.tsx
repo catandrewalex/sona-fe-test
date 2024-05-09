@@ -1,18 +1,18 @@
 import { Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
 import Modal from "@sonamusica-fe/components/Modal";
-import { Instrument } from "@sonamusica-fe/types";
-import { InstrumentUpsertFormData } from "@sonamusica-fe/types/form/admin/instrument";
+import { Grade } from "@sonamusica-fe/types";
+import { GradeUpsertFormData } from "@sonamusica-fe/types/form/admin/grade";
 import { FailedResponse, ResponseMany } from "api";
 import React, { useEffect } from "react";
 
-type PageAdminInstrumentFormProps = {
-  data: Instrument[];
-  setData: (newData: Instrument[]) => void;
-  selectedData: Instrument | undefined;
+type PageAdminGradeFormProps = {
+  data: Grade[];
+  setData: (newData: Grade[]) => void;
+  selectedData: Grade | undefined;
   onClose: () => void;
   open: boolean;
 };
@@ -21,7 +21,7 @@ const errorResponseMapping = {
   name: "name"
 };
 
-const defaultFields: FormFieldType<InstrumentUpsertFormData>[] = [
+const defaultFields: FormFieldType<GradeUpsertFormData>[] = [
   {
     type: "text",
     name: "name",
@@ -32,22 +32,22 @@ const defaultFields: FormFieldType<InstrumentUpsertFormData>[] = [
   }
 ];
 
-const PageAdminInstrumentForm = ({
+const PageAdminGradeModalForm = ({
   data,
   setData,
   selectedData,
   onClose,
   open
-}: PageAdminInstrumentFormProps): JSX.Element => {
+}: PageAdminGradeFormProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
 
-  const defaultFieldValue: InstrumentUpsertFormData = {
+  const defaultFieldValue: GradeUpsertFormData = {
     name: ""
   };
 
-  const { formProperties, formRenderer } = useFormRenderer<InstrumentUpsertFormData>(
+  const { formProperties, formRenderer } = useFormRenderer<GradeUpsertFormData>(
     {
-      testIdContext: "InstrumentUpsert",
+      testIdContext: "GradeUpsert",
       cancelButtonProps: {
         onClick: onClose
       },
@@ -59,9 +59,9 @@ const PageAdminInstrumentForm = ({
         let request;
 
         if (selectedData) {
-          request = API.UpdateInstrument([{ ...selectedData, name: formData.name }]);
+          request = ADMIN_API.UpdateGrade([{ ...selectedData, name: formData.name }]);
         } else {
-          request = API.InsertInstrument([{ name: formData.name }]);
+          request = ADMIN_API.InsertGrade([{ name: formData.name }]);
         }
 
         const response = await request;
@@ -69,10 +69,10 @@ const PageAdminInstrumentForm = ({
         if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
           return parsedResponse as FailedResponse;
         } else {
-          const responseData = (parsedResponse as ResponseMany<Instrument>).results[0];
+          const responseData = (parsedResponse as ResponseMany<Grade>).results[0];
           if (selectedData) {
             const newData = data.map((val) => {
-              if (val.instrumentId === responseData.instrumentId) {
+              if (val.gradeId === responseData.gradeId) {
                 return responseData;
               }
               return val;
@@ -92,18 +92,18 @@ const PageAdminInstrumentForm = ({
       formProperties.valueRef.current = {
         name: selectedData.name
       };
-      formProperties.errorRef.current = {} as Record<keyof InstrumentUpsertFormData, string>;
+      formProperties.errorRef.current = {} as Record<keyof GradeUpsertFormData, string>;
     }
   }, [selectedData]);
 
   return (
     <Modal open={open} onClose={onClose}>
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
-        {selectedData ? "Update" : "Add"} Instrument
+        {selectedData ? "Update" : "Add"} Grade
       </Typography>
       {formRenderer()}
     </Modal>
   );
 };
 
-export default PageAdminInstrumentForm;
+export default PageAdminGradeModalForm;

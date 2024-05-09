@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -106,7 +106,7 @@ updateFields.push({
   validations: [{ name: "required" }]
 });
 
-const PageAdminUserForm = ({
+const PageAdminUserModalForm = ({
   data,
   setData,
   selectedData,
@@ -125,94 +125,95 @@ const PageAdminUserForm = ({
     privilegeType: UserType.MEMBER
   };
 
-  const { formProperties, formRenderer } = selectedData
-    ? useFormRenderer<UserUpdateFormData>(
-        {
-          testIdContext: "UserUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: updateFields,
-          errorResponseMapping,
-          submitHandler: async (formData, error) => {
-            if (error.email || error.username || error.firstName || error.privilegeType)
-              return Promise.reject();
+  const { formRenderer: insertFormRenderer } = useFormRenderer<UserInsertFormData>(
+    {
+      testIdContext: "UserUpsert",
+      cancelButtonProps: {
+        onClick: onClose
+      },
+      fields: insertFields,
+      errorResponseMapping,
+      submitHandler: async (formData, error) => {
+        if (
+          error.email ||
+          error.username ||
+          error.password ||
+          error.passwordConfirm ||
+          error.firstName ||
+          error.privilegeType
+        )
+          return Promise.reject();
 
-            const payload: UserUpdateFormRequest = {
-              userId: selectedData.userId,
-              email: formData.email,
-              username: formData.username,
-              privilegeType: formData.privilegeType,
-              userDetail: {
-                firstName: formData.firstName,
-                lastName: formData.lastName
-              },
-              isDeactivated: !formData.isActive
-            };
-            const response = await API.UpdateUser([payload]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<User>).results[0];
-              const newData = data.map((val) => {
-                if (val.userId === responseData.userId) {
-                  return responseData;
-                }
-                return val;
-              });
-              setData(newData);
-            }
+        const payload: UserInsertFormRequest = {
+          email: formData.email,
+          username: formData.username,
+          password: formData.password,
+          privilegeType: formData.privilegeType,
+          userDetail: {
+            firstName: formData.firstName,
+            lastName: formData.lastName
           }
-        },
-        { ...defaultFieldValue, isActive: false }
-      )
-    : useFormRenderer<UserInsertFormData>(
-        {
-          testIdContext: "UserUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: insertFields,
-          errorResponseMapping,
-          submitHandler: async (formData, error) => {
-            if (
-              error.email ||
-              error.username ||
-              error.password ||
-              error.passwordConfirm ||
-              error.firstName ||
-              error.privilegeType
-            )
-              return Promise.reject();
+        };
+        const response = await ADMIN_API.CreateUser([payload]);
+        const parsedResponse = apiTransformer(response, true);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        } else {
+          const responseData = (parsedResponse as ResponseMany<User>).results[0];
+          const newData = [...data, responseData];
+          setData(newData);
+        }
+      }
+    },
+    defaultFieldValue
+  );
 
-            const payload: UserInsertFormRequest = {
-              email: formData.email,
-              username: formData.username,
-              password: formData.password,
-              privilegeType: formData.privilegeType,
-              userDetail: {
-                firstName: formData.firstName,
-                lastName: formData.lastName
+  const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
+    useFormRenderer<UserUpdateFormData>(
+      {
+        testIdContext: "UserUpsert",
+        cancelButtonProps: {
+          onClick: onClose
+        },
+        fields: updateFields,
+        errorResponseMapping,
+        submitHandler: async (formData, error) => {
+          if (error.email || error.username || error.firstName || error.privilegeType)
+            return Promise.reject();
+
+          const payload: UserUpdateFormRequest = {
+            userId: selectedData?.userId || 0,
+            email: formData.email,
+            username: formData.username,
+            privilegeType: formData.privilegeType,
+            userDetail: {
+              firstName: formData.firstName,
+              lastName: formData.lastName
+            },
+            isDeactivated: !formData.isActive
+          };
+          const response = await ADMIN_API.UpdateUser([payload]);
+          const parsedResponse = apiTransformer(response, true);
+          if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+            return parsedResponse as FailedResponse;
+          } else {
+            const responseData = (parsedResponse as ResponseMany<User>).results[0];
+            const newData = data.map((val) => {
+              if (val.userId === responseData.userId) {
+                return responseData;
               }
-            };
-            const response = await API.CreateUser([payload]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<User>).results[0];
-              const newData = [...data, responseData];
-              setData(newData);
-            }
+              return val;
+            });
+            setData(newData);
           }
-        },
-        defaultFieldValue
-      );
+        }
+      },
+      { ...defaultFieldValue, isActive: false }
+    );
 
   useEffect(() => {
     if (selectedData) {
-      formProperties.valueRef.current = {
+      updateFormProperties.valueRef.current = {
         firstName: selectedData.userDetail.firstName,
         lastName: selectedData.userDetail.lastName,
         email: selectedData.email,
@@ -220,7 +221,7 @@ const PageAdminUserForm = ({
         privilegeType: selectedData.privilegeType,
         isActive: !selectedData.isDeactivated
       };
-      formProperties.errorRef.current = {} as Record<keyof UserUpdateFormData, string>;
+      updateFormProperties.errorRef.current = {} as Record<keyof UserUpdateFormData, string>;
     }
   }, [selectedData]);
 
@@ -229,9 +230,9 @@ const PageAdminUserForm = ({
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} User
       </Typography>
-      {formRenderer()}
+      {selectedData ? updateFormRenderer() : insertFormRenderer()}
     </Modal>
   );
 };
 
-export default PageAdminUserForm;
+export default PageAdminUserModalForm;

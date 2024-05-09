@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -29,7 +29,7 @@ const errorResponseMapping = {
   fee: "fee"
 };
 
-const PageAdminTeacherSpecialFeeForm = ({
+const PageAdminTeacherSpecialFeeModalForm = ({
   data,
   setData,
   selectedData,
@@ -104,72 +104,76 @@ const PageAdminTeacherSpecialFeeForm = ({
     course: null
   };
 
-  const { formProperties, formRenderer } = selectedData
-    ? useFormRenderer<TeacherSpecialFeeUpdateFormData>(
-        {
-          testIdContext: "TeacherSpecialFeeUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultUpdateFields,
-          submitHandler: async ({ fee }, error) => {
-            if (error.fee) return Promise.reject();
-            const response = await API.UpdateTeacherSpecialFee([
-              { teacherSpecialFeeId: selectedData.teacherSpecialFeeId, fee }
-            ]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<TeacherSpecialFee>).results[0];
-              const newData = data.map((val) => {
-                if (val.teacherSpecialFeeId === responseData.teacherSpecialFeeId) {
-                  return responseData;
-                }
-                return val;
-              });
-              setData(newData);
-            }
-          }
+  const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
+    useFormRenderer<TeacherSpecialFeeUpdateFormData>(
+      {
+        testIdContext: "TeacherSpecialFeeUpsert",
+        cancelButtonProps: {
+          onClick: onClose
         },
-        defaultUpdateFieldValue
-      )
-    : useFormRenderer<TeacherSpecialFeeInsertFormData>(
-        {
-          testIdContext: "TeacherSpecialFeeUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultInsertFields,
-          errorResponseMapping,
-          submitHandler: async ({ fee, teacher, course }, error) => {
-            if (error.fee || error.teacher || error.course) return Promise.reject();
-            const response = await API.InsertTeacherSpecialFee([
-              {
-                fee,
-                teacherId: teacher?.teacherId || 0,
-                courseId: course?.courseId || 0
+        fields: defaultUpdateFields,
+        submitHandler: async ({ fee }, error) => {
+          if (error.fee) return Promise.reject();
+          const response = await ADMIN_API.UpdateTeacherSpecialFee([
+            { teacherSpecialFeeId: selectedData?.teacherSpecialFeeId || 0, fee }
+          ]);
+          const parsedResponse = apiTransformer(response, true);
+          if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+            return parsedResponse as FailedResponse;
+          } else {
+            const responseData = (parsedResponse as ResponseMany<TeacherSpecialFee>).results[0];
+            const newData = data.map((val) => {
+              if (val.teacherSpecialFeeId === responseData.teacherSpecialFeeId) {
+                return responseData;
               }
-            ]);
-
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<TeacherSpecialFee>).results[0];
-              setData([...data, responseData]);
-            }
+              return val;
+            });
+            setData(newData);
           }
-        },
-        defaultInsertFieldValue
-      );
+        }
+      },
+      defaultUpdateFieldValue
+    );
+
+  const { formRenderer: insertFormRenderer } = useFormRenderer<TeacherSpecialFeeInsertFormData>(
+    {
+      testIdContext: "TeacherSpecialFeeUpsert",
+      cancelButtonProps: {
+        onClick: onClose
+      },
+      fields: defaultInsertFields,
+      errorResponseMapping,
+      submitHandler: async ({ fee, teacher, course }, error) => {
+        if (error.fee || error.teacher || error.course) return Promise.reject();
+        const response = await ADMIN_API.InsertTeacherSpecialFee([
+          {
+            fee,
+            teacherId: teacher?.teacherId || 0,
+            courseId: course?.courseId || 0
+          }
+        ]);
+
+        const parsedResponse = apiTransformer(response, true);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        } else {
+          const responseData = (parsedResponse as ResponseMany<TeacherSpecialFee>).results[0];
+          setData([...data, responseData]);
+        }
+      }
+    },
+    defaultInsertFieldValue
+  );
 
   useEffect(() => {
     if (selectedData) {
-      formProperties.valueRef.current = {
+      updateFormProperties.valueRef.current = {
         fee: selectedData.fee
       };
-      formProperties.errorRef.current = {} as Record<keyof TeacherSpecialFeeUpdateFormData, string>;
+      updateFormProperties.errorRef.current = {} as Record<
+        keyof TeacherSpecialFeeUpdateFormData,
+        string
+      >;
     }
   }, [selectedData]);
 
@@ -178,9 +182,9 @@ const PageAdminTeacherSpecialFeeForm = ({
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} Teacher Special Fee
       </Typography>
-      {formRenderer()}
+      {selectedData ? updateFormRenderer() : insertFormRenderer()}
     </Modal>
   );
 };
 
-export default PageAdminTeacherSpecialFeeForm;
+export default PageAdminTeacherSpecialFeeModalForm;

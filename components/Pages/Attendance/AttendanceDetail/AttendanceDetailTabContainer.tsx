@@ -15,9 +15,10 @@ type AttendanceDetailTabContainerProps = {
   teacherId: number;
   openForm: (data: Attendance) => void;
   preSelectedStudentId: number;
+  forceRenderCounter: number;
 };
 
-const resultPerPage = 12;
+const RESULT_PER_PAGE = 12;
 
 function isIdExistOnStudents(id: number, students: Student[]): boolean {
   return students.findIndex((student) => student.studentId === id) !== -1;
@@ -28,7 +29,8 @@ const AttendanceDetailTabContainer = ({
   classId,
   teacherId,
   openForm,
-  preSelectedStudentId
+  preSelectedStudentId,
+  forceRenderCounter
 }: AttendanceDetailTabContainerProps): JSX.Element => {
   const { showSnackbar } = useSnack();
   const [currentStudentId, setCurrentStudentId] = useState<number>(
@@ -39,37 +41,43 @@ const AttendanceDetailTabContainer = ({
 
   const {
     data: attendanceData,
-    paginationResult: paginationConfig,
+    paginationResult,
     error,
     isLoading: loading,
     refetch
-  } = useAttendanceFetch(classId, currentStudentId, resultPerPage);
+  } = useAttendanceFetch(classId, currentStudentId, RESULT_PER_PAGE);
 
   useEffect(() => {
     if (error) {
       showSnackbar(error, "error");
     }
-  }, [error]);
+  }, [error, showSnackbar]);
+
+  useEffect(() => {
+    if (forceRenderCounter > 0) {
+      refetch(currentStudentId, paginationResult.currentPage);
+    }
+  }, [forceRenderCounter]);
 
   const handleTabChange = useCallback(
     (_e, newValue) => {
       const newStudentId = parseInt(newValue);
       setCurrentStudentId(newStudentId);
-      refetch(newStudentId, paginationConfig.page);
+      refetch(currentStudentId, paginationResult.currentPage);
     },
-    [setCurrentStudentId, paginationConfig.page]
+    [currentStudentId, paginationResult.currentPage]
   );
 
   const handlePageChange = useCallback(
     (_event: React.ChangeEvent<unknown>, page: number) => {
       refetch(currentStudentId, page);
     },
-    [refetch, currentStudentId]
+    [currentStudentId]
   );
 
   const onDelete = useCallback(() => {
-    refetch(currentStudentId, paginationConfig.page);
-  }, [paginationConfig.page, currentStudentId]);
+    refetch(currentStudentId, paginationResult.currentPage);
+  }, [currentStudentId, paginationResult.currentPage]);
 
   return (
     <Box mt={1}>
@@ -91,8 +99,8 @@ const AttendanceDetailTabContainer = ({
               {loading ? (
                 <LoaderSimple />
               ) : (
-                // TODO: edit the table header to be sticky(?). currently, when the table is long, it has its own vertical scrollbar,
-                // and the table header gets hidden after we scroll down. WE NEED THE HEADER TO BE ALWAYS VISIBLE
+                // TODO(FerdiantJoshua): in each student tab, show latest SLT quota & all non-latest non-zero SLT quota
+                // TODO(FerdiantJoshua): add class default price (default course fee, default transport fee)
                 <AttendanceDetailTableView
                   data={attendanceData}
                   teacherId={teacherId}
@@ -105,12 +113,12 @@ const AttendanceDetailTabContainer = ({
         ))}
       </TabContext>
       <Pagination
-        count={paginationConfig.maxPage}
-        page={paginationConfig.page}
+        count={paginationResult.totalPages}
+        page={paginationResult.currentPage}
         onChange={handlePageChange}
       />
     </Box>
   );
 };
 
-export default AttendanceDetailTabContainer;
+export default React.memo(AttendanceDetailTabContainer);

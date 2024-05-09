@@ -3,7 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import AttendanceDetailTabContainer from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTabContainer";
 import FormDataViewerTable from "@sonamusica-fe/components/Table/FormDataViewerTable";
-import AttendanceForm from "@sonamusica-fe/pages/attendance/AttendanceForm";
+import AttendanceModalForm from "@sonamusica-fe/components/Pages/Attendance/AttendanceModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { Attendance, Class, Teacher } from "@sonamusica-fe/types";
 import {
@@ -23,7 +23,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
   const [selectedData, setSelectedData] = useState<Attendance>();
   const [teacherOptions, setTeacherOptions] = useState<Teacher[]>([]);
   // we switch this true/false to force render on AttendanceDetailTabContainer, whenever the AttendanceForm is submitted
-  const [, forceRender] = useReducer((prev) => prev + 1, 0);
+  const [forceRenderCounter, forceRender] = useReducer((prev) => prev + 1, 0);
 
   const { query } = useRouter();
 
@@ -58,6 +58,8 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
     });
   }, [setTeacherOptions]);
 
+  const onSubmit = useCallback(() => forceRender(), [forceRender]);
+
   useEffect(fetchTeacherOptions, [setTeacherOptions]);
 
   const preSelectedStudentId = typeof query.studentId == "string" ? parseInt(query.studentId) : 0;
@@ -89,6 +91,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
         </Box>
         <Box width={200}>
           <Button
+            disabled={classData.students.length === 0}
             onClick={() => openForm()}
             startIcon={<Add />}
             fullWidth
@@ -99,21 +102,24 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
           </Button>
         </Box>
       </Box>
-      <AttendanceDetailTabContainer
-        studentsData={classData.students}
-        teacherId={classData.teacher?.teacherId || 0}
-        classId={classData.classId}
-        openForm={openForm}
-        preSelectedStudentId={preSelectedStudentId}
-      />
-      <AttendanceForm
+      {classData.students.length > 0 && (
+        <AttendanceDetailTabContainer
+          studentsData={classData.students}
+          teacherId={classData.teacher?.teacherId || 0}
+          classId={classData.classId}
+          openForm={openForm}
+          preSelectedStudentId={preSelectedStudentId}
+          forceRenderCounter={forceRenderCounter}
+        />
+      )}
+      <AttendanceModalForm
         data={selectedData}
         classData={classData}
         teacherOptions={teacherOptions}
         onClose={closeForm}
         open={open}
-        onSubmit={() => forceRender()}
-      ></AttendanceForm>
+        onSubmit={onSubmit}
+      ></AttendanceModalForm>
     </Box>
   );
 };

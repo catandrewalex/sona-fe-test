@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -33,7 +33,7 @@ const errorResponseMapping = {
   balanceTopUp: "balanceTopUp"
 };
 
-const PageAdminEnrollmentPaymentForm = ({
+const PageAdminEnrollmentPaymentModalForm = ({
   data,
   setData,
   selectedData,
@@ -63,6 +63,7 @@ const PageAdminEnrollmentPaymentForm = ({
       label: "Course Fee",
       formFieldProps: { lg: 3, md: 6 },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
@@ -74,6 +75,7 @@ const PageAdminEnrollmentPaymentForm = ({
       label: "Transport Fee",
       formFieldProps: { lg: 3, md: 6 },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
@@ -96,6 +98,7 @@ const PageAdminEnrollmentPaymentForm = ({
       label: "Balance Top Up",
       formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number",
         required: true
       },
@@ -139,123 +142,127 @@ const PageAdminEnrollmentPaymentForm = ({
     studentEnrollment: null
   };
 
-  const { formProperties, formRenderer } = selectedData
-    ? useFormRenderer<EnrollmentPaymentUpdateFormData>(
-        {
-          testIdContext: "EnrollmentPaymentUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultUpdateFields,
-          submitHandler: async (
-            { courseFeeValue, balanceTopUp, transportFeeValue, paymentDate, penaltyFeeValue },
-            error
-          ) => {
-            if (
-              error.courseFeeValue ||
-              error.balanceTopUp ||
-              error.transportFeeValue ||
-              error.penaltyFeeValue ||
-              error.paymentDate
-            )
-              return Promise.reject();
-            const response = await API.UpdateEnrollmentPayment([
-              {
-                penaltyFeeValue,
-                balanceTopUp,
-                courseFeeValue,
-                transportFeeValue,
-                paymentDate: convertMomentDateToRFC3339(paymentDate),
-                enrollmentPaymentId: selectedData.enrollmentPaymentId
-              }
-            ]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<EnrollmentPayment>).results[0];
-              const newData = data.map((val) => {
-                if (val.enrollmentPaymentId === responseData.enrollmentPaymentId) {
-                  return responseData;
-                }
-                return val;
-              });
-              setData(newData);
-            }
-          }
+  const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
+    useFormRenderer<EnrollmentPaymentUpdateFormData>(
+      {
+        testIdContext: "EnrollmentPaymentUpsert",
+        cancelButtonProps: {
+          onClick: onClose
         },
-        defaultUpdateFieldValue
-      )
-    : useFormRenderer<EnrollmentPaymentInsertFormData>(
-        {
-          testIdContext: "EnrollmentPaymentUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultInsertFields,
-          errorResponseMapping,
-          submitHandler: async (
+        fields: defaultUpdateFields,
+        submitHandler: async (
+          { courseFeeValue, balanceTopUp, transportFeeValue, paymentDate, penaltyFeeValue },
+          error
+        ) => {
+          if (
+            error.courseFeeValue ||
+            error.balanceTopUp ||
+            error.transportFeeValue ||
+            error.penaltyFeeValue ||
+            error.paymentDate
+          )
+            return Promise.reject();
+          const response = await ADMIN_API.UpdateEnrollmentPayment([
             {
-              courseFeeValue,
+              penaltyFeeValue,
               balanceTopUp,
-              studentEnrollment,
-              paymentDate,
+              courseFeeValue,
               transportFeeValue,
-              penaltyFeeValue
-            },
-            error
-          ) => {
-            if (
-              error.courseFeeValue ||
-              error.balanceTopUp ||
-              error.transportFeeValue ||
-              error.studentEnrollment ||
-              error.penaltyFeeValue
-            )
-              return Promise.reject();
-            const response = await API.InsertEnrollmentPayment([
-              {
-                courseFeeValue,
-                transportFeeValue,
-                balanceTopUp,
-                penaltyFeeValue,
-                paymentDate: convertMomentDateToRFC3339(paymentDate),
-                studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
-              }
-            ]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<EnrollmentPayment>).results[0];
-              setData([...data, responseData]);
+              paymentDate: convertMomentDateToRFC3339(paymentDate),
+              enrollmentPaymentId: selectedData?.enrollmentPaymentId || 0
             }
+          ]);
+          const parsedResponse = apiTransformer(response, true);
+          if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+            return parsedResponse as FailedResponse;
+          } else {
+            const responseData = (parsedResponse as ResponseMany<EnrollmentPayment>).results[0];
+            const newData = data.map((val) => {
+              if (val.enrollmentPaymentId === responseData.enrollmentPaymentId) {
+                return responseData;
+              }
+              return val;
+            });
+            setData(newData);
           }
+        }
+      },
+      defaultUpdateFieldValue
+    );
+
+  const { formRenderer: insertFormRenderer } = useFormRenderer<EnrollmentPaymentInsertFormData>(
+    {
+      testIdContext: "EnrollmentPaymentUpsert",
+      cancelButtonProps: {
+        onClick: onClose
+      },
+      fields: defaultInsertFields,
+      errorResponseMapping,
+      submitHandler: async (
+        {
+          courseFeeValue,
+          balanceTopUp,
+          studentEnrollment,
+          paymentDate,
+          transportFeeValue,
+          penaltyFeeValue
         },
-        defaultInsertFieldValue
-      );
+        error
+      ) => {
+        if (
+          error.courseFeeValue ||
+          error.balanceTopUp ||
+          error.transportFeeValue ||
+          error.studentEnrollment ||
+          error.penaltyFeeValue
+        )
+          return Promise.reject();
+        const response = await ADMIN_API.InsertEnrollmentPayment([
+          {
+            courseFeeValue,
+            transportFeeValue,
+            balanceTopUp,
+            penaltyFeeValue,
+            paymentDate: convertMomentDateToRFC3339(paymentDate),
+            studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
+          }
+        ]);
+        const parsedResponse = apiTransformer(response, true);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        } else {
+          const responseData = (parsedResponse as ResponseMany<EnrollmentPayment>).results[0];
+          setData([...data, responseData]);
+        }
+      }
+    },
+    defaultInsertFieldValue
+  );
 
   useEffect(() => {
     if (selectedData) {
-      formProperties.valueRef.current = {
+      updateFormProperties.valueRef.current = {
         balanceTopUp: selectedData.balanceTopUp,
         transportFeeValue: selectedData.transportFeeValue,
         courseFeeValue: selectedData.courseFeeValue,
         paymentDate: moment(selectedData.paymentDate),
         penaltyFeeValue: selectedData.penaltyFeeValue
       };
-      formProperties.errorRef.current = {} as Record<keyof EnrollmentPaymentUpdateFormData, string>;
+      updateFormProperties.errorRef.current = {} as Record<
+        keyof EnrollmentPaymentUpdateFormData,
+        string
+      >;
     }
-  }, [selectedData]);
+  }, [selectedData, updateFormProperties.errorRef, updateFormProperties.valueRef]);
 
   return (
     <Modal open={open} onClose={onClose}>
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} Enrollment Payment
       </Typography>
-      {formRenderer()}
+      {selectedData ? updateFormRenderer() : insertFormRenderer()}
     </Modal>
   );
 };
 
-export default PageAdminEnrollmentPaymentForm;
+export default PageAdminEnrollmentPaymentModalForm;

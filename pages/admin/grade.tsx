@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { Grade } from "@sonamusica-fe/types";
 import PageAdminGradeTable from "@sonamusica-fe/components/Pages/Admin/Grade/PageAdminGradeTable";
-import PageAdminGradeForm from "@sonamusica-fe/components/Pages/Admin/Grade/PageAdminGradeForm";
+import PageAdminGradeModalForm from "@sonamusica-fe/components/Pages/Admin/Grade/PageAdminGradeModalForm";
 
 const GradePage = (): JSX.Element => {
   const [data, setData] = useState<Array<Grade>>([]);
@@ -28,7 +28,7 @@ const GradePage = (): JSX.Element => {
 
   useEffect(() => {
     if (user) {
-      API.GetAllGrade()
+      ADMIN_API.GetAllGrade()
         .then((response) => {
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
@@ -52,7 +52,7 @@ const GradePage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminGradeForm
+      <PageAdminGradeModalForm
         selectedData={selectedData}
         data={data}
         open={open}

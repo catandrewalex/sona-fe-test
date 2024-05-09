@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { TeacherSpecialFee, Teacher, Course } from "@sonamusica-fe/types";
 import PageAdminTeacherSpecialFeeTable from "@sonamusica-fe/components/Pages/Admin/TeacherSpecialFee/PageAdminTeacherSpecialFeeTable";
-import PageAdminTeacherSpecialFeeForm from "@sonamusica-fe/components/Pages/Admin/TeacherSpecialFee/PageAdminTeacherSpecialFeeForm";
+import PageAdminTeacherSpecialFeeModalForm from "@sonamusica-fe/components/Pages/Admin/TeacherSpecialFee/PageAdminTeacherSpecialFeeModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 
 const TeacherSpecialFeePage = (): JSX.Element => {
@@ -32,7 +32,11 @@ const TeacherSpecialFeePage = (): JSX.Element => {
 
   useEffect(() => {
     if (user) {
-      const promises = [API.GetAllTeacherSpecialFee(), API.GetAllTeacher(), API.GetAllCourse()];
+      const promises = [
+        ADMIN_API.GetAllTeacherSpecialFee(),
+        ADMIN_API.GetAllTeacher(),
+        ADMIN_API.GetAllCourse()
+      ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
           const response = value[0].value as SuccessResponse<TeacherSpecialFee>;
@@ -79,7 +83,7 @@ const TeacherSpecialFeePage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminTeacherSpecialFeeForm
+      <PageAdminTeacherSpecialFeeModalForm
         selectedData={selectedData}
         courseData={courseData}
         teacherData={teacherData}

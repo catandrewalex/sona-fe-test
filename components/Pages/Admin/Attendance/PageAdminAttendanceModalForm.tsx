@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -40,7 +40,7 @@ const errorResponseMapping = {
   studentLearningToken: "studentLearningTokenId"
 };
 
-const PageAdminAttendanceForm = ({
+const PageAdminAttendanceModalForm = ({
   data,
   setData,
   selectedData,
@@ -112,6 +112,7 @@ const PageAdminAttendanceForm = ({
       label: "Quota Used",
       formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number"
       },
       validations: []
@@ -122,12 +123,13 @@ const PageAdminAttendanceForm = ({
       label: "Duration (minute)",
       formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
+        // TODO: validate to only allow value >= 0
         type: "number"
       },
       validations: []
     },
     {
-      type: "date",
+      type: "date-time",
       name: "date",
       label: "Date",
       formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
@@ -166,134 +168,135 @@ const PageAdminAttendanceForm = ({
     isPaid: false
   };
 
-  const { formProperties, formRenderer } = selectedData
-    ? useFormRenderer<AttendanceUpdateFormData>(
-        {
-          testIdContext: "AttendanceUpsert",
-          cancelButtonProps: {
-            onClick: onClose
+  const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
+    useFormRenderer<AttendanceUpdateFormData>(
+      {
+        testIdContext: "AttendanceUpsert",
+        cancelButtonProps: {
+          onClick: onClose
+        },
+        fields: defaultFields,
+        submitHandler: async (
+          {
+            student,
+            teacher,
+            studentLearningToken,
+            usedStudentTokenQuota,
+            date,
+            note,
+            duration,
+            isPaid,
+            class: classData
           },
-          fields: defaultFields,
-          submitHandler: async (
-            {
-              student,
-              teacher,
-              studentLearningToken,
-              usedStudentTokenQuota,
-              date,
-              note,
-              duration,
-              isPaid,
-              class: classData
-            },
-            error
-          ) => {
-            if (
-              error.class ||
-              error.student ||
-              error.teacher ||
-              error.studentLearningToken ||
-              error.usedStudentTokenQuota ||
-              error.date ||
-              error.duration ||
-              error.note ||
-              error.isPaid
-            )
-              return Promise.reject();
+          error
+        ) => {
+          if (
+            error.class ||
+            error.student ||
+            error.teacher ||
+            error.studentLearningToken ||
+            error.usedStudentTokenQuota ||
+            error.date ||
+            error.duration ||
+            error.note ||
+            error.isPaid
+          )
+            return Promise.reject();
 
-            const response = await API.UpdateAttendance([
-              {
-                attendanceId: selectedData?.attendanceId || 0,
-                usedStudentTokenQuota,
-                date: convertMomentDateToRFC3339(date),
-                note,
-                duration,
-                isPaid: isPaid,
-                classId: classData?.classId || 0,
-                studentId: student?.studentId || 0,
-                teacherId: teacher?.teacherId || 0,
-                studentLearningTokenId: studentLearningToken?.studentLearningTokenId || 0
-              }
-            ]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<Attendance>).results[0];
-              const newData = data.map((val) => {
-                if (val.attendanceId === responseData.attendanceId) {
-                  return responseData;
-                }
-                return val;
-              });
-              setData(newData);
-            }
-          }
-        },
-        defaultFieldValue
-      )
-    : useFormRenderer<AttendanceInsertFormData>(
-        {
-          testIdContext: "AttendanceUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultFields,
-          errorResponseMapping,
-          submitHandler: async (
+          const response = await ADMIN_API.UpdateAttendance([
             {
-              class: classData,
-              student,
-              teacher,
-              studentLearningToken,
+              attendanceId: selectedData?.attendanceId || 0,
               usedStudentTokenQuota,
-              date,
+              date: convertMomentDateToRFC3339(date),
               note,
               duration,
-              isPaid
-            },
-            error
-          ) => {
-            if (
-              error.class ||
-              error.student ||
-              error.teacher ||
-              error.studentLearningToken ||
-              error.usedStudentTokenQuota ||
-              error.date ||
-              error.note ||
-              error.duration ||
-              error.isPaid
-            )
-              return Promise.reject();
-            const response = await API.InsertAttendance([
-              {
-                usedStudentTokenQuota,
-                date: convertMomentDateToRFC3339(date),
-                note,
-                duration,
-                isPaid: isPaid,
-                classId: classData?.classId || 0,
-                studentId: student?.studentId || 0,
-                teacherId: teacher?.teacherId || 0,
-                studentLearningTokenId: studentLearningToken?.studentLearningTokenId || 0
-              }
-            ]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<Attendance>).results[0];
-              setData([...data, responseData]);
+              isPaid: isPaid,
+              classId: classData?.classId || 0,
+              studentId: student?.studentId || 0,
+              teacherId: teacher?.teacherId || 0,
+              studentLearningTokenId: studentLearningToken?.studentLearningTokenId || 0
             }
+          ]);
+          const parsedResponse = apiTransformer(response, true);
+          if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+            return parsedResponse as FailedResponse;
+          } else {
+            const responseData = (parsedResponse as ResponseMany<Attendance>).results[0];
+            const newData = data.map((val) => {
+              if (val.attendanceId === responseData.attendanceId) {
+                return responseData;
+              }
+              return val;
+            });
+            setData(newData);
           }
+        }
+      },
+      defaultFieldValue
+    );
+
+  const { formRenderer: insertFormRenderer } = useFormRenderer<AttendanceInsertFormData>(
+    {
+      testIdContext: "AttendanceUpsert",
+      cancelButtonProps: {
+        onClick: onClose
+      },
+      fields: defaultFields,
+      errorResponseMapping,
+      submitHandler: async (
+        {
+          class: classData,
+          student,
+          teacher,
+          studentLearningToken,
+          usedStudentTokenQuota,
+          date,
+          note,
+          duration,
+          isPaid
         },
-        defaultFieldValue
-      );
+        error
+      ) => {
+        if (
+          error.class ||
+          error.student ||
+          error.teacher ||
+          error.studentLearningToken ||
+          error.usedStudentTokenQuota ||
+          error.date ||
+          error.note ||
+          error.duration ||
+          error.isPaid
+        )
+          return Promise.reject();
+        const response = await ADMIN_API.InsertAttendance([
+          {
+            usedStudentTokenQuota,
+            date: convertMomentDateToRFC3339(date),
+            note,
+            duration,
+            isPaid: isPaid,
+            classId: classData?.classId || 0,
+            studentId: student?.studentId || 0,
+            teacherId: teacher?.teacherId || 0,
+            studentLearningTokenId: studentLearningToken?.studentLearningTokenId || 0
+          }
+        ]);
+        const parsedResponse = apiTransformer(response, true);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        } else {
+          const responseData = (parsedResponse as ResponseMany<Attendance>).results[0];
+          setData([...data, responseData]);
+        }
+      }
+    },
+    defaultFieldValue
+  );
 
   useEffect(() => {
     if (selectedData) {
-      formProperties.valueRef.current = {
+      updateFormProperties.valueRef.current = {
         usedStudentTokenQuota: selectedData.usedStudentTokenQuota,
         duration: selectedData.duration,
         isPaid: selectedData.isPaid,
@@ -304,18 +307,18 @@ const PageAdminAttendanceForm = ({
         class: selectedData.class,
         studentLearningToken: selectedData.studentLearningToken
       };
-      formProperties.errorRef.current = {} as Record<keyof AttendanceUpdateFormData, string>;
+      updateFormProperties.errorRef.current = {} as Record<keyof AttendanceUpdateFormData, string>;
     }
-  }, [selectedData]);
+  }, [selectedData, updateFormProperties.errorRef, updateFormProperties.valueRef]);
 
   return (
     <Modal open={open} onClose={onClose}>
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} Attendance
       </Typography>
-      {formRenderer()}
+      {selectedData ? updateFormRenderer() : insertFormRenderer()}
     </Modal>
   );
 };
 
-export default PageAdminAttendanceForm;
+export default PageAdminAttendanceModalForm;

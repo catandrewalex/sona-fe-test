@@ -12,8 +12,8 @@ import { Grid, Button, CircularProgress } from "@mui/material";
  * @version 1.0.0
  * @author Joshua Lauwrich Nandy
  * @property {string|undefined} submitText the optional submit button text. Default will be 'Submit'.
- * @property {boolean|undefined} regular if true, the button acts as regular button and you must provide onClick listener to it.
- * @property {boolean|undefined} loading if true, the loading animation will showed instead of submit text.
+ * @property {boolean|undefined} regular if true, the button acts as regular button, and you must provide onClick listener to it.
+ * @property {boolean|undefined} loading if true, the loading animation will show instead of submit text.
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  */
 export interface SubmitButtonProps

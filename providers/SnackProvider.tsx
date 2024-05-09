@@ -138,7 +138,7 @@ const SnackProvider = ({ children }: SnackProviderProps): JSX.Element => {
  * @since 1.0.0
  * @version 1.0.0
  * @author Joshua Lauwrich Nandy
- * @throws Error - if this method used outside of SnackProvider component
+ * @throws Error - if this method used outside SnackProvider component
  * @returns snackbar context value
  * @example <caption>Example how to use useSnack() hooks</caption>
  * import { useSnack } from "../../Providers/SnackProvider";

@@ -98,7 +98,10 @@ export interface EnrollmentPayment {
 export type EnrollmentPaymentInvoice = Omit<
   EnrollmentPayment,
   "enrollmentPaymentId" | "studentEnrollment" | "paymentDate"
->;
+> & {
+  lastPaymentDate?: string;
+  daysLate?: number;
+};
 
 export interface Attendance {
   attendanceId: number;
@@ -113,21 +116,52 @@ export interface Attendance {
   isPaid: boolean;
 }
 
+// PaginationResult is backend's direct output
+export interface PaginationResult {
+  totalPages: number;
+  totalResults: number;
+  currentPage: number;
+}
+
 export interface SearchClassConfig {
   studentId?: number;
   teacherId?: number;
   courseId?: number;
 }
 
-// PaginationConfig is used internally for various frontend usecase
-export interface PaginationConfig {
-  maxPage: number;
-  page: number;
+export type TeacherPaymentInvoiceItem = Omit<Class, "student"> & {
+  students: Array<TeacherPaymentInvoiceItemStudent>;
+};
+
+export type TeacherPaymentInvoiceItemStudent = Pick<Student, "studentId" | "user"> & {
+  studentLearningTokens: Array<TeacherPaymentInvoiceItemStudentLearningToken>;
+};
+
+export type TeacherPaymentInvoiceItemStudentLearningToken = Omit<
+  StudentLearningToken,
+  "studentEnrollment"
+> & {
+  attendances: Array<TeacherPaymentInvoiceItemAttendance>;
+};
+
+export type TeacherPaymentInvoiceItemAttendance = Omit<
+  Attendance,
+  "class" | "student" | "studentLearningToken"
+> & {
+  grossCourseFeeValue: number;
+  grossTransportFeeValue: number;
+  courseFeeSharingPercentage: number;
+  transportFeeSharingPercentage: number;
+};
+
+export interface TeacherPaymentInvoiceItemSubmit {
+  attendanceId: number;
+  paidCourseFeeValue: number;
+  paidTransportFeeValue: number;
 }
 
-// PaginationResult is backend's direct output
-export interface PaginationResult {
-  totalPages: number;
-  totalResults: number;
-  currentPage: number;
+export interface TeacherPaymentUnpaidListItem {
+  teacherId: number;
+  user: User;
+  totalUnpaidAttendances: number;
 }

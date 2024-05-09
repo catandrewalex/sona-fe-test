@@ -88,7 +88,7 @@ const PageContainer = ({
       const userId = getCookie("SNMC_ID");
 
       if (authToken && userId) {
-        API.GetUserData(parseInt(userId)).then((response) => {
+        API.GetUserProfile().then((response) => {
           const loggedInUser = apiTransformer(response, false) as User;
           setUser(loggedInUser);
         });

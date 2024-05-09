@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { StudentLearningToken, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
 import PageAdminStudentLearningTokenTable from "@sonamusica-fe/components/Pages/Admin/StudentLearningToken/PageAdminStudentLearningTokenTable";
-import PageAdminStudentLearningTokenForm from "@sonamusica-fe/components/Pages/Admin/StudentLearningToken/PageAdminStudentLearningTokenForm";
+import PageAdminStudentLearningTokenModalForm from "@sonamusica-fe/components/Pages/Admin/StudentLearningToken/PageAdminStudentLearningTokenModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import WarningCRUD from "@sonamusica-fe/components/WarningCRUD";
 
@@ -35,10 +35,10 @@ const StudentLearningTokenPage = (): JSX.Element => {
   useEffect(() => {
     if (user) {
       const promises = [
-        API.GetAllStudentLearningToken(),
-        API.GetAllStudentEnrollment(),
-        API.GetAllStudent(),
-        API.GetAllTeacher()
+        ADMIN_API.GetAllStudentLearningToken(),
+        ADMIN_API.GetAllStudentEnrollment(),
+        ADMIN_API.GetAllStudent(),
+        ADMIN_API.GetAllTeacher()
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
@@ -97,7 +97,7 @@ const StudentLearningTokenPage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminStudentLearningTokenForm
+      <PageAdminStudentLearningTokenModalForm
         selectedData={selectedData}
         studentEnrollmentData={studentEnrollmentData}
         data={data}

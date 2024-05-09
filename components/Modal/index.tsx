@@ -1,6 +1,5 @@
 import React from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
-import Fade from "./FadeAnimation";
 import { SxProps } from "@mui/system";
 
 import { IconButton, Modal as MuiModal, Paper, Typography, Box } from "@mui/material";
@@ -67,52 +66,50 @@ const Modal = ({
       style={{ zIndex: zIndex }}
       disableEscapeKeyDown={disableEscape}
     >
-      <Fade in={open}>
-        <Box
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh"
+        }}
+      >
+        {closeIcon && (
+          <IconButton
+            sx={{
+              position: "absolute",
+              right: (theme) => theme.spacing(iconBtnRight),
+              top: (theme) => theme.spacing(iconBtnTop),
+              color: "whitesmoke"
+            }}
+            aria-label="close modal"
+            component="span"
+            onClick={onClose}
+            size="large"
+          >
+            <CancelIcon fontSize="large" />
+          </IconButton>
+        )}
+        <Paper
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh"
+            minWidth: minWidth,
+            maxWidth: maxWidth,
+            maxHeight,
+            position: "relative",
+            py: 2,
+            px: 3,
+            overflowY: "auto",
+            ...sx
           }}
         >
-          {closeIcon && (
-            <IconButton
-              sx={{
-                position: "absolute",
-                right: (theme) => theme.spacing(iconBtnRight),
-                top: (theme) => theme.spacing(iconBtnTop),
-                color: "whitesmoke"
-              }}
-              aria-label="close modal"
-              component="span"
-              onClick={onClose}
-              size="large"
-            >
-              <CancelIcon fontSize="large" />
-            </IconButton>
+          {title && (
+            <Typography component="h4" variant="h4" sx={{ textAlign: "center" }}>
+              {title}
+            </Typography>
           )}
-          <Paper
-            sx={{
-              minWidth: minWidth,
-              maxWidth: maxWidth,
-              maxHeight,
-              position: "relative",
-              py: 2,
-              px: 3,
-              overflowY: "auto",
-              ...sx
-            }}
-          >
-            {title && (
-              <Typography component="h4" variant="h4" sx={{ textAlign: "center" }}>
-                {title}
-              </Typography>
-            )}
-            {children}
-          </Paper>
-        </Box>
-      </Fade>
+          {children}
+        </Paper>
+      </Box>
     </MuiModal>
   );
 };

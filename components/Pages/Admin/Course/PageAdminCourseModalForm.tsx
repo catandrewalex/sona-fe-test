@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from "@mui/material";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
 } from "@sonamusica-fe/components/Form/FormRenderer";
@@ -19,7 +19,7 @@ type PageAdminCourseFormProps = {
   open: boolean;
 };
 
-const PageAdminCourseForm = ({
+const PageAdminCourseModalForm = ({
   data,
   setData,
   selectedData,
@@ -62,6 +62,7 @@ const PageAdminCourseForm = ({
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
+        // TODO: validate to only allow value >= 0
         type: "number",
         endAdornment: <InputAdornment position="end">minute(s)</InputAdornment>
       },
@@ -74,6 +75,7 @@ const PageAdminCourseForm = ({
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
+        // TODO: validate to only allow value >= 0
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
@@ -97,87 +99,85 @@ const PageAdminCourseForm = ({
     instrument: null
   };
 
-  const { formProperties, formRenderer } = selectedData
-    ? useFormRenderer<CourseUpdateFormData>(
-        {
-          testIdContext: "CourseUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultUpdateFields,
-          errorResponseMapping: {
-            defaultDurationMinute: "defaultDurationMinute",
-            defaultFee: "defaultFee"
-          },
-          submitHandler: async ({ defaultDurationMinute, defaultFee }, error) => {
-            if (error.defaultDurationMinute || error.defaultFee) return Promise.reject();
-            const response = await API.UpdateCourse([
-              { courseId: selectedData.courseId, defaultFee, defaultDurationMinute }
-            ]);
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<Course>).results[0];
-              const newData = data.map((val) => {
-                if (val.courseId === responseData.courseId) {
-                  return responseData;
-                }
-                return val;
-              });
-              setData(newData);
-            }
-          }
+  const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
+    useFormRenderer<CourseUpdateFormData>(
+      {
+        testIdContext: "CourseUpsert",
+        cancelButtonProps: {
+          onClick: onClose
         },
-        defaultUpdateFieldValue
-      )
-    : useFormRenderer<CourseInsertFormData>(
-        {
-          testIdContext: "CourseUpsert",
-          cancelButtonProps: {
-            onClick: onClose
-          },
-          fields: defaultInsertFields,
-          errorResponseMapping: {
-            defaultDurationMinute: "defaultDurationMinute",
-            defaultFee: "defaultFee",
-            grade: "gradeId",
-            instrument: "instrumentId"
-          },
-          submitHandler: async (
-            { defaultDurationMinute, defaultFee, grade, instrument },
-            error
-          ) => {
-            if (error.defaultDurationMinute || error.defaultFee || error.grade || error.instrument)
-              return Promise.reject();
-            const response = await API.InsertCourse([
-              {
-                defaultDurationMinute,
-                defaultFee,
-                gradeId: grade?.gradeId || 0,
-                instrumentId: instrument?.instrumentId || 0
+        fields: defaultUpdateFields,
+        errorResponseMapping: {
+          defaultDurationMinute: "defaultDurationMinute",
+          defaultFee: "defaultFee"
+        },
+        submitHandler: async ({ defaultDurationMinute, defaultFee }, error) => {
+          if (error.defaultDurationMinute || error.defaultFee) return Promise.reject();
+          const response = await ADMIN_API.UpdateCourse([
+            { courseId: selectedData?.courseId || 0, defaultFee, defaultDurationMinute }
+          ]);
+          const parsedResponse = apiTransformer(response, true);
+          if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+            return parsedResponse as FailedResponse;
+          } else {
+            const responseData = (parsedResponse as ResponseMany<Course>).results[0];
+            const newData = data.map((val) => {
+              if (val.courseId === responseData.courseId) {
+                return responseData;
               }
-            ]);
-
-            const parsedResponse = apiTransformer(response, true);
-            if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
-              return parsedResponse as FailedResponse;
-            } else {
-              const responseData = (parsedResponse as ResponseMany<Course>).results[0];
-              setData([...data, responseData]);
-            }
+              return val;
+            });
+            setData(newData);
           }
-        },
-        defaultInsertFieldValue
-      );
+        }
+      },
+      defaultUpdateFieldValue
+    );
+
+  const { formRenderer: insertFormRenderer } = useFormRenderer<CourseInsertFormData>(
+    {
+      testIdContext: "CourseUpsert",
+      cancelButtonProps: {
+        onClick: onClose
+      },
+      fields: defaultInsertFields,
+      errorResponseMapping: {
+        defaultDurationMinute: "defaultDurationMinute",
+        defaultFee: "defaultFee",
+        grade: "gradeId",
+        instrument: "instrumentId"
+      },
+      submitHandler: async ({ defaultDurationMinute, defaultFee, grade, instrument }, error) => {
+        if (error.defaultDurationMinute || error.defaultFee || error.grade || error.instrument)
+          return Promise.reject();
+        const response = await ADMIN_API.InsertCourse([
+          {
+            defaultDurationMinute,
+            defaultFee,
+            gradeId: grade?.gradeId || 0,
+            instrumentId: instrument?.instrumentId || 0
+          }
+        ]);
+
+        const parsedResponse = apiTransformer(response, true);
+        if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
+          return parsedResponse as FailedResponse;
+        } else {
+          const responseData = (parsedResponse as ResponseMany<Course>).results[0];
+          setData([...data, responseData]);
+        }
+      }
+    },
+    defaultInsertFieldValue
+  );
 
   useEffect(() => {
     if (selectedData) {
-      formProperties.valueRef.current = {
+      updateFormProperties.valueRef.current = {
         defaultDurationMinute: selectedData.defaultDurationMinute,
         defaultFee: selectedData.defaultFee
       };
-      formProperties.errorRef.current = {} as Record<keyof CourseUpdateFormData, string>;
+      updateFormProperties.errorRef.current = {} as Record<keyof CourseUpdateFormData, string>;
     }
   }, [selectedData]);
 
@@ -186,9 +186,9 @@ const PageAdminCourseForm = ({
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} Course
       </Typography>
-      {formRenderer()}
+      {selectedData ? updateFormRenderer() : insertFormRenderer()}
     </Modal>
   );
 };
 
-export default PageAdminCourseForm;
+export default PageAdminCourseModalForm;

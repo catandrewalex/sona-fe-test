@@ -15,7 +15,7 @@ type EditPaymentFormProps = {
   onClose: () => void;
 };
 
-const EditPaymentForm = ({ data, onSubmit, onClose }: EditPaymentFormProps): JSX.Element => {
+const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(false);
   const onCloseInternal = useCallback(() => {
     setOpen(false);
@@ -37,6 +37,7 @@ const EditPaymentForm = ({ data, onSubmit, onClose }: EditPaymentFormProps): JSX
           label: "Balance Top Up",
           formFieldProps: { lg: 6, md: 6 },
           inputProps: {
+            // TODO: validate to only allow value >= 0
             type: "number",
             required: true
           },
@@ -91,4 +92,4 @@ const EditPaymentForm = ({ data, onSubmit, onClose }: EditPaymentFormProps): JSX
   );
 };
 
-export default EditPaymentForm;
+export default EditPaymentModalForm;

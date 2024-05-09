@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany } from "api";
 import { User } from "@sonamusica-fe/types";
 import PageAdminUserTable from "@sonamusica-fe/components/Pages/Admin/User/PageAdminUserTable";
-import PageAdminUserForm from "@sonamusica-fe/components/Pages/Admin/User/PageAdminUserForm";
+import PageAdminUserModalForm from "@sonamusica-fe/components/Pages/Admin/User/PageAdminUserModalForm";
 
 const UserPage = (): JSX.Element => {
   const [data, setData] = useState<Array<User>>([]);
@@ -27,7 +27,7 @@ const UserPage = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    API.GetAllUser()
+    ADMIN_API.GetAllUser()
       .then((response) => {
         const parsedResponse = apiTransformer(response, false);
         if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
@@ -48,7 +48,7 @@ const UserPage = (): JSX.Element => {
         loading={loading}
         openModal={openForm}
       />
-      <PageAdminUserForm
+      <PageAdminUserModalForm
         data={data}
         setData={setData}
         selectedData={selectedData}

@@ -10,7 +10,7 @@ interface GetUserConfig extends GetRequestConfig {
 
 const GetUserData = (id: number): Promise<FailedResponse | SuccessResponse<User>> => {
   return API.get<User>({
-    url: "/admin/user/" + id
+    url: `${AdminRoutes.USER}/${id}`
   });
 };
 

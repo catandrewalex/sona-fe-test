@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Cancel, Save } from "@mui/icons-material";
 import { TextFieldProps } from "@mui/material";
-import { DatePickerProps } from "@mui/x-date-pickers";
+import { DatePickerProps, DateTimePickerProps } from "@mui/x-date-pickers";
 import Form from "@sonamusica-fe/components/Form";
 import DatePicker from "@sonamusica-fe/components/Form/DatePicker";
 import FormField, { FormFieldTypes } from "@sonamusica-fe/components/Form/FormField";
@@ -19,8 +20,9 @@ import { FailedResponse } from "api";
 import { merge } from "lodash";
 import { Moment } from "moment";
 import React, { useRef, useState } from "react";
+import DateTimePicker from "@sonamusica-fe/components/Form/DateTimePicker";
 
-type FormFieldType = "text" | "select" | "switch" | "custom" | "date";
+type FormFieldType = "text" | "select" | "switch" | "custom" | "date" | "date-time";
 
 interface BaseFormField<T> {
   type: FormFieldType;
@@ -66,12 +68,18 @@ interface FormFieldDate<T> extends BaseFormField<T> {
   dateProps?: Omit<DatePickerProps<Moment>, "label">;
 }
 
+interface FormFieldDateTime<T> extends BaseFormField<T> {
+  type: "date-time";
+  dateProps?: Omit<DateTimePickerProps<Moment>, "label">;
+}
+
 export type FormField<T> =
   | FormFieldText<T>
   | FormFieldSelect<T>
   | FormFieldSwitch<T>
   | FormFieldCustom<T>
-  | FormFieldDate<T>;
+  | FormFieldDate<T>
+  | FormFieldDateTime<T>;
 
 export interface FormConfig<T> {
   fields: Array<FormField<T>>;
@@ -263,6 +271,25 @@ const useFormRenderer = <T extends unknown>(
               return (
                 <FormField key={field.name as string} {...field.formFieldProps}>
                   <DatePicker
+                    valueRef={valueRef}
+                    errorRef={errorRef}
+                    label={field.label}
+                    field={field.name}
+                    disabled={loading}
+                    validations={field.validations}
+                    testIdContext={(config.testIdContext || "") + titleCase(field.name.toString())}
+                    {...field.dateProps}
+                    onChange={(value, context) => {
+                      hasUnsavedChangesRef.current = true;
+                      if (field.dateProps?.onChange) field.dateProps.onChange(value, context);
+                    }}
+                  />
+                </FormField>
+              );
+            case "date-time":
+              return (
+                <FormField key={field.name as string} {...field.formFieldProps}>
+                  <DateTimePicker
                     valueRef={valueRef}
                     errorRef={errorRef}
                     label={field.label}

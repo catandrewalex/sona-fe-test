@@ -3,7 +3,7 @@ import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableAct
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Instrument } from "@sonamusica-fe/types";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import React from "react";
 import { FailedResponse } from "api";
 
@@ -52,7 +52,7 @@ const PageAdminInstrumentTable = ({
                 },
                 () => {
                   setLoading(true);
-                  API.DeleteInstrument([{ instrumentId: id as number }])
+                  ADMIN_API.DeleteInstrument([{ instrumentId: id as number }])
                     .then((response) => {
                       const parsedResponse = apiTransformer(response, true);
                       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype)

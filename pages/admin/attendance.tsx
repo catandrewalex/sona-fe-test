@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { Attendance, StudentLearningToken, Student, Teacher, Class } from "@sonamusica-fe/types";
 import PageAdminAttendanceTable from "@sonamusica-fe/components/Pages/Admin/Attendance/PageAdminAttendanceTable";
-import PageAdminAttendanceForm from "@sonamusica-fe/components/Pages/Admin/Attendance/PageAdminAttendanceForm";
+import PageAdminAttendanceModalForm from "@sonamusica-fe/components/Pages/Admin/Attendance/PageAdminAttendanceModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import WarningCRUD from "@sonamusica-fe/components/WarningCRUD";
 
@@ -38,11 +38,11 @@ const AttendancePage = (): JSX.Element => {
   useEffect(() => {
     if (user) {
       const promises = [
-        API.GetAllAttendance(),
-        API.GetAllStudentLearningToken(),
-        API.GetAllStudent(),
-        API.GetAllTeacher(),
-        API.AdminGetAllClass()
+        ADMIN_API.GetAllAttendance(),
+        ADMIN_API.GetAllStudentLearningToken(),
+        ADMIN_API.GetAllStudent(),
+        ADMIN_API.GetAllTeacher(),
+        ADMIN_API.AdminGetAllClass()
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
@@ -112,7 +112,7 @@ const AttendancePage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminAttendanceForm
+      <PageAdminAttendanceModalForm
         selectedData={selectedData}
         studentLearningTokenData={studentLearningTokenData}
         teacherData={teacherData}

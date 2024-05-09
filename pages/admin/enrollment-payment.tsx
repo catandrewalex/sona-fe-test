@@ -1,11 +1,11 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useEffect, useState } from "react";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import { EnrollmentPayment, StudentEnrollment, Student, Teacher } from "@sonamusica-fe/types";
 import PageAdminEnrollmentPaymentTable from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentTable";
-import PageAdminEnrollmentPaymentForm from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentForm";
+import PageAdminEnrollmentPaymentModalForm from "@sonamusica-fe/components/Pages/Admin/EnrollmentPayment/PageAdminEnrollmentPaymentModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import WarningCRUD from "@sonamusica-fe/components/WarningCRUD";
 
@@ -35,10 +35,10 @@ const EnrollmentPaymentPage = (): JSX.Element => {
   useEffect(() => {
     if (user) {
       const promises = [
-        API.GetAllEnrollmentPayment(),
-        API.GetAllStudentEnrollment(),
-        API.GetAllStudent(),
-        API.GetAllTeacher()
+        ADMIN_API.GetAllEnrollmentPayment(),
+        ADMIN_API.GetAllStudentEnrollment(),
+        ADMIN_API.GetAllStudent(),
+        ADMIN_API.GetAllTeacher()
       ];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
@@ -97,7 +97,7 @@ const EnrollmentPaymentPage = (): JSX.Element => {
         setData={setData}
         setSelectedData={setSelectedData}
       />
-      <PageAdminEnrollmentPaymentForm
+      <PageAdminEnrollmentPaymentModalForm
         selectedData={selectedData}
         studentEnrollmentData={studentEnrollmentData}
         data={data}

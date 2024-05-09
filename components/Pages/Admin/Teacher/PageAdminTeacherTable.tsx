@@ -1,4 +1,4 @@
-import API, { useApiTransformer } from "@sonamusica-fe/api";
+import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import Table from "@sonamusica-fe/components/Table";
 import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
@@ -48,7 +48,7 @@ const PageAdminTeacherTable = ({
                 },
                 () => {
                   setLoading(true);
-                  API.DeleteTeacher([{ teacherId: id as number }])
+                  ADMIN_API.DeleteTeacher([{ teacherId: id as number }])
                     .then((response) => {
                       const parsedResponse = apiTransformer(response, true);
                       if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype)

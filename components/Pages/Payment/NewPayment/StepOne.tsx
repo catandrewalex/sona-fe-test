@@ -16,12 +16,14 @@ import React, { useEffect, useState } from "react";
 
 type NewPaymentStepOneProps = {
   setStudentEnrollment: (data?: StudentEnrollment) => void;
+  setRecalculateInvoice: (value: boolean) => void;
   defaultStudent?: Student;
   defaultClass?: Class;
 };
 
 const NewPaymentStepOne = ({
   setStudentEnrollment,
+  setRecalculateInvoice,
   defaultClass,
   defaultStudent
 }: NewPaymentStepOneProps): JSX.Element => {
@@ -42,7 +44,7 @@ const NewPaymentStepOne = ({
 
   useEffect(() => {
     if (user) {
-      const promises = [API.GetStudentDropdownOptions(), API.GetAllStudentEnrollment()];
+      const promises = [API.GetStudentDropdownOptions(), API.GetStudentEnrollmentDropdownOptions()];
       Promise.allSettled(promises).then((value) => {
         if (value[0].status === "fulfilled") {
           const response = value[0].value as SuccessResponse<Student>;
@@ -84,6 +86,7 @@ const NewPaymentStepOne = ({
     );
     if (filteredStudentEnrollment.length > 0) {
       setStudentEnrollment(filteredStudentEnrollment[0]);
+      setRecalculateInvoice(true);
       setError("");
     } else {
       setError("Student Enrollment not found!");

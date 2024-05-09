@@ -15,7 +15,7 @@ import { Grid, Box } from "@mui/material";
  * @property {React.ReactNode} formSubmit the form submit component that usually show submit button
  * @property {string|undefined} testIdContext the context for data-testid attribute (for testing)
  * @property {boolean} submitPositionTop if true, position the form submit on top of the form, else otherwise
- * @property {function} onSubmit submit handler (listener) that can handle when user submit the from
+ * @property {function} onSubmit submit handler (listener) that can handle when user submit the form
  */
 interface FormProps extends Omit<GridProps, "onSubmit"> {
   disableSubmit?: boolean;
