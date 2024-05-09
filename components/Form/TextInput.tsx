@@ -7,7 +7,9 @@ import {
   ValidationConfig,
   useCheckEmail,
   useCheckMatch,
-  useCheckRequired
+  useCheckRequired,
+  useCheckGTEZeroValue,
+  useCheckGTZeroValue
 } from "@sonamusica-fe/utils/ValidationUtil";
 
 /**
@@ -66,6 +68,8 @@ const TextInput = <T extends unknown>({
   const requiredCheck = useCheckRequired(label);
   const emailCheck = useCheckEmail(label);
   const matchCheck = useCheckMatch(label);
+  const GTEZeroCheck = useCheckGTEZeroValue(label);
+  const GTZeroCheck = useCheckGTZeroValue(label);
 
   const validationHandler = useCallback(
     (value: string) => {
@@ -88,6 +92,12 @@ const TextInput = <T extends unknown>({
                   : (validation.parameters.matcherField as unknown as string)
               );
               break;
+            case "gte-zero":
+              errorMsg = GTEZeroCheck(value);
+              break;
+            case "gt-zero":
+              errorMsg = GTZeroCheck(value);
+              break;
           }
           if (errorMsg) {
             setInternalErrorMsg(errorMsg);
@@ -98,7 +108,7 @@ const TextInput = <T extends unknown>({
       setInternalErrorMsg("");
       return "";
     },
-    [validations]
+    [emailCheck, matchCheck, GTEZeroCheck, GTZeroCheck, requiredCheck, validations, valueRef]
   );
 
   useEffect(() => {
@@ -107,13 +117,13 @@ const TextInput = <T extends unknown>({
 
   useEffect(() => {
     setInternalValue((valueRef.current[field] as unknown as string) || "");
-  }, [valueRef.current[field]]);
+  }, [field, valueRef]);
 
   useEffect(() => {
     if (errorRef.current[field] !== undefined && errorRef.current[field] !== internalErrorMsg) {
       setInternalErrorMsg(errorRef.current[field]);
     }
-  }, [errorRef.current[field]]);
+  }, [errorRef, field, internalErrorMsg]);
 
   return (
     <>

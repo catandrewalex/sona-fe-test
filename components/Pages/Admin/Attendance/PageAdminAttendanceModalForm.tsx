@@ -112,10 +112,10 @@ const PageAdminAttendanceModalForm = ({
       label: "Quota Used",
       formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
-        // TODO: validate to only allow value >= 0
-        type: "number"
+        type: "number",
+        required: true
       },
-      validations: []
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -123,10 +123,10 @@ const PageAdminAttendanceModalForm = ({
       label: "Duration (minute)",
       formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
-        // TODO: validate to only allow value >= 0
-        type: "number"
+        type: "number",
+        required: true
       },
-      validations: []
+      validations: [{ name: "required" }, { name: "gt-zero" }]
     },
     {
       type: "date-time",
