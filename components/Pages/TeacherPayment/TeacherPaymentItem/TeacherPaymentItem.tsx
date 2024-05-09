@@ -97,8 +97,28 @@ const TeacherPaymentItem = React.memo(
               <Typography fontSize={24} component="span" sx={{ mr: 0.5, ml: 0.5 }}>
                 |
               </Typography>
-              {/* TODO: colorize: (0 = green, -1 or 1 = yellow, <-2 or > 2 = red) */}
-              <Typography sx={{ ml: 1 }} component="span">
+              <Typography
+                sx={{
+                  ml: 1,
+                  p: 0.75,
+                  backgroundColor: (theme) =>
+                    data.quota === 0
+                      ? theme.palette.success.main
+                      : data.quota === -1 || data.quota === 1
+                      ? theme.palette.warning.main
+                      : theme.palette.error.main
+                }}
+                component="span"
+                color={(theme) =>
+                  theme.palette.getContrastText(
+                    data.quota === 0
+                      ? theme.palette.success.main
+                      : data.quota === -1 || data.quota === 1
+                      ? theme.palette.warning.main
+                      : theme.palette.error.main
+                  )
+                }
+              >
                 Remaining Quota: {data.quota}
               </Typography>
             </Box>
