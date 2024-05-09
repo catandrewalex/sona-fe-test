@@ -3,7 +3,7 @@ import {
   TeacherPaymentInvoiceItemStudentLearningToken,
   TeacherPaymentInvoiceItemSubmit
 } from "@sonamusica-fe/types";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { convertNumberToCurrencyString } from "@sonamusica-fe/utils/StringUtil";
 import TeacherPaymentItemDetails from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentItem/TeacherPaymentItemDetails";
@@ -27,6 +27,14 @@ const TeacherPaymentItem = React.memo(
       (prev, curr) => prev + curr.paidCourseFeeValue + curr.paidTransportFeeValue,
       0
     );
+
+    const calculateTotalGross = useMemo(() => {
+      let result = 0;
+      for (const attendance of data.attendances) {
+        result += attendance.grossCourseFeeValue + attendance.grossTransportFeeValue;
+      }
+      return result;
+    }, [data]);
 
     const calculateTotalUsedQuotaFromAttendances = useCallback(() => {
       return Object.values(data.attendances).reduce(
@@ -100,32 +108,33 @@ const TeacherPaymentItem = React.memo(
               <Typography
                 sx={{
                   ml: 1,
-                  p: 0.75,
-                  backgroundColor: (theme) =>
-                    data.quota === 0
-                      ? theme.palette.success.main
-                      : data.quota === -1 || data.quota === 1
-                      ? theme.palette.warning.main
-                      : theme.palette.error.main
+                  p: 0.75
                 }}
                 component="span"
                 color={(theme) =>
-                  theme.palette.getContrastText(
-                    data.quota === 0
-                      ? theme.palette.success.main
-                      : data.quota === -1 || data.quota === 1
-                      ? theme.palette.warning.main
-                      : theme.palette.error.main
-                  )
+                  data.quota === 0
+                    ? theme.palette.success.main
+                    : data.quota === -1 || data.quota === 1
+                    ? theme.palette.warning.main
+                    : theme.palette.error.main
                 }
+                fontWeight="bold"
               >
                 Remaining Quota: {data.quota}
               </Typography>
             </Box>
-            <Typography align="center" sx={{ width: "200px" }}>
-              {convertNumberToCurrencyString(calculateTotalFromAttendances)}
-            </Typography>
-            {/* TODO: add SLT's gross value (total course fee & total transport fee) */}
+            <Box>
+              <Typography fontSize="12px" align="right" variant="subtitle1" sx={{ width: "225px" }}>
+                ({convertNumberToCurrencyString(calculateTotalGross)})
+              </Typography>
+              <Typography
+                align="right"
+                sx={{ width: "225px", textDecoration: "underline" }}
+                fontWeight="bold"
+              >
+                {convertNumberToCurrencyString(calculateTotalFromAttendances)}
+              </Typography>
+            </Box>
           </Box>
         </AccordionSummary>
         <TeacherPaymentItemDetails

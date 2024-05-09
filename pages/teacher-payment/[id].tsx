@@ -35,6 +35,7 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
 
   const [rawData, setRawData] = useState<TeacherPaymentInvoiceItem[] | undefined>(undefined);
   const [submitData, setSubmitData] = useState<Record<string, TeacherPaymentInvoiceItemSubmit>>({});
+  const [grossGrandTotal, setGrossGrandTotal] = useState<number>(0);
 
   const apiTransformer = useApiTransformer();
 
@@ -80,6 +81,7 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isReady && query.id && typeof query.id === "string") {
+      let grossGrandTotalTemp = 0;
       startLoading();
       const year = typeof query.year == "string" ? parseInt(query.year) : undefined;
       const month = typeof query.month == "string" ? parseInt(query.month) : undefined;
@@ -100,6 +102,8 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
                   paidTransportFeeValue:
                     attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage
                 };
+                grossGrandTotalTemp +=
+                  attendance.grossTransportFeeValue + attendance.grossCourseFeeValue;
               }
             }
           }
@@ -107,6 +111,7 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
 
         setRawData(tempRawData);
         setSubmitData(tempSubmitData);
+        setGrossGrandTotal(grossGrandTotalTemp);
         finishLoading();
       });
     }
@@ -133,7 +138,10 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
             Back
           </Button>
           <Box>
-            <TeacherPaymentInvoiceContainer totalPaidValue={calculateGrandTotal()}>
+            <TeacherPaymentInvoiceContainer
+              totalPaidValue={calculateGrandTotal()}
+              totalGrossPaidValue={grossGrandTotal}
+            >
               {rawData.map((classData, idx, arr) => (
                 <TeacherPaymentClassContainer
                   key={classData.classId}
