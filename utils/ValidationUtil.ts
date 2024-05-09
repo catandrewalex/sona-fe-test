@@ -147,7 +147,7 @@ export const useCheckPositiveNumberValue = (field: string): ((value: string) => 
       if (isNaN(parseInt(value))) {
         return `${field} is not a valid number!`;
       } else if (parseInt(value) <= 0) {
-        return `${field} must bigger than 0!`;
+        return `${field} must be larger than 0!`;
       }
       return "";
     },
