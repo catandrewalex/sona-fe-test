@@ -133,7 +133,7 @@ export const useCheckNoBelowZeroValue = (field: string): ((value: string) => str
       if (isNaN(parseInt(value))) {
         return `${field} is not a valid number!`;
       } else if (parseInt(value) < 0) {
-        return `${field} must not negative value!`;
+        return `${field} must be greater than or equal to 0!`;
       }
       return "";
     },
@@ -147,7 +147,7 @@ export const useCheckPositiveNumberValue = (field: string): ((value: string) => 
       if (isNaN(parseInt(value))) {
         return `${field} is not a valid number!`;
       } else if (parseInt(value) <= 0) {
-        return `${field} must be larger than 0!`;
+        return `${field} must be greater than 0!`;
       }
       return "";
     },
