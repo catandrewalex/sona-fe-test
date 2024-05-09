@@ -6,11 +6,13 @@ import React, { ReactElement } from "react";
 interface TeacherPaymentInvoiceContainerProps {
   children: ReactElement<TeacherPaymentClassContainerProps>[];
   totalPaidValue: number;
+  totalGrossPaidValue: number;
 }
 
 const TeacherPaymentInvoiceContainer = ({
   children,
-  totalPaidValue
+  totalPaidValue,
+  totalGrossPaidValue
 }: TeacherPaymentInvoiceContainerProps): JSX.Element => {
   return (
     <Box sx={{ my: 2 }}>
@@ -20,8 +22,8 @@ const TeacherPaymentInvoiceContainer = ({
             <>
               <Box sx={{ mb: 1, display: "flex", justifyContent: "space-between", pr: 4 }}>
                 <Typography variant="h6">Items</Typography>
-                <Typography variant="h6" align="center" sx={{ width: "200px" }}>
-                  Sub Total
+                <Typography align="right" variant="h6" sx={{ width: "225px" }}>
+                  Gross / Paid Sub-Total
                 </Typography>
               </Box>
             </>
@@ -37,13 +39,37 @@ const TeacherPaymentInvoiceContainer = ({
             py: 1.5,
             borderTop: "5px solid rgba(0,0,0,0.1)",
             display: "flex",
-            justifyContent: "space-between"
+            alignItems: "center"
           }}
         >
-          <Typography variant="h6">Total</Typography>
-          <Typography sx={{ width: "200px", mr: 3 }} align="center" variant="h6">
-            {convertNumberToCurrencyString(totalPaidValue)}
-          </Typography>
+          <Box
+            ml="0"
+            width="100%"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h6">(Gross) Paid Total</Typography>
+
+            <Box>
+              <Typography
+                sx={{ width: "200px", mr: 3 }}
+                align="right"
+                variant="subtitle1"
+                fontSize="0.9em"
+              >
+                ({convertNumberToCurrencyString(totalGrossPaidValue)})
+              </Typography>
+              <Typography
+                sx={{ width: "200px", mr: 3, textDecoration: "underline" }}
+                fontWeight="bold"
+                align="right"
+                variant="h6"
+              >
+                {convertNumberToCurrencyString(totalPaidValue)}
+              </Typography>
+            </Box>
+          </Box>
         </CardActions>
       </Card>
     </Box>
