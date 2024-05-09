@@ -8,8 +8,8 @@ import {
   useCheckEmail,
   useCheckMatch,
   useCheckRequired,
-  useCheckNoBelowZeroValue,
-  useCheckPositiveNumberValue
+  useCheckGTEZeroValue,
+  useCheckGTZeroValue
 } from "@sonamusica-fe/utils/ValidationUtil";
 
 /**
@@ -68,8 +68,8 @@ const TextInput = <T extends unknown>({
   const requiredCheck = useCheckRequired(label);
   const emailCheck = useCheckEmail(label);
   const matchCheck = useCheckMatch(label);
-  const noBelowZeroCheck = useCheckNoBelowZeroValue(label);
-  const positiveNumberCheck = useCheckPositiveNumberValue(label);
+  const GTEZeroCheck = useCheckGTEZeroValue(label);
+  const GTZeroCheck = useCheckGTZeroValue(label);
 
   const validationHandler = useCallback(
     (value: string) => {
@@ -92,11 +92,11 @@ const TextInput = <T extends unknown>({
                   : (validation.parameters.matcherField as unknown as string)
               );
               break;
-            case "no-below-zero":
-              errorMsg = noBelowZeroCheck(value);
+            case "gte-zero":
+              errorMsg = GTEZeroCheck(value);
               break;
-            case "positive-number":
-              errorMsg = positiveNumberCheck(value);
+            case "gt-zero":
+              errorMsg = GTZeroCheck(value);
               break;
           }
           if (errorMsg) {
@@ -108,15 +108,7 @@ const TextInput = <T extends unknown>({
       setInternalErrorMsg("");
       return "";
     },
-    [
-      emailCheck,
-      matchCheck,
-      noBelowZeroCheck,
-      positiveNumberCheck,
-      requiredCheck,
-      validations,
-      valueRef
-    ]
+    [emailCheck, matchCheck, GTEZeroCheck, GTZeroCheck, requiredCheck, validations, valueRef]
   );
 
   useEffect(() => {

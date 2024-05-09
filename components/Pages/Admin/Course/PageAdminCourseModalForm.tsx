@@ -65,7 +65,7 @@ const PageAdminCourseModalForm = ({
         required: true,
         endAdornment: <InputAdornment position="end">minute(s)</InputAdornment>
       },
-      validations: [{ name: "required" }, { name: "positive-number" }]
+      validations: [{ name: "required" }, { name: "gt-zero" }]
     },
     {
       type: "text",
@@ -77,7 +77,7 @@ const PageAdminCourseModalForm = ({
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
         required: true
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     }
   ];
 

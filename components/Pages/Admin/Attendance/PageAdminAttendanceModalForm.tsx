@@ -115,7 +115,7 @@ const PageAdminAttendanceModalForm = ({
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -126,7 +126,7 @@ const PageAdminAttendanceModalForm = ({
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }, { name: "positive-number" }]
+      validations: [{ name: "required" }, { name: "gt-zero" }]
     },
     {
       type: "date-time",

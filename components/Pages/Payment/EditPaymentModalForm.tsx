@@ -40,7 +40,7 @@ const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps)
             type: "number",
             required: true
           },
-          validations: [{ name: "required" }, { name: "no-below-zero" }]
+          validations: [{ name: "required" }, { name: "gte-zero" }]
         },
         {
           type: "date",

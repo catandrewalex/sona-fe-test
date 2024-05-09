@@ -67,7 +67,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -79,7 +79,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -91,7 +91,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -102,7 +102,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "date",

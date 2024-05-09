@@ -61,7 +61,7 @@ const PageAdminStudentLearningTokenModalForm = ({
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
         required: true
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -73,7 +73,7 @@ const PageAdminStudentLearningTokenModalForm = ({
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
         required: true
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -84,7 +84,7 @@ const PageAdminStudentLearningTokenModalForm = ({
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     }
   ];
 

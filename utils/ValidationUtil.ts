@@ -6,16 +6,10 @@ export type ValidationConfig<T = undefined> =
   | EmailValidationConfig
   | MatchValidationConfig<T>
   | NotEmptyArrayConfig
-  | NoBelowZeroValueConfig
-  | PositiveNumberConfig;
+  | GTEZeroValueConfig
+  | GTZeroConfig;
 
-type ValidationName =
-  | "required"
-  | "email"
-  | "match"
-  | "not-empty-array"
-  | "no-below-zero"
-  | "positive-number";
+type ValidationName = "required" | "email" | "match" | "not-empty-array" | "gte-zero" | "gt-zero";
 
 interface BaseValidationConfig {
   name: ValidationName;
@@ -41,12 +35,12 @@ interface MatchValidationConfig<T> extends BaseValidationConfig {
   };
 }
 
-interface NoBelowZeroValueConfig extends BaseValidationConfig {
-  name: "no-below-zero";
+interface GTEZeroValueConfig extends BaseValidationConfig {
+  name: "gte-zero";
 }
 
-interface PositiveNumberConfig extends BaseValidationConfig {
-  name: "positive-number";
+interface GTZeroConfig extends BaseValidationConfig {
+  name: "gt-zero";
 }
 
 const notNull = (value: unknown): boolean => {
@@ -127,7 +121,7 @@ export const useCheckMatch = (
   );
 };
 
-export const useCheckNoBelowZeroValue = (field: string): ((value: string) => string) => {
+export const useCheckGTEZeroValue = (field: string): ((value: string) => string) => {
   return useCallback(
     (value: string) => {
       if (isNaN(parseInt(value))) {
@@ -141,7 +135,7 @@ export const useCheckNoBelowZeroValue = (field: string): ((value: string) => str
   );
 };
 
-export const useCheckPositiveNumberValue = (field: string): ((value: string) => string) => {
+export const useCheckGTZeroValue = (field: string): ((value: string) => string) => {
   return useCallback(
     (value: string) => {
       if (isNaN(parseInt(value))) {

@@ -64,7 +64,7 @@ const AttendanceModalForm = ({
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }, { name: "no-below-zero" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -75,7 +75,7 @@ const AttendanceModalForm = ({
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }, { name: "positive-number" }]
+      validations: [{ name: "required" }, { name: "gt-zero" }]
     },
     {
       type: "text",
