@@ -61,12 +61,11 @@ const PageAdminCourseModalForm = ({
       label: "Course Duration",
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
-        required: true,
-        // TODO: validate to only allow value >= 0
         type: "number",
+        required: true,
         endAdornment: <InputAdornment position="end">minute(s)</InputAdornment>
       },
-      validations: [{ name: "required" }]
+      validations: [{ name: "required" }, { name: "positive-number" }]
     },
     {
       type: "text",
@@ -74,12 +73,11 @@ const PageAdminCourseModalForm = ({
       label: "Course Fee",
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
-        required: true,
-        // TODO: validate to only allow value >= 0
         type: "number",
-        startAdornment: <InputAdornment position="start">Rp</InputAdornment>
+        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+        required: true
       },
-      validations: [{ name: "required" }]
+      validations: [{ name: "required" }, { name: "no-below-zero" }]
     }
   ];
 
@@ -179,7 +177,7 @@ const PageAdminCourseModalForm = ({
       };
       updateFormProperties.errorRef.current = {} as Record<keyof CourseUpdateFormData, string>;
     }
-  }, [selectedData]);
+  }, [selectedData, updateFormProperties.errorRef, updateFormProperties.valueRef]);
 
   return (
     <Modal open={open} onClose={onClose}>

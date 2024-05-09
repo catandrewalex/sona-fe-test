@@ -57,11 +57,11 @@ const PageAdminStudentLearningTokenModalForm = ({
       label: "Course Fee",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: {
-        // TODO: validate to only allow value >= 0
         type: "number",
-        startAdornment: <InputAdornment position="start">Rp</InputAdornment>
+        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+        required: true
       },
-      validations: []
+      validations: [{ name: "required" }, { name: "no-below-zero" }]
     },
     {
       type: "text",
@@ -69,11 +69,11 @@ const PageAdminStudentLearningTokenModalForm = ({
       label: "Transport Fee",
       formFieldProps: { lg: 6, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
       inputProps: {
-        // TODO: validate to only allow value >= 0
         type: "number",
-        startAdornment: <InputAdornment position="start">Rp</InputAdornment>
+        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+        required: true
       },
-      validations: []
+      validations: [{ name: "required" }, { name: "no-below-zero" }]
     },
     {
       type: "text",
@@ -81,11 +81,10 @@ const PageAdminStudentLearningTokenModalForm = ({
       label: "Quota",
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
-        // TODO: validate to only allow value >= 0
-        required: true,
-        type: "number"
+        type: "number",
+        required: true
       },
-      validations: [{ name: "required" }]
+      validations: [{ name: "required" }, { name: "no-below-zero" }]
     }
   ];
 

@@ -20,7 +20,7 @@ const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps)
   const onCloseInternal = useCallback(() => {
     setOpen(false);
     onClose();
-  }, []);
+  }, [onClose]);
   const apiTransformer = useApiTransformer();
 
   const { formRenderer, formProperties } = useFormRenderer<EditPaymentBalanceFormData>(
@@ -37,11 +37,10 @@ const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps)
           label: "Balance Top Up",
           formFieldProps: { lg: 6, md: 6 },
           inputProps: {
-            // TODO: validate to only allow value >= 0
             type: "number",
             required: true
           },
-          validations: [{ name: "required" }]
+          validations: [{ name: "required" }, { name: "no-below-zero" }]
         },
         {
           type: "date",
@@ -80,7 +79,7 @@ const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps)
       };
       formProperties.errorRef.current = {} as Record<keyof EditPaymentBalanceFormData, string>;
     }
-  }, [data]);
+  }, [data, formProperties.errorRef, formProperties.valueRef]);
 
   return (
     <Modal open={open} onClose={onClose} minWidth="70vh">

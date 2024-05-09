@@ -80,11 +80,11 @@ const PageAdminClassModalForm = ({
       formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
       inputProps: {
         placeholder: "0",
-        // TODO: validate to only allow value >= 0
         type: "number",
-        startAdornment: <InputAdornment position="start">Rp</InputAdornment>
+        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+        required: true
       },
-      validations: []
+      validations: [{ name: "required" }, { name: "no-below-zero" }]
     }
   ];
 
@@ -201,7 +201,7 @@ const PageAdminClassModalForm = ({
       };
       updateFormProperties.errorRef.current = {} as Record<keyof ClassUpdateFormData, string>;
     }
-  }, [selectedData]);
+  }, [selectedData, updateFormProperties.errorRef, updateFormProperties.valueRef]);
 
   return (
     <Modal open={open} onClose={onClose}>

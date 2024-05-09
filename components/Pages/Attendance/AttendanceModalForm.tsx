@@ -14,7 +14,7 @@ import {
 import { getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "../../../api";
 import moment from "moment";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 type AttendanceFormProps = {
   data?: Attendance;
@@ -35,13 +35,16 @@ const AttendanceModalForm = ({
 }: AttendanceFormProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
 
-  const defaultAddFieldValue = {
-    date: moment(),
-    usedStudentTokenQuota: 1,
-    duration: classData.course.defaultDurationMinute,
-    note: "",
-    teacher: classData.teacher ?? null
-  };
+  const defaultAddFieldValue = useMemo(
+    () => ({
+      date: moment(),
+      usedStudentTokenQuota: 1,
+      duration: classData.course.defaultDurationMinute,
+      note: "",
+      teacher: classData.teacher ?? null
+    }),
+    [classData.course.defaultDurationMinute, classData.teacher]
+  );
 
   const formFields: FormFieldType<AddAttendanceFormData>[] = [
     {
@@ -58,11 +61,10 @@ const AttendanceModalForm = ({
       label: "Used Quota",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: {
-        // TODO: validate to only allow value >= 0
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }]
+      validations: [{ name: "required" }, { name: "no-below-zero" }]
     },
     {
       type: "text",
@@ -70,11 +72,10 @@ const AttendanceModalForm = ({
       label: "Duration (minute)",
       formFieldProps: { lg: 6, md: 6 },
       inputProps: {
-        // TODO: validate to only allow value >= 0
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }]
+      validations: [{ name: "required" }, { name: "positive-number" }]
     },
     {
       type: "text",
@@ -187,7 +188,14 @@ const AttendanceModalForm = ({
       addFormProperties.valueRef.current = defaultAddFieldValue;
       addFormProperties.errorRef.current = {} as Record<keyof EditAttendanceFormData, string>;
     }
-  }, [data]);
+  }, [
+    addFormProperties.errorRef,
+    addFormProperties.valueRef,
+    data,
+    defaultAddFieldValue,
+    updateFormProperties.errorRef,
+    updateFormProperties.valueRef
+  ]);
 
   return (
     <Modal open={open} onClose={onClose} minWidth="70vw">

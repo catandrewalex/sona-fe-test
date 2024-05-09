@@ -5,9 +5,17 @@ export type ValidationConfig<T = undefined> =
   | RequiredValidationConfig
   | EmailValidationConfig
   | MatchValidationConfig<T>
-  | NotEmptyArrayConfig;
+  | NotEmptyArrayConfig
+  | NoBelowZeroValueConfig
+  | PositiveNumberConfig;
 
-type ValidationName = "required" | "email" | "match" | "not-empty-array";
+type ValidationName =
+  | "required"
+  | "email"
+  | "match"
+  | "not-empty-array"
+  | "no-below-zero"
+  | "positive-number";
 
 interface BaseValidationConfig {
   name: ValidationName;
@@ -33,6 +41,14 @@ interface MatchValidationConfig<T> extends BaseValidationConfig {
   };
 }
 
+interface NoBelowZeroValueConfig extends BaseValidationConfig {
+  name: "no-below-zero";
+}
+
+interface PositiveNumberConfig extends BaseValidationConfig {
+  name: "positive-number";
+}
+
 const notNull = (value: unknown): boolean => {
   return value !== null;
 };
@@ -50,48 +66,91 @@ const validEmail = (value: string): boolean => {
 };
 
 export const useCheckNotNull = (field: string): ((value: unknown) => string) => {
-  return useCallback((value: unknown) => {
-    if (!notNull(value)) {
-      return `${field} is required!`;
-    }
-    return "";
-  }, []);
+  return useCallback(
+    (value: unknown) => {
+      if (!notNull(value)) {
+        return `${field} is required!`;
+      }
+      return "";
+    },
+    [field]
+  );
 };
 
 export const useCheckRequired = (field: string): ((value: string) => string) => {
-  return useCallback((value: string) => {
-    if (!required(value)) {
-      return `${field} is required!`;
-    }
-    return "";
-  }, []);
+  return useCallback(
+    (value: string) => {
+      if (!required(value)) {
+        return `${field} is required!`;
+      }
+      return "";
+    },
+    [field]
+  );
 };
 
 export const useNotEmptyArray = (field: string): ((value: Array<unknown>) => string) => {
-  return useCallback((value: Array<unknown>) => {
-    if (!notEmptyArray(value)) {
-      return `${field} is required!`;
-    }
-    return "";
-  }, []);
+  return useCallback(
+    (value: Array<unknown>) => {
+      if (!notEmptyArray(value)) {
+        return `${field} is required!`;
+      }
+      return "";
+    },
+    [field]
+  );
 };
 
 export const useCheckEmail = (field: string): ((value: string) => string) => {
-  return useCallback((value: string) => {
-    if (!validEmail(value)) {
-      return `${field} is not valid!`;
-    }
-    return "";
-  }, []);
+  return useCallback(
+    (value: string) => {
+      if (!validEmail(value)) {
+        return `${field} is not valid!`;
+      }
+      return "";
+    },
+    [field]
+  );
 };
 
 export const useCheckMatch = (
   field: string
 ): ((value: string, matcher: string, matcherField: string) => string) => {
-  return useCallback((value: string, matcher: string, matcherField: string) => {
-    if (value !== matcher) {
-      return `${field} and ${matcherField} do not match!`;
-    }
-    return "";
-  }, []);
+  return useCallback(
+    (value: string, matcher: string, matcherField: string) => {
+      if (value !== matcher) {
+        return `${field} and ${matcherField} do not match!`;
+      }
+      return "";
+    },
+    [field]
+  );
+};
+
+export const useCheckNoBelowZeroValue = (field: string): ((value: string) => string) => {
+  return useCallback(
+    (value: string) => {
+      if (isNaN(parseInt(value))) {
+        return `${field} is not a valid number!`;
+      } else if (parseInt(value) < 0) {
+        return `${field} must not negative value!`;
+      }
+      return "";
+    },
+    [field]
+  );
+};
+
+export const useCheckPositiveNumberValue = (field: string): ((value: string) => string) => {
+  return useCallback(
+    (value: string) => {
+      if (isNaN(parseInt(value))) {
+        return `${field} is not a valid number!`;
+      } else if (parseInt(value) <= 0) {
+        return `${field} must bigger than 0!`;
+      }
+      return "";
+    },
+    [field]
+  );
 };
