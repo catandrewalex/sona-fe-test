@@ -60,6 +60,7 @@ export interface Class {
   students: Student[];
   course: Course;
   transportFee: number;
+  teacherSpecialFee?: number;
   isDeactivated: boolean;
 }
 
@@ -82,7 +83,16 @@ export interface StudentLearningToken {
   quota: number;
   courseFeeValue: number;
   transportFeeValue: number;
+  createdAt: string;
   lastUpdatedAt: string;
+}
+
+// StudentLearningTokenDisplay is a simplified version of StudentLearningToken, where only a subset of its information required, thus omitting the "studentEnrollment".
+export type StudentLearningTokenDisplay = Omit<StudentLearningToken, "studentEnrollment">;
+
+export interface StudentWithStudentLearningTokensDisplay {
+  studentId: number;
+  studentLearningTokens: StudentLearningTokenDisplay[];
 }
 
 export interface EnrollmentPayment {

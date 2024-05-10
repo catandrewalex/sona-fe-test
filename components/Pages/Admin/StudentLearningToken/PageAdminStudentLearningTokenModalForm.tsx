@@ -84,7 +84,7 @@ const PageAdminStudentLearningTokenModalForm = ({
         type: "number",
         required: true
       },
-      validations: [{ name: "required" }, { name: "gte-zero" }]
+      validations: [{ name: "required" }]
     }
   ];
 
@@ -93,7 +93,7 @@ const PageAdminStudentLearningTokenModalForm = ({
 
   const defaultFieldValue: Omit<
     StudentLearningTokenInsertFormData,
-    "studentEnrollment" | "lastUpdatedAt"
+    "studentEnrollment" | "lastUpdatedAt" | "createdAt"
   > = {
     quota: 0,
     courseFeeValue: 0,
@@ -195,7 +195,7 @@ const PageAdminStudentLearningTokenModalForm = ({
       <Typography align="center" variant="h4" sx={{ mb: 2 }}>
         {selectedData ? "Update" : "Add"} Student Learning Token
       </Typography>
-      {selectedData ? updateFormRenderer : insertFormRenderer()}
+      {selectedData ? updateFormRenderer() : insertFormRenderer()}
     </Modal>
   );
 };

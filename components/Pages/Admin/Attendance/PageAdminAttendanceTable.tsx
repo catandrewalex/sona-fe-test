@@ -68,8 +68,8 @@ const PageAdminAttendanceTable = ({
                 {
                   title: "Delete Attendance",
                   content: `Are you sure to delete ${getFullNameFromStudent(
-                    row.studentEnrollment.student
-                  )} attendance on ${getCourseName(row.studentEnrollment.class.course)}?`
+                    row.student
+                  )} attendance on ${getCourseName(row.class.course)}?`
                 },
                 () => {
                   setLoading(true);
@@ -127,6 +127,7 @@ const PageAdminAttendanceTable = ({
             headerClassName: "header-break",
             valueGetter: (params) => params.row.duration
           },
+          // TODO: fix sorting based on date, instead of text
           {
             field: "date",
             headerName: "Date",

@@ -1,13 +1,23 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Tab, TableContainer } from "@mui/material";
+import { Box, Tab, TableContainer, Typography } from "@mui/material";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
 import AttendanceDetailTableView from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTableView";
 import Pagination from "@sonamusica-fe/components/Pagination";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { Attendance, Student } from "@sonamusica-fe/types";
-import { getFullNameFromStudent } from "@sonamusica-fe/utils/StringUtil";
+import {
+  Attendance,
+  Student,
+  StudentLearningTokenDisplay,
+  StudentWithStudentLearningTokensDisplay
+} from "@sonamusica-fe/types";
+import {
+  convertNumberToCurrencyString,
+  getFullNameFromStudent
+} from "@sonamusica-fe/utils/StringUtil";
 import React, { useCallback, useEffect, useState } from "react";
 import useAttendanceFetch from "../useAttendanceFetch";
+import useStudentLearningTokenDisplayFetch from "@sonamusica-fe/components/Pages/Attendance/useStudentLearningTokenDisplayFetch";
+import moment from "moment";
 
 type AttendanceDetailTabContainerProps = {
   studentsData: Student[];
@@ -40,22 +50,37 @@ const AttendanceDetailTabContainer = ({
   );
 
   const {
+    data: studentLearningTokenData,
+    error: errorStudentLearningToken,
+    refetch: refetchStudentLearningToken
+  } = useStudentLearningTokenDisplayFetch(classId);
+
+  const {
     data: attendanceData,
     paginationResult,
-    error,
+    error: errorAttendance,
     isLoading: loading,
-    refetch
+    refetch: refetchAttendance
   } = useAttendanceFetch(classId, currentStudentId, RESULT_PER_PAGE);
 
   useEffect(() => {
-    if (error) {
-      showSnackbar(error, "error");
+    if (errorAttendance) {
+      showSnackbar(errorAttendance, "error");
     }
-  }, [error, showSnackbar]);
+  }, [errorAttendance, showSnackbar]);
 
   useEffect(() => {
+    if (errorStudentLearningToken) {
+      showSnackbar(errorStudentLearningToken, "error");
+    }
+  }, [errorStudentLearningToken, showSnackbar]);
+
+  // everytime an attendance is edited/submitted, we must update the (1) attendance table, (2) displayed student's SLT remaining quota.
+  //   Thus, we subscribe to "forceRenderCounter"
+  useEffect(() => {
     if (forceRenderCounter > 0) {
-      refetch(currentStudentId, paginationResult.currentPage);
+      refetchAttendance(currentStudentId, paginationResult.currentPage);
+      refetchStudentLearningToken();
     }
   }, [forceRenderCounter]);
 
@@ -63,21 +88,30 @@ const AttendanceDetailTabContainer = ({
     (_e, newValue) => {
       const newStudentId = parseInt(newValue);
       setCurrentStudentId(newStudentId);
-      refetch(currentStudentId, paginationResult.currentPage);
+      refetchAttendance(currentStudentId, paginationResult.currentPage);
     },
     [currentStudentId, paginationResult.currentPage]
   );
 
   const handlePageChange = useCallback(
     (_event: React.ChangeEvent<unknown>, page: number) => {
-      refetch(currentStudentId, page);
+      refetchAttendance(currentStudentId, page);
     },
     [currentStudentId]
   );
 
   const onDelete = useCallback(() => {
-    refetch(currentStudentId, paginationResult.currentPage);
+    refetchAttendance(currentStudentId, paginationResult.currentPage);
+    refetchStudentLearningToken();
   }, [currentStudentId, paginationResult.currentPage]);
+
+  const studentIdToSLTDisplay: Record<number, StudentLearningTokenDisplay[]> = {};
+  if (studentLearningTokenData) {
+    studentLearningTokenData.forEach((studentWithSLTsDisplay) => {
+      studentIdToSLTDisplay[studentWithSLTsDisplay.studentId] =
+        studentWithSLTsDisplay.studentLearningTokens;
+    });
+  }
 
   return (
     <Box mt={1}>
@@ -95,12 +129,45 @@ const AttendanceDetailTabContainer = ({
         </Box>
         {studentsData.map((student) => (
           <TabPanel key={student.studentId} value={student.studentId + ""}>
-            <TableContainer sx={{ height: "calc(100vh - 336px)" }}>
+            {studentIdToSLTDisplay[student.studentId] &&
+              studentIdToSLTDisplay[student.studentId].map((data) => (
+                <Box key={data.studentLearningTokenId}>
+                  <Typography
+                    sx={{ mr: 1 }}
+                    component="span"
+                    color={(theme) =>
+                      data.quota === 0
+                        ? theme.palette.success.main
+                        : data.quota === -1 || data.quota === 1
+                        ? theme.palette.warning.main
+                        : theme.palette.error.main
+                    }
+                    fontWeight="bold"
+                  >
+                    Remaining Quota: {data.quota}
+                  </Typography>
+                  <Typography fontSize={16} component="span" sx={{ mr: 0.5, ml: 0.5 }}>
+                    |
+                  </Typography>
+                  <Typography component="span" sx={{ mx: 1 }}>
+                    <small>Active: {moment(data.createdAt).format("DD MMMM YYYY")}</small>
+                  </Typography>
+                  <Typography fontSize={16} component="span" sx={{ mr: 0.5, ml: 0.5 }}>
+                    |
+                  </Typography>
+                  <Typography component="span" sx={{ ml: 1 }}>
+                    <small>
+                      ({convertNumberToCurrencyString(data.courseFeeValue)} (Course) +{" "}
+                      {convertNumberToCurrencyString(data.transportFeeValue)} (Transport))
+                    </small>
+                  </Typography>
+                </Box>
+              ))}
+
+            <TableContainer sx={{ mt: 2, height: "calc(100vh - 376px)" }}>
               {loading ? (
                 <LoaderSimple />
               ) : (
-                // TODO(FerdiantJoshua): in each student tab, show latest SLT quota & all non-latest non-zero SLT quota
-                // TODO(FerdiantJoshua): add class default price (default course fee, default transport fee)
                 <AttendanceDetailTableView
                   data={attendanceData}
                   teacherId={teacherId}

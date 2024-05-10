@@ -1,15 +1,15 @@
 import { StudentLearningToken, StudentEnrollment } from "@sonamusica-fe/types";
 
-export type StudentLearningTokenInsertFormData = Omit<
+export type StudentLearningTokenInsertFormData = Pick<
   StudentLearningToken,
-  "studentLearningTokenId" | "studentEnrollment" | "lastUpdatedAt"
+  "quota" | "courseFeeValue" | "transportFeeValue"
 > & {
   studentEnrollment: StudentEnrollment | null;
 };
 
-export type StudentLearningTokenUpdateFormData = Omit<
+export type StudentLearningTokenUpdateFormData = Pick<
   StudentLearningToken,
-  "studentEnrollment" | "studentLearningTokenId" | "lastUpdatedAt"
+  "quota" | "courseFeeValue" | "transportFeeValue"
 >;
 
 export type StudentLearningTokenInsertFormRequest = Omit<
