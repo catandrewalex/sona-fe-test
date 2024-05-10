@@ -20,6 +20,7 @@ import studentModule from "./student";
 import courseModule from "./course";
 import studentEnrollmentModule from "./student-enrollment";
 import classModule from "./class";
+import studentLearningTokenModule from "./student-learning-token";
 import attendanceModule from "./attendance";
 import teacherPaymentModule from "./teacher-payment";
 
@@ -32,6 +33,7 @@ export default {
   ...courseModule,
   ...studentEnrollmentModule,
   ...classModule,
+  ...studentLearningTokenModule,
   ...attendanceModule,
   ...teacherPaymentModule
 };

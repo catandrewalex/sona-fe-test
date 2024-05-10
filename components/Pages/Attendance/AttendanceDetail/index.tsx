@@ -7,8 +7,8 @@ import AttendanceModalForm from "@sonamusica-fe/components/Pages/Attendance/Atte
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { Attendance, Class, Teacher } from "@sonamusica-fe/types";
 import {
+  convertNumberToCurrencyString,
   getCourseName,
-  getFullNameFromStudent,
   getFullNameFromTeacher
 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
@@ -58,11 +58,28 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
     });
   }, [setTeacherOptions]);
 
-  const onSubmit = useCallback(() => forceRender(), [forceRender]);
+  const onAddOrEditSubmit = useCallback(() => forceRender(), [forceRender]);
 
   useEffect(fetchTeacherOptions, [setTeacherOptions]);
 
   const preSelectedStudentId = typeof query.studentId == "string" ? parseInt(query.studentId) : 0;
+
+  const courseDisplayString = `${getCourseName(classData.course)} (${
+    classData.course.defaultDurationMinute
+  } min)`;
+
+  const courseFeeDisplayString = convertNumberToCurrencyString(classData.course.defaultFee);
+  const transportFeeDisplayString = convertNumberToCurrencyString(classData.transportFee);
+  const teacherSpecialFeeDisplayString = convertNumberToCurrencyString(
+    classData.teacherSpecialFee ?? 0
+  );
+
+  let feesDisplayString = "";
+  if (classData.teacherSpecialFee) {
+    feesDisplayString = `${teacherSpecialFeeDisplayString} (Special Fee) + ${transportFeeDisplayString} (Transport)`;
+  } else {
+    feesDisplayString = `${courseFeeDisplayString} (Course) + ${transportFeeDisplayString} (Transport)`;
+  }
 
   return (
     <Box mt={1}>
@@ -78,12 +95,9 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
               }
             }}
             data={[
-              { title: "Course", value: getCourseName(classData.course) },
-              { title: "Teacher", value: getFullNameFromTeacher(classData.teacher) },
-              {
-                title: "Student(s)",
-                value: classData.students.map(getFullNameFromStudent).join(", ")
-              }
+              { title: "Course", value: courseDisplayString },
+              { title: "Fees", value: feesDisplayString },
+              { title: "Teacher", value: getFullNameFromTeacher(classData.teacher) }
             ]}
             CellValueComponent={Typography}
             cellValueComponentProps={{ variant: "h5", fontSize: 16 }}
@@ -118,7 +132,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
         teacherOptions={teacherOptions}
         onClose={closeForm}
         open={open}
-        onSubmit={onSubmit}
+        onSubmit={onAddOrEditSubmit}
       ></AttendanceModalForm>
     </Box>
   );

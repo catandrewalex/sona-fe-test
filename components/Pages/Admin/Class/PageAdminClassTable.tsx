@@ -99,6 +99,15 @@ const PageAdminClassTable = ({
               )
             },
             {
+              field: "teacherSpecialFee",
+              headerName: "Teacher Special Fee",
+              width: 140,
+              align: "center",
+              headerAlign: "center",
+              valueGetter: (params) => params.row.teacherSpecialFee ?? 0,
+              valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
+            },
+            {
               field: "defaultFee",
               headerName: "Fee",
               width: 140,
@@ -129,7 +138,7 @@ const PageAdminClassTable = ({
             {
               type: "text-input",
               field: "teacher",
-              md: 6,
+              md: 4,
               lg: 4,
               filterHandler: (data, value) => searchFullNameByValue(value, data.teacher?.user)
             },
@@ -137,7 +146,7 @@ const PageAdminClassTable = ({
               type: "text-input",
               field: "instrument-grade",
               columnLabel: "Course",
-              md: 6,
+              md: 4,
               lg: 4,
               filterHandler: (data, value) => searchCourseNameByValue(value, data.course)
             },
@@ -146,7 +155,7 @@ const PageAdminClassTable = ({
               data: studentData,
               field: "students",
               getOptionLabel: (option) => getFullNameFromStudent(option),
-              md: 6,
+              md: 4,
               lg: 4,
               filterHandler: (data, value) => {
                 for (const val of value) {
@@ -160,12 +169,23 @@ const PageAdminClassTable = ({
             },
             {
               type: "text-input",
+              field: "teacherSpecialFee",
+              columnLabel: "Teacher Special Fee",
+              helperText: "Equality signs can be used (<=700000, >100000, 375000, etc.)",
+              md: 4,
+              lg: 4,
+              filterHandler: (data, value) =>
+                advancedNumberFilter(data.teacherSpecialFee, value.trim())
+            },
+            {
+              type: "text-input",
               field: "defaultFee",
               columnLabel: "Fee",
               helperText: "Equality signs can be used (<=700000, >100000, 375000, etc.)",
               md: 4,
               lg: 4,
-              filterHandler: (data, value) => advancedNumberFilter(data.defaultFee, value.trim())
+              filterHandler: (data, value) =>
+                advancedNumberFilter(data.course.defaultFee, value.trim())
             },
             {
               type: "text-input",
@@ -175,7 +195,7 @@ const PageAdminClassTable = ({
               md: 4,
               lg: 4,
               filterHandler: (data, value) =>
-                advancedNumberFilter(data.defaultDurationMinute, value.trim())
+                advancedNumberFilter(data.course.defaultDurationMinute, value.trim())
             }
           ]}
         />

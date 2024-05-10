@@ -27,7 +27,7 @@ const AddAttendance = (
   data: AddAttendanceFormRequest
 ): Promise<FailedResponse | SuccessResponse<Attendance>> => {
   return API.post<Attendance>({
-    url: `${Routes.CLASS}/${classId}/attendance/add`,
+    url: `${Routes.CLASS}/${classId}/attendances/add`,
     config: { data }
   });
 };
