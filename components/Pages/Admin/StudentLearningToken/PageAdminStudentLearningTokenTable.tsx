@@ -133,9 +133,17 @@ const PageAdminStudentLearningTokenTable = ({
             valueGetter: (params) =>
               getFullNameFromTeacher(params.row.studentEnrollment.class.teacher)
           },
+          // TODO: fix sorting based on date, instead of text
+          {
+            field: "createdAt",
+            headerName: "Created At",
+            width: 200,
+            valueGetter: (params) => moment(params.row.createdAt).format("DD MMMM YYYY")
+          },
+          // TODO: fix sorting based on date, instead of text
           {
             field: "lastUpdatedAt",
-            headerName: "Last Update",
+            headerName: "Last Updated At",
             width: 200,
             valueGetter: (params) => moment(params.row.lastUpdatedAt).format("DD MMMM YYYY")
           }
@@ -146,8 +154,8 @@ const PageAdminStudentLearningTokenTable = ({
             data: studentData,
             field: "students",
             getOptionLabel: (option) => getFullNameFromStudent(option),
-            md: 6,
-            lg: 6,
+            md: 4,
+            lg: 4,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.student.studentId === val.studentId;
@@ -161,8 +169,8 @@ const PageAdminStudentLearningTokenTable = ({
             data: teacherData,
             field: "teachers",
             getOptionLabel: (option) => getFullNameFromTeacher(option),
-            md: 6,
-            lg: 6,
+            md: 4,
+            lg: 4,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.class.teacher.teacherId === val.teacherId;
@@ -175,7 +183,7 @@ const PageAdminStudentLearningTokenTable = ({
             type: "text-input",
             field: "instrument-grade",
             columnLabel: "Course",
-            md: 6,
+            md: 4,
             lg: 4,
             filterHandler: (data, value) =>
               searchCourseNameByValue(value, data.studentEnrollment.class.course)
