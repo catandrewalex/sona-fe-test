@@ -19,7 +19,7 @@ const checkIfQueryResultAvailable = (query?: ParsedUrlQuery) => {
   );
 };
 
-const TeacherPaymentPage = () => {
+const EditTeacherPaymentPage = (): JSX.Element => {
   const [data, setData] = useState<TeacherPaymentUnpaidListItem[]>();
 
   const { query, isReady } = useRouter();
@@ -52,9 +52,9 @@ const TeacherPaymentPage = () => {
   }, [query, data]);
 
   return (
-    <PageContainer navTitle="Teacher Payment">
+    <PageContainer navTitle="Edit Teacher Payment">
       {data && isReady && checkIfQueryResultAvailable(query) ? (
-        <SearchResultTeacherPayment data={data} />
+        <SearchResultTeacherPayment isEdit data={data} />
       ) : (
         <SearchTeacherPayment onSearchComplete={onSearchComplete} />
       )}
@@ -62,4 +62,4 @@ const TeacherPaymentPage = () => {
   );
 };
 
-export default TeacherPaymentPage;
+export default EditTeacherPaymentPage;

@@ -1,4 +1,4 @@
-import { Box, Accordion, AccordionSummary, Typography } from "@mui/material";
+import { Accordion, AccordionSummary, Box, Typography } from "@mui/material";
 import {
   TeacherPaymentInvoiceItemStudentLearningToken,
   TeacherPaymentInvoiceItemSubmit
@@ -10,15 +10,22 @@ import TeacherPaymentItemDetails from "@sonamusica-fe/components/Pages/TeacherPa
 
 interface TeacherPaymentItemProps {
   data: TeacherPaymentInvoiceItemStudentLearningToken;
+  isEdit?: boolean;
   handleSubmitDataChange: (
     attendanceId: number,
     paidCourseFeeValue: number,
     paidTransportFeeValue: number
   ) => void;
+  handleDeleteData: (attendanceId: number, value: boolean) => void;
 }
 
 const TeacherPaymentItem = React.memo(
-  ({ data, handleSubmitDataChange }: TeacherPaymentItemProps): JSX.Element => {
+  ({
+    isEdit,
+    data,
+    handleSubmitDataChange,
+    handleDeleteData
+  }: TeacherPaymentItemProps): JSX.Element => {
     const [internalSubmitData, setInternalSubmitData] = useState<
       Record<string, TeacherPaymentInvoiceItemSubmit>
     >({});
@@ -139,7 +146,9 @@ const TeacherPaymentItem = React.memo(
         </AccordionSummary>
         <TeacherPaymentItemDetails
           data={data.attendances}
+          isEdit={isEdit}
           handleSubmitDataChange={internalHandleSubmitDataChange}
+          handleDeleteData={handleDeleteData}
         />
       </Accordion>
     );

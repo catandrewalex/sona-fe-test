@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { TeacherPaymentInvoiceItemAttendance } from "@sonamusica-fe/types";
@@ -9,26 +9,41 @@ import {
 } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
 import React, { useCallback } from "react";
+import StandardSwitch from "@sonamusica-fe/components/Form/StandardSwitch";
 
 type TeacherPaymentInvoiceItemAttendanceEditable = TeacherPaymentInvoiceItemAttendance & {
   paidCourseFeeValue?: number;
   courseFeeSharingPercentage?: number;
   paidTransportFeeValue?: number;
   transportFeeSharingPercentage?: number;
+  isDeleted?: boolean;
 };
 
 export interface TeacherPaymentItemDetailsProps {
   data: TeacherPaymentInvoiceItemAttendanceEditable[];
+  isEdit?: boolean;
   handleSubmitDataChange: (
     attendanceId: number,
     paidCourseFeeValue: number,
     paidTransportFeeValue: number
   ) => void;
+  handleDeleteData: (attendanceId: number, value: boolean) => void;
 }
+
+interface MarkIsDeletedSwitchProps {
+  onChange: (value: boolean) => void;
+}
+
+// TODO: change row color to grey but without rendering all child
+const MarkIsDeletedSwitch = React.memo(({ onChange }: MarkIsDeletedSwitchProps) => {
+  return <StandardSwitch onChange={(_event, value) => onChange(value)} />;
+});
 
 const TeacherPaymentItemDetails = ({
   data,
-  handleSubmitDataChange
+  isEdit,
+  handleSubmitDataChange,
+  handleDeleteData
 }: TeacherPaymentItemDetailsProps): JSX.Element => {
   const drawerOpen = useApp((state) => state.drawerOpen);
   const { showSnackbar } = useSnack();
@@ -51,165 +66,193 @@ const TeacherPaymentItemDetails = ({
     );
   }, []);
 
+  let columns: GridColDef[] = [
+    {
+      field: "date",
+      valueGetter(params) {
+        return moment(params.value).unix();
+      },
+      width: 125,
+      headerAlign: "center",
+      align: "center",
+      headerName: "Date",
+      disableColumnMenu: true,
+      sortable: false,
+      valueFormatter(params) {
+        return moment.unix(params.value).format("DD/MM/YYYY HH:mm");
+      }
+    },
+    {
+      field: "usedStudentTokenQuotaAndDuration",
+      type: "number",
+      headerName: "Quota Used (Duration)",
+      width: 100,
+      headerAlign: "center",
+      align: "center",
+      sortable: false,
+      disableColumnMenu: true,
+      headerClassName: "header-break",
+      valueGetter(params) {
+        return `${params.row.usedStudentTokenQuota} (${params.row.duration} min)`;
+      }
+    },
+    {
+      field: "note",
+      headerName: "Notes",
+      flex: 1,
+      headerAlign: "center",
+      align: "center",
+      sortable: false,
+      disableColumnMenu: true,
+      headerClassName: "header-break"
+    },
+    {
+      field: "grossCourseFeeValue",
+      type: "number",
+      headerName: "Gross Course Fee",
+      width: 110,
+      headerAlign: "center",
+      align: "center",
+      sortable: false,
+      disableColumnMenu: true,
+      headerClassName: "header-break",
+      valueFormatter(params) {
+        return convertNumberToCurrencyString(params.value);
+      }
+    },
+    {
+      field: "paidCourseFeeValue",
+      type: "number",
+      headerName: "Paid Course Fee",
+      width: 110,
+      headerAlign: "center",
+      align: "center",
+      sortable: false,
+      disableColumnMenu: true,
+      headerClassName: "header-break",
+      valueGetter(params) {
+        if (params.row.paidCourseFeeValue === undefined)
+          return params.row.grossCourseFeeValue * params.row.courseFeeSharingPercentage;
+        return params.value;
+      },
+      valueFormatter(params) {
+        return convertNumberToCurrencyString(params.value);
+      },
+      renderCell: renderEditableCell,
+      editable: true
+    },
+    {
+      field: "courseFeeSharingPercentage",
+      type: "number",
+      headerName: "(%) Course Fee",
+      width: 100,
+      headerAlign: "center",
+      align: "center",
+      sortable: false,
+      disableColumnMenu: true,
+      headerClassName: "header-break",
+      valueGetter(params) {
+        if (params.row.courseFeeSharingPercentage === undefined)
+          return params.row.courseFeeSharingPercentage * 100;
+        return params.value * 100;
+      },
+      valueFormatter(params) {
+        return convertNumberToPercentage(params.value.toFixed(2), true);
+      },
+      renderCell: renderEditableCell,
+      editable: true
+    },
+
+    {
+      field: "grossTransportFeeValue",
+      type: "number",
+      headerName: "Gross Transport Fee",
+      width: 110,
+      headerAlign: "center",
+      align: "center",
+      sortable: false,
+      disableColumnMenu: true,
+      headerClassName: "header-break",
+      valueFormatter(params) {
+        return convertNumberToCurrencyString(params.value);
+      }
+    },
+    {
+      field: "paidTransportFeeValue",
+      type: "number",
+      headerName: "Paid Transport Fee",
+      width: 110,
+      headerAlign: "center",
+      align: "center",
+      sortable: false,
+      disableColumnMenu: true,
+      headerClassName: "header-break",
+      valueGetter(params) {
+        if (params.row.paidTransportFeeValue === undefined)
+          return params.row.grossTransportFeeValue * params.row.transportFeeSharingPercentage;
+        return params.value;
+      },
+      valueFormatter(params) {
+        return convertNumberToCurrencyString(params.value);
+      },
+      renderCell: renderEditableCell,
+      editable: true
+    },
+    {
+      field: "transportFeeSharingPercentage",
+      type: "number",
+      headerName: "(%) Transport Fee",
+      width: 110,
+      headerAlign: "center",
+      align: "center",
+      sortable: false,
+      disableColumnMenu: true,
+      headerClassName: "header-break",
+      valueGetter(params) {
+        if (params.row.transportFeeSharingPercentage === undefined)
+          return params.row.transportFeeSharingPercentage * 100;
+        return params.value * 100;
+      },
+      valueFormatter(params) {
+        return convertNumberToPercentage(params.value.toFixed(2), true);
+      },
+      renderCell: renderEditableCell,
+      editable: true
+    }
+  ];
+
+  if (isEdit) {
+    columns = (
+      [
+        {
+          field: "actions",
+          type: "actions",
+          headerName: "Is Deleted?",
+          headerAlign: "center",
+          headerClassName: "header-break",
+          width: 80,
+          align: "center" as const,
+          valueGetter(params) {
+            return params.row.isDeleted;
+          },
+          renderCell(params) {
+            return (
+              <MarkIsDeletedSwitch
+                onChange={(value) => handleDeleteData(params.row.attendanceId, value)}
+              />
+            );
+          }
+        }
+      ] as GridColDef[]
+    ).concat(columns);
+  }
+
   return (
     <Box sx={{ width: drawerOpen ? "calc(100vw - 340px)" : "calc(100vw - 150px)" }}>
       <DataGrid
         sx={{ width: "100%", overflowX: "auto", "& .MuiDataGrid-cell": { px: 0 } }}
         rows={data}
-        columns={[
-          {
-            field: "date",
-            valueGetter(params) {
-              return moment(params.value).unix();
-            },
-            width: 125,
-            headerAlign: "center",
-            align: "center",
-            headerName: "Date",
-            disableColumnMenu: true,
-            sortable: false,
-            valueFormatter(params) {
-              return moment.unix(params.value).format("DD/MM/YYYY HH:mm");
-            }
-          },
-          {
-            field: "usedStudentTokenQuotaAndDuration",
-            type: "number",
-            headerName: "Quota Used (Duration)",
-            width: 100,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break",
-            valueGetter(params) {
-              return `${params.row.usedStudentTokenQuota} (${params.row.duration} min)`;
-            }
-          },
-          {
-            field: "note",
-            headerName: "Notes",
-            flex: 1,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break"
-          },
-          {
-            field: "grossCourseFeeValue",
-            type: "number",
-            headerName: "Gross Course Fee",
-            width: 110,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break",
-            valueFormatter(params) {
-              return convertNumberToCurrencyString(params.value);
-            }
-          },
-          {
-            field: "paidCourseFeeValue",
-            type: "number",
-            headerName: "Paid Course Fee",
-            width: 110,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break",
-            valueGetter(params) {
-              if (params.row.paidCourseFeeValue === undefined)
-                return params.row.grossCourseFeeValue * params.row.courseFeeSharingPercentage;
-              return params.value;
-            },
-            valueFormatter(params) {
-              return convertNumberToCurrencyString(params.value);
-            },
-            renderCell: renderEditableCell,
-            editable: true
-          },
-          {
-            field: "courseFeeSharingPercentage",
-            type: "number",
-            headerName: "(%) Course Fee",
-            width: 100,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break",
-            valueGetter(params) {
-              if (params.row.courseFeeSharingPercentage === undefined)
-                return params.row.courseFeeSharingPercentage * 100;
-              return params.value * 100;
-            },
-            valueFormatter(params) {
-              return convertNumberToPercentage(params.value.toFixed(2), true);
-            },
-            renderCell: renderEditableCell,
-            editable: true
-          },
-
-          {
-            field: "grossTransportFeeValue",
-            type: "number",
-            headerName: "Gross Transport Fee",
-            width: 110,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break",
-            valueFormatter(params) {
-              return convertNumberToCurrencyString(params.value);
-            }
-          },
-          {
-            field: "paidTransportFeeValue",
-            type: "number",
-            headerName: "Paid Transport Fee",
-            width: 110,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break",
-            valueGetter(params) {
-              if (params.row.paidTransportFeeValue === undefined)
-                return params.row.grossTransportFeeValue * params.row.transportFeeSharingPercentage;
-              return params.value;
-            },
-            valueFormatter(params) {
-              return convertNumberToCurrencyString(params.value);
-            },
-            renderCell: renderEditableCell,
-            editable: true
-          },
-          {
-            field: "transportFeeSharingPercentage",
-            type: "number",
-            headerName: "(%) Transport Fee",
-            width: 110,
-            headerAlign: "center",
-            align: "center",
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: "header-break",
-            valueGetter(params) {
-              if (params.row.transportFeeSharingPercentage === undefined)
-                return params.row.transportFeeSharingPercentage * 100;
-              return params.value * 100;
-            },
-            valueFormatter(params) {
-              return convertNumberToPercentage(params.value.toFixed(2), true);
-            },
-            renderCell: renderEditableCell,
-            editable: true
-          }
-        ]}
+        columns={columns}
         getRowId={(row) => row.attendanceId}
         sortModel={[{ field: "date", sort: "desc" }]}
         disableRowSelectionOnClick

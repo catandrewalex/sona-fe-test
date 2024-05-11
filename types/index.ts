@@ -158,6 +158,7 @@ export interface TeacherPaymentInvoiceItemSubmit {
   attendanceId: number;
   paidCourseFeeValue: number;
   paidTransportFeeValue: number;
+  isDeleted?: boolean;
 }
 
 export interface TeacherPaymentUnpaidListItem {

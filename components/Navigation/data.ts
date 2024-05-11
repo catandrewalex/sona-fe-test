@@ -1,7 +1,7 @@
 import { SvgIconTypeMap } from "@mui/material";
 import { UserType } from "@sonamusica-fe/types";
 import HomeIcon from "@mui/icons-material/Home";
-import { People, Hail } from "@mui/icons-material";
+import { Hail, People } from "@mui/icons-material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 
 export type SidebarItem = {
@@ -53,6 +53,15 @@ const data: Array<SidebarSection> = [
         icon: People,
         text: "Teacher Payment",
         url: "/teacher-payment",
+        userHasAccess: (userType?: UserType): boolean => {
+          return userType === UserType.ADMIN;
+        },
+        useSubstringIncludeForMarkSelected: true
+      },
+      {
+        icon: People,
+        text: "Edit Teacher Payment",
+        url: "/teacher-payment/edit",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         },
