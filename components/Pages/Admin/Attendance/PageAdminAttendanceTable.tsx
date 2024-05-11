@@ -127,14 +127,14 @@ const PageAdminAttendanceTable = ({
             headerClassName: "header-break",
             valueGetter: (params) => params.row.duration
           },
-          // TODO: fix sorting based on date, instead of text
           {
             field: "date",
             headerName: "Date",
             width: 200,
             align: "center",
             headerAlign: "center",
-            valueGetter: (params) => moment(params.row.date).format("DD MMMM YYYY HH:mm")
+            valueGetter: (params) => moment(params.row.date),
+            valueFormatter: (params) => params.value.format("DD MMMM YYYY HH:mm")
           },
           {
             field: "courseFee",
