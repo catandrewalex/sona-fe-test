@@ -141,6 +141,26 @@ a {
   background-color: #eeeeee9e;
 }
 
+.deleted-row, .MuiDataGrid-row:hover.deleted-row {
+  background-color: rgb(253 147 147 / 62%);
+}
+
+
+.deleted-row svg.MuiDataGrid-booleanCell[data-value="true"] {
+  color: #f44336;
+}
+
+.dark .deleted-row svg.MuiDataGrid-booleanCell[data-value="true"] {
+  color: #ffc2bd;
+}
+
+svg.MuiDataGrid-booleanCell[data-value="false"].MuiDataGrid-booleanCell[data-testid="CheckIcon"] {
+  color: #66bb6a;
+}
+
+.editable-cell {
+  background-color: rgba(255, 248, 140, 0.55);
+}
 .header-break .MuiDataGrid-columnHeaderTitle {
   white-space: break-spaces;
   line-height: normal;

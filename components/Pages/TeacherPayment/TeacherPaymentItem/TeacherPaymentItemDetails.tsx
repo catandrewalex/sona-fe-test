@@ -1,43 +1,28 @@
 import { Box } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { TeacherPaymentInvoiceItemAttendance } from "@sonamusica-fe/types";
+import {
+  TeacherPaymentInvoiceItemAttendance,
+  TeacherPaymentInvoiceItemAttendanceModify
+} from "@sonamusica-fe/types";
 import {
   convertNumberToCurrencyString,
   convertNumberToPercentage
 } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
-import React, { useCallback } from "react";
-import StandardSwitch from "@sonamusica-fe/components/Form/StandardSwitch";
-
-type TeacherPaymentInvoiceItemAttendanceEditable = TeacherPaymentInvoiceItemAttendance & {
-  paidCourseFeeValue?: number;
-  courseFeeSharingPercentage?: number;
-  paidTransportFeeValue?: number;
-  transportFeeSharingPercentage?: number;
-  isDeleted?: boolean;
-};
+import React from "react";
 
 export interface TeacherPaymentItemDetailsProps {
-  data: TeacherPaymentInvoiceItemAttendanceEditable[];
+  data: Array<TeacherPaymentInvoiceItemAttendance | TeacherPaymentInvoiceItemAttendanceModify>;
   isEdit?: boolean;
   handleSubmitDataChange: (
     attendanceId: number,
     paidCourseFeeValue: number,
     paidTransportFeeValue: number
   ) => void;
-  handleDeleteData: (attendanceId: number, value: boolean) => void;
+  handleDeleteData: (teacherPaymentId: number, value: boolean) => void;
 }
-
-interface MarkIsDeletedSwitchProps {
-  onChange: (value: boolean) => void;
-}
-
-// TODO: change row color to grey but without rendering all child
-const MarkIsDeletedSwitch = React.memo(({ onChange }: MarkIsDeletedSwitchProps) => {
-  return <StandardSwitch onChange={(_event, value) => onChange(value)} />;
-});
 
 const TeacherPaymentItemDetails = ({
   data,
@@ -47,24 +32,6 @@ const TeacherPaymentItemDetails = ({
 }: TeacherPaymentItemDetailsProps): JSX.Element => {
   const drawerOpen = useApp((state) => state.drawerOpen);
   const { showSnackbar } = useSnack();
-
-  // we need this to colorize the editable cell (currently it is yellow)
-  const renderEditableCell = useCallback((params: GridRenderCellParams) => {
-    return (
-      <Box
-        sx={{
-          backgroundColor: "rgba(255, 248, 140, 0.55)",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
-        {params.formattedValue}
-      </Box>
-    );
-  }, []);
 
   let columns: GridColDef[] = [
     {
@@ -130,6 +97,7 @@ const TeacherPaymentItemDetails = ({
       sortable: false,
       disableColumnMenu: true,
       headerClassName: "header-break",
+      cellClassName: "editable-cell",
       valueGetter(params) {
         if (params.row.paidCourseFeeValue === undefined)
           return params.row.grossCourseFeeValue * params.row.courseFeeSharingPercentage;
@@ -138,7 +106,6 @@ const TeacherPaymentItemDetails = ({
       valueFormatter(params) {
         return convertNumberToCurrencyString(params.value);
       },
-      renderCell: renderEditableCell,
       editable: true
     },
     {
@@ -150,6 +117,7 @@ const TeacherPaymentItemDetails = ({
       align: "center",
       sortable: false,
       disableColumnMenu: true,
+      cellClassName: "editable-cell",
       headerClassName: "header-break",
       valueGetter(params) {
         if (params.row.courseFeeSharingPercentage === undefined)
@@ -159,7 +127,6 @@ const TeacherPaymentItemDetails = ({
       valueFormatter(params) {
         return convertNumberToPercentage(params.value.toFixed(2), true);
       },
-      renderCell: renderEditableCell,
       editable: true
     },
 
@@ -187,6 +154,7 @@ const TeacherPaymentItemDetails = ({
       sortable: false,
       disableColumnMenu: true,
       headerClassName: "header-break",
+      cellClassName: "editable-cell",
       valueGetter(params) {
         if (params.row.paidTransportFeeValue === undefined)
           return params.row.grossTransportFeeValue * params.row.transportFeeSharingPercentage;
@@ -195,7 +163,6 @@ const TeacherPaymentItemDetails = ({
       valueFormatter(params) {
         return convertNumberToCurrencyString(params.value);
       },
-      renderCell: renderEditableCell,
       editable: true
     },
     {
@@ -208,6 +175,7 @@ const TeacherPaymentItemDetails = ({
       sortable: false,
       disableColumnMenu: true,
       headerClassName: "header-break",
+      cellClassName: "editable-cell",
       valueGetter(params) {
         if (params.row.transportFeeSharingPercentage === undefined)
           return params.row.transportFeeSharingPercentage * 100;
@@ -216,7 +184,6 @@ const TeacherPaymentItemDetails = ({
       valueFormatter(params) {
         return convertNumberToPercentage(params.value.toFixed(2), true);
       },
-      renderCell: renderEditableCell,
       editable: true
     }
   ];
@@ -225,23 +192,16 @@ const TeacherPaymentItemDetails = ({
     columns = (
       [
         {
-          field: "actions",
-          type: "actions",
-          headerName: "Is Deleted?",
+          field: "isDeleted",
+          type: "boolean",
+          headerName: "Deleted",
           headerAlign: "center",
           headerClassName: "header-break",
           width: 80,
-          align: "center" as const,
-          valueGetter(params) {
-            return params.row.isDeleted;
-          },
-          renderCell(params) {
-            return (
-              <MarkIsDeletedSwitch
-                onChange={(value) => handleDeleteData(params.row.attendanceId, value)}
-              />
-            );
-          }
+          editable: true,
+          disableColumnMenu: true,
+          sortable: false,
+          align: "center" as const
         }
       ] as GridColDef[]
     ).concat(columns);
@@ -257,16 +217,16 @@ const TeacherPaymentItemDetails = ({
         sortModel={[{ field: "date", sort: "desc" }]}
         disableRowSelectionOnClick
         hideFooter
+        getRowClassName={(params) => (params.row.isDeleted ? "deleted-row" : "default")}
         initialState={{
           pagination: {
             paginationModel: { pageSize: 100, page: 0 }
           }
         }}
         processRowUpdate={(updatedRow, originalRow) => {
-          console.log(updatedRow, originalRow);
           const invokeHandleSubmit = () => {
             handleSubmitDataChange(
-              updatedRow.attendanceId,
+              isEdit ? updatedRow.teacherPaymentId : updatedRow.attendanceId,
               updatedRow.paidCourseFeeValue
                 ? updatedRow.paidCourseFeeValue
                 : updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage,
@@ -297,7 +257,7 @@ const TeacherPaymentItemDetails = ({
             if (updatedRow.courseFeeSharingPercentage > 100) {
               showSnackbar("Percentage Course Fee must be less than 100%!", "error");
             } else if (updatedRow.courseFeeSharingPercentage < 0) {
-              showSnackbar("Percentange Course Fee must be greater than 0%!", "error");
+              showSnackbar("Percentage Course Fee must be greater than 0%!", "error");
             } else {
               updatedRow.paidCourseFeeValue =
                 (updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage) / 100;
@@ -313,7 +273,7 @@ const TeacherPaymentItemDetails = ({
             if (updatedRow.transportFeeSharingPercentage > 100) {
               showSnackbar("Percentage Transport Fee must be less than 100%!", "error");
             } else if (updatedRow.transportFeeSharingPercentage < 0) {
-              showSnackbar("Percentange Transport Fee must be greater than 0%!", "error");
+              showSnackbar("Percentage Transport Fee must be greater than 0%!", "error");
             } else {
               updatedRow.paidTransportFeeValue =
                 (updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage) /
@@ -339,6 +299,9 @@ const TeacherPaymentItemDetails = ({
               invokeHandleSubmit();
               return updatedRow;
             }
+          } else if (originalRow.isDeleted !== updatedRow.isDeleted) {
+            handleDeleteData(updatedRow.teacherPaymentId, updatedRow.isDeleted);
+            return updatedRow;
           }
           return originalRow;
         }}

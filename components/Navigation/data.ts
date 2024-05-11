@@ -61,7 +61,7 @@ const data: Array<SidebarSection> = [
       {
         icon: People,
         text: "Edit Teacher Payment",
-        url: "/teacher-payment/edit",
+        url: "/edit-teacher-payment",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         },

@@ -1,9 +1,11 @@
 import { Accordion, AccordionSummary, Box, Typography } from "@mui/material";
 import {
+  TeacherPaymentInvoiceItemAttendanceModify,
+  TeacherPaymentInvoiceItemModify,
   TeacherPaymentInvoiceItemStudentLearningToken,
   TeacherPaymentInvoiceItemSubmit
 } from "@sonamusica-fe/types";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { convertNumberToCurrencyString } from "@sonamusica-fe/utils/StringUtil";
 import TeacherPaymentItemDetails from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentItem/TeacherPaymentItemDetails";
@@ -16,7 +18,7 @@ interface TeacherPaymentItemProps {
     paidCourseFeeValue: number,
     paidTransportFeeValue: number
   ) => void;
-  handleDeleteData: (attendanceId: number, value: boolean) => void;
+  handleDeleteData?: (teacherPaymentId: number, value: boolean) => void;
 }
 
 const TeacherPaymentItem = React.memo(
@@ -27,21 +29,27 @@ const TeacherPaymentItem = React.memo(
     handleDeleteData
   }: TeacherPaymentItemProps): JSX.Element => {
     const [internalSubmitData, setInternalSubmitData] = useState<
-      Record<string, TeacherPaymentInvoiceItemSubmit>
+      Record<string, TeacherPaymentInvoiceItemSubmit | TeacherPaymentInvoiceItemModify>
     >({});
 
     const calculateTotalFromAttendances = Object.values(internalSubmitData).reduce(
-      (prev, curr) => prev + curr.paidCourseFeeValue + curr.paidTransportFeeValue,
+      (prev, curr) =>
+        isEdit && (curr as TeacherPaymentInvoiceItemModify).isDeleted
+          ? prev
+          : prev + curr.paidCourseFeeValue + curr.paidTransportFeeValue,
       0
     );
-
-    const calculateTotalGross = useMemo(() => {
-      let result = 0;
-      for (const attendance of data.attendances) {
-        result += attendance.grossCourseFeeValue + attendance.grossTransportFeeValue;
-      }
-      return result;
-    }, [data]);
+    const calculateTotalGross = () => {
+      return Object.values(internalSubmitData).reduce(
+        (prev, curr) =>
+          isEdit && (curr as TeacherPaymentInvoiceItemModify).isDeleted
+            ? prev
+            : prev +
+              (curr as TeacherPaymentInvoiceItemModify).grossCourseFeeValue +
+              (curr as TeacherPaymentInvoiceItemModify).grossTransportFeeValue,
+        0
+      );
+    };
 
     const calculateTotalUsedQuotaFromAttendances = useCallback(() => {
       return Object.values(data.attendances).reduce(
@@ -51,25 +59,50 @@ const TeacherPaymentItem = React.memo(
     }, [data.attendances]);
 
     useEffect(() => {
-      const tempSubmitData: Record<string, TeacherPaymentInvoiceItemSubmit> = {};
+      const tempSubmitData: Record<
+        string,
+        TeacherPaymentInvoiceItemSubmit | TeacherPaymentInvoiceItemModify
+      > = {};
       for (const attendance of data.attendances) {
-        tempSubmitData[attendance.attendanceId.toString()] = {
-          attendanceId: attendance.attendanceId,
-          paidCourseFeeValue:
-            attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
-          paidTransportFeeValue:
-            attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage
-        };
+        if (isEdit) {
+          tempSubmitData[
+            (attendance as TeacherPaymentInvoiceItemAttendanceModify).teacherPaymentId.toString()
+          ] = {
+            ...tempSubmitData[
+              (attendance as TeacherPaymentInvoiceItemAttendanceModify).teacherPaymentId.toString()
+            ],
+            teacherPaymentId: (attendance as TeacherPaymentInvoiceItemAttendanceModify)
+              .teacherPaymentId,
+            paidCourseFeeValue:
+              attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
+            paidTransportFeeValue:
+              attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage,
+            grossCourseFeeValue: attendance.grossCourseFeeValue,
+            grossTransportFeeValue: attendance.grossTransportFeeValue
+          };
+        } else {
+          tempSubmitData[attendance.attendanceId.toString()] = {
+            ...tempSubmitData[attendance.attendanceId.toString()],
+            attendanceId: attendance.attendanceId,
+            paidCourseFeeValue:
+              attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
+            paidTransportFeeValue:
+              attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage,
+            grossCourseFeeValue: attendance.grossCourseFeeValue,
+            grossTransportFeeValue: attendance.grossTransportFeeValue
+          };
+        }
       }
 
       setInternalSubmitData(tempSubmitData);
-    }, [data]);
+    }, [data, isEdit]);
 
     const internalHandleSubmitDataChange = useCallback(
       (attendanceId: number, paidCourseFeeValue: number, paidTransportFeeValue: number) => {
         setInternalSubmitData((prevValue) => {
           const newSubmitData = { ...prevValue };
           newSubmitData[attendanceId.toString()] = {
+            ...newSubmitData[attendanceId.toString()],
             attendanceId,
             paidCourseFeeValue,
             paidTransportFeeValue
@@ -82,12 +115,24 @@ const TeacherPaymentItem = React.memo(
       [handleSubmitDataChange]
     );
 
+    const internalHandleDeleteData = useCallback(
+      (teacherPaymentId: number, value: boolean) => {
+        setInternalSubmitData((prevValue) => {
+          const newSubmitData = { ...prevValue };
+          newSubmitData[teacherPaymentId.toString()] = {
+            ...newSubmitData[teacherPaymentId.toString()],
+            teacherPaymentId,
+            isDeleted: value
+          };
+          return newSubmitData;
+        });
+        if (handleDeleteData) handleDeleteData(teacherPaymentId, value);
+      },
+      [handleDeleteData]
+    );
+
     return (
-      <Accordion
-        elevation={0}
-        TransitionProps={{ unmountOnExit: true }}
-        sx={{ "&:before": { backgroundColor: "transparent" } }}
-      >
+      <Accordion elevation={0} sx={{ "&:before": { backgroundColor: "transparent" } }}>
         <AccordionSummary
           sx={{
             pr: 0,
@@ -132,7 +177,7 @@ const TeacherPaymentItem = React.memo(
             </Box>
             <Box>
               <Typography fontSize="12px" align="right" variant="subtitle1" sx={{ width: "225px" }}>
-                ({convertNumberToCurrencyString(calculateTotalGross)})
+                ({convertNumberToCurrencyString(calculateTotalGross())})
               </Typography>
               <Typography
                 align="right"
@@ -148,7 +193,7 @@ const TeacherPaymentItem = React.memo(
           data={data.attendances}
           isEdit={isEdit}
           handleSubmitDataChange={internalHandleSubmitDataChange}
-          handleDeleteData={handleDeleteData}
+          handleDeleteData={internalHandleDeleteData}
         />
       </Accordion>
     );

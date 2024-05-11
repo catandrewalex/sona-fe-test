@@ -10,16 +10,10 @@ import { ParsedUrlQuery } from "querystring";
 import React, { useCallback, useEffect, useState } from "react";
 
 const checkIfQueryResultAvailable = (query?: ParsedUrlQuery) => {
-  return (
-    query &&
-    query.month &&
-    query.year &&
-    typeof query.month === "string" &&
-    typeof query.year === "string"
-  );
+  return query && query.result;
 };
 
-const TeacherPaymentPage = () => {
+const TeacherPaymentPage = (): JSX.Element => {
   const [data, setData] = useState<TeacherPaymentUnpaidListItem[]>();
 
   const { query, isReady } = useRouter();
@@ -38,8 +32,8 @@ const TeacherPaymentPage = () => {
     if (data === undefined && checkIfQueryResultAvailable(query)) {
       startLoading();
       API.GetUnpaidTeacherPaymentByMonthAndYear({
-        month: parseInt(query.month as string),
-        year: parseInt(query.year as string)
+        month: query.month ? parseInt(query.month as string) : undefined,
+        year: query.year ? parseInt(query.year as string) : undefined
       }).then((response) => {
         const result = apiTransformer(response, false);
         setData((result as ResponseMany<TeacherPaymentUnpaidListItem>).results);

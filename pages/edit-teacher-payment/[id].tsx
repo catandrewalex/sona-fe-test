@@ -6,8 +6,9 @@ import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import {
   Student,
   TeacherPaymentInvoiceItem,
-  TeacherPaymentInvoiceItemStudentLearningToken,
-  TeacherPaymentInvoiceItemSubmit
+  TeacherPaymentInvoiceItemAttendanceModify,
+  TeacherPaymentInvoiceItemModify,
+  TeacherPaymentInvoiceItemStudentLearningToken
 } from "@sonamusica-fe/types";
 import {
   convertNumberToCurrencyString,
@@ -19,7 +20,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import TeacherPaymentInvoiceContainer from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentInvoiceContainer";
 import TeacherPaymentClassContainer from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentClassContainer";
 import TeacherPaymentItemContainer from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentItem/TeacherPaymentItemContainer";
-import { ResponseMany } from "api";
+import { FailedResponse, ResponseMany } from "../../api";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { ArrowBack, SaveAs } from "@mui/icons-material";
 
@@ -33,19 +34,19 @@ const EditTeacherPaymentDetailPage = (): JSX.Element => {
     startLoading: state.startLoading
   }));
 
+  const [prevPaidTotal, setPrevPaidTotal] = useState<number>(0);
   const [rawData, setRawData] = useState<TeacherPaymentInvoiceItem[] | undefined>(undefined);
-  const [submitData, setSubmitData] = useState<Record<string, TeacherPaymentInvoiceItemSubmit>>({});
-  const [grossGrandTotal, setGrossGrandTotal] = useState<number>(0);
+  const [submitData, setSubmitData] = useState<Record<string, TeacherPaymentInvoiceItemModify>>({});
 
   const apiTransformer = useApiTransformer();
 
   const handleSubmitDataChange = useCallback(
-    (attendanceId: number, paidCourseFeeValue: number, paidTransportFeeValue: number) => {
+    (teacherPaymentId: number, paidCourseFeeValue: number, paidTransportFeeValue: number) => {
       setSubmitData((prevValue) => {
         const newSubmitData = { ...prevValue };
-        newSubmitData[attendanceId.toString()] = {
-          ...newSubmitData[attendanceId.toString()],
-          attendanceId,
+        newSubmitData[teacherPaymentId.toString()] = {
+          ...newSubmitData[teacherPaymentId.toString()],
+          teacherPaymentId,
           paidCourseFeeValue,
           paidTransportFeeValue
         };
@@ -55,37 +56,48 @@ const EditTeacherPaymentDetailPage = (): JSX.Element => {
     []
   );
 
-  const handleDeleteData = useCallback((attendanceId: number, value: boolean) => {
+  const handleDeleteData = useCallback((teacherPaymentId: number, value: boolean) => {
     setSubmitData((prevValue) => {
       const newSubmitData = { ...prevValue };
-      newSubmitData[attendanceId.toString()] = {
-        ...newSubmitData[attendanceId.toString()],
-        attendanceId,
+      newSubmitData[teacherPaymentId.toString()] = {
+        ...newSubmitData[teacherPaymentId.toString()],
+        teacherPaymentId,
         isDeleted: value
       };
       return newSubmitData;
     });
   }, []);
 
-  const calculateGrandTotal = () => {
+  const calculateGrandTotal = useCallback(
+    (data: Record<string, TeacherPaymentInvoiceItemModify>) => {
+      return Object.values(data).reduce(
+        (prev, curr) =>
+          curr.isDeleted ? prev : prev + curr.paidCourseFeeValue + curr.paidTransportFeeValue,
+        0
+      );
+    },
+    []
+  );
+
+  const calculateGrossGrandTotal = () => {
     return Object.values(submitData).reduce(
-      (prev, curr) => prev + curr.paidCourseFeeValue + curr.paidTransportFeeValue,
+      (prev, curr) =>
+        curr.isDeleted ? prev : prev + curr.grossCourseFeeValue + curr.grossTransportFeeValue,
       0
     );
   };
 
   const handleSubmit = () => {
     showDialog({ title: "Submit Payment", content: "Are you sure to submit the payment?" }, () => {
-      // startLoading();
-      // API.SubmitTeacherPaymentInvoice(Object.values(submitData))
-      //   .then((response) => {
-      //     const result = apiTransformer(response);
-      //     if (Object.getPrototypeOf(result) !== FailedResponse.prototype) {
-      //       setPage(1);
-      //     }
-      //   })
-      //   .finally(() => finishLoading());
-      console.log(submitData);
+      startLoading();
+      API.ModifyTeacherPaymentInvoice(Object.values(submitData))
+        .then((response) => {
+          const result = apiTransformer(response);
+          if (Object.getPrototypeOf(result) !== FailedResponse.prototype) {
+            setPage(1);
+          }
+        })
+        .finally(() => finishLoading());
     });
   };
 
@@ -95,37 +107,42 @@ const EditTeacherPaymentDetailPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isReady && query.id && typeof query.id === "string") {
-      let grossGrandTotalTemp = 0;
       startLoading();
-      const year = typeof query.year == "string" ? parseInt(query.year) : undefined;
-      const month = typeof query.month == "string" ? parseInt(query.month) : undefined;
-      API.GetTeacherPaymentInvoice(parseInt(query.id), year, month).then((response) => {
+      const year =
+        typeof query.year == "string" && query.year !== "" ? parseInt(query.year) : undefined;
+      const month =
+        typeof query.month == "string" && query.month !== "" ? parseInt(query.month) : undefined;
+      API.GetPaidTeacherPaymentInvoice(parseInt(query.id), year, month).then((response) => {
         const result = apiTransformer(response, false);
         const tempRawData = (result as ResponseMany<TeacherPaymentInvoiceItem>).results;
 
-        const tempSubmitData: Record<string, TeacherPaymentInvoiceItemSubmit> = {};
+        const tempSubmitData: Record<string, TeacherPaymentInvoiceItemModify> = {};
 
         for (const data of tempRawData) {
           for (const student of data.students) {
             for (const studentLearningToken of student.studentLearningTokens) {
               for (const attendance of studentLearningToken.attendances) {
-                tempSubmitData[attendance.attendanceId.toString()] = {
-                  attendanceId: attendance.attendanceId,
+                tempSubmitData[
+                  (
+                    attendance as TeacherPaymentInvoiceItemAttendanceModify
+                  ).teacherPaymentId.toString()
+                ] = {
+                  teacherPaymentId: (attendance as TeacherPaymentInvoiceItemAttendanceModify)
+                    .teacherPaymentId,
                   paidCourseFeeValue:
                     attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
                   paidTransportFeeValue:
-                    attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage
+                    attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage,
+                  grossCourseFeeValue: attendance.grossCourseFeeValue,
+                  grossTransportFeeValue: attendance.grossTransportFeeValue
                 };
-                grossGrandTotalTemp +=
-                  attendance.grossTransportFeeValue + attendance.grossCourseFeeValue;
               }
             }
           }
         }
-
+        setPrevPaidTotal(calculateGrandTotal(tempSubmitData));
         setRawData(tempRawData);
         setSubmitData(tempSubmitData);
-        setGrossGrandTotal(grossGrandTotalTemp);
         finishLoading();
       });
     }
@@ -153,8 +170,8 @@ const EditTeacherPaymentDetailPage = (): JSX.Element => {
           </Button>
           <Box>
             <TeacherPaymentInvoiceContainer
-              totalPaidValue={calculateGrandTotal()}
-              totalGrossPaidValue={grossGrandTotal}
+              totalPaidValue={calculateGrandTotal(submitData)}
+              totalGrossPaidValue={calculateGrossGrandTotal()}
             >
               {rawData.map((classData, idx, arr) => (
                 <TeacherPaymentClassContainer
@@ -208,9 +225,10 @@ const EditTeacherPaymentDetailPage = (): JSX.Element => {
           <Typography my={4} variant="h3" color={(theme) => theme.palette.success.main}>
             Success!
           </Typography>
-          <Typography variant="h4">
-            {getFullNameFromTeacher(rawData[0].teacher)} has been paid{" "}
-            {convertNumberToCurrencyString(calculateGrandTotal())}
+          <Typography variant="h4" align="center">
+            {getFullNameFromTeacher(rawData[0].teacher)} payment has been updated from{" "}
+            {convertNumberToCurrencyString(prevPaidTotal)} to{" "}
+            {convertNumberToCurrencyString(calculateGrandTotal(submitData))}
           </Typography>
         </Box>
       ) : (

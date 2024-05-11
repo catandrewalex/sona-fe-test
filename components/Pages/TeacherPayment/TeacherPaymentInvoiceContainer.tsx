@@ -23,7 +23,7 @@ const TeacherPaymentInvoiceContainer = ({
               <Box sx={{ mb: 1, display: "flex", justifyContent: "space-between", pr: 4 }}>
                 <Typography variant="h6">Items</Typography>
                 <Typography align="right" variant="h6" sx={{ width: "225px" }}>
-                  Gross / Paid Sub-Total
+                  (Gross) Paid Sub-Total
                 </Typography>
               </Box>
             </>

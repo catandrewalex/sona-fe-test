@@ -15,7 +15,7 @@ export interface TeacherPaymentItemContainerProps {
     paidCourseFeeValue: number,
     paidTransportFeeValue: number
   ) => void;
-  handleDeleteData: (attendanceId: number, value: boolean) => void;
+  handleDeleteData?: (teacherPaymentId: number, value: boolean) => void;
 }
 
 const TeacherPaymentItemContainer = React.memo(
@@ -41,7 +41,7 @@ const TeacherPaymentItemContainer = React.memo(
           });
         }
       );
-    }, []);
+    }, [classId, data.studentId, push, showDialog]);
 
     return (
       <>

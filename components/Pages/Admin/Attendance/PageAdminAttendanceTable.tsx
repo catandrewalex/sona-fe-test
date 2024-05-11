@@ -215,7 +215,6 @@ const PageAdminAttendanceTable = ({
             md: 4,
             lg: 2,
             filterHandler: (data, value) => {
-              console.log(value);
               for (const val of value) {
                 const result = data.isPaid === val;
                 if (result) return true;

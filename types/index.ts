@@ -151,7 +151,9 @@ export type TeacherPaymentInvoiceItemStudentLearningToken = Omit<
   StudentLearningToken,
   "studentEnrollment"
 > & {
-  attendances: Array<TeacherPaymentInvoiceItemAttendance>;
+  attendances: Array<
+    TeacherPaymentInvoiceItemAttendance | TeacherPaymentInvoiceItemAttendanceModify
+  >;
 };
 
 export type TeacherPaymentInvoiceItemAttendance = Omit<
@@ -164,11 +166,24 @@ export type TeacherPaymentInvoiceItemAttendance = Omit<
   transportFeeSharingPercentage: number;
 };
 
+export type TeacherPaymentInvoiceItemAttendanceModify = TeacherPaymentInvoiceItemAttendance & {
+  teacherPaymentId: number;
+};
+
 export interface TeacherPaymentInvoiceItemSubmit {
   attendanceId: number;
   paidCourseFeeValue: number;
   paidTransportFeeValue: number;
+}
+
+export interface TeacherPaymentInvoiceItemModify {
+  teacherPaymentId: number;
+  paidCourseFeeValue: number;
+  paidTransportFeeValue: number;
   isDeleted?: boolean;
+  //TODO: optimize this!! not used in API, required for render in TeacherPaymentDetails page
+  grossCourseFeeValue: number;
+  grossTransportFeeValue: number;
 }
 
 export interface TeacherPaymentUnpaidListItem {
@@ -176,3 +191,5 @@ export interface TeacherPaymentUnpaidListItem {
   user: User;
   totalAttendances: number;
 }
+
+export type TeacherPaymentPaidListItem = TeacherPaymentUnpaidListItem;
