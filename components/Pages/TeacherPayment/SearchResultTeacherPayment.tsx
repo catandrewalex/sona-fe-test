@@ -28,7 +28,7 @@ const SearchResultTeacherPayment = ({
           pathname: (isEdit ? "/edit-teacher-payment/" : "/teacher-payment/") + teacherId,
           query
         });
-    };,
+    },
     [isEdit, push, query]
   );
 
