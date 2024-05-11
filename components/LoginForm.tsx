@@ -15,7 +15,7 @@ enum State {
   FORGOT_PASSWORD
 }
 
-const LoginButton = (): JSX.Element => {
+const LoginForm = (): JSX.Element => {
   const [state, setState] = useState<State>(State.LOGIN);
 
   const { setUser } = useUser((state) => ({
@@ -184,4 +184,4 @@ const LoginButton = (): JSX.Element => {
     </>
   );
 };
-export default LoginButton;
+export default LoginForm;

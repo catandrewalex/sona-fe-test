@@ -95,14 +95,14 @@ const PageAdminTeacherTable = ({
             headerAlign: "center",
             width: 90
           },
-          // TODO: fix sorting based on date, instead of text
           {
             field: "createdAt",
             headerName: "Created At",
             align: "center",
             headerAlign: "center",
             width: 125,
-            valueGetter: (params) => moment(params.row.user.createdAt).format("DD MMMM YYYY")
+            valueGetter: (params) => moment(params.row.user.createdAt),
+            valueFormatter: (params) => params.value.format("DD MMMM YYYY")
           }
         ]}
         tableMenu={[

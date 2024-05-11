@@ -133,19 +133,19 @@ const PageAdminStudentLearningTokenTable = ({
             valueGetter: (params) =>
               getFullNameFromTeacher(params.row.studentEnrollment.class.teacher)
           },
-          // TODO: fix sorting based on date, instead of text
           {
             field: "createdAt",
             headerName: "Created At",
             width: 200,
-            valueGetter: (params) => moment(params.row.createdAt).format("DD MMMM YYYY")
+            valueGetter: (params) => moment(params.row.createdAt),
+            valueFormatter: (params) => params.value.format("DD MMMM YYYY")
           },
-          // TODO: fix sorting based on date, instead of text
           {
             field: "lastUpdatedAt",
             headerName: "Last Updated At",
             width: 200,
-            valueGetter: (params) => moment(params.row.lastUpdatedAt).format("DD MMMM YYYY")
+            valueGetter: (params) => moment(params.row.lastUpdatedAt),
+            valueFormatter: (params) => params.value.format("DD MMMM YYYY")
           }
         ]}
         tableMenu={[

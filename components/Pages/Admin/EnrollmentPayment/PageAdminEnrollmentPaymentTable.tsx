@@ -143,12 +143,12 @@ const PageAdminEnrollmentPaymentTable = ({
             valueGetter: (params) =>
               getFullNameFromTeacher(params.row.studentEnrollment.class.teacher)
           },
-          // TODO: fix sorting based on date, instead of text
           {
             field: "paymentDate",
             headerName: "Payment Date",
             width: 200,
-            valueGetter: (params) => moment(params.row.paymentDate).format("DD MMMM YYYY")
+            valueGetter: (params) => moment(params.row.paymentDate),
+            valueFormatter: (params) => params.value.format("DD MMMM YYYY")
           }
         ]}
         tableMenu={[

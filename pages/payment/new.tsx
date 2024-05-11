@@ -3,6 +3,7 @@ import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useCallback, useState } from "react";
 import { FailedResponse } from "api";
 import { useRouter } from "next/router";
+import SearchIcon from "@mui/icons-material/Search";
 import { Box, Button, Divider, Paper, Step, StepLabel, Stepper } from "@mui/material";
 import { Container } from "@mui/system";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
@@ -27,8 +28,23 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
   const [recalculateInvoice, setRecalculateInvoice] = useState<boolean>(true);
 
   const apiTransformer = useApiTransformer();
+  const { push } = useRouter();
   const { showDialog } = useAlertDialog();
   const { showSnackbar } = useSnack();
+
+  const onSearchEnrollmentPaymentClick = useCallback(() => {
+    showDialog(
+      {
+        title: "Going to search enrollment payment page...",
+        content: "All changes in this page will be lost. Proceed?"
+      },
+      () => {
+        push({
+          pathname: "/payment"
+        });
+      }
+    );
+  }, [showDialog, push]);
 
   const nextStep = () => {
     if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
@@ -112,15 +128,16 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
       <Container
         maxWidth="sm"
         sx={{
-          height: "calc(100vh - 128px)",
+          height: "calc(100vh - 136px)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          alignItems: "center",
           mt: 4
         }}
       >
         <Paper
-          sx={{ p: 2, height: "100%", display: "flex", flexDirection: "column" }}
+          sx={{ p: 2, height: "100%", width: "100%", display: "flex", flexDirection: "column" }}
           elevation={5}
         >
           <Box sx={{ width: "100%", my: 2 }}>
@@ -212,6 +229,15 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
             </Box>
           </Box>
         </Paper>
+        <Button
+          startIcon={<SearchIcon />}
+          sx={{ mt: 1, width: "fit-content" }}
+          size="small"
+          onClick={onSearchEnrollmentPaymentClick}
+          variant="text"
+        >
+          <small>Search Enrollment Payment</small>
+        </Button>
       </Container>
     </PageContainer>
   );
