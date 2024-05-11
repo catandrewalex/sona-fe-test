@@ -1,4 +1,5 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
@@ -6,6 +7,7 @@ import { EnrollmentPayment } from "@sonamusica-fe/types";
 import { convertMomentDateToRFC3339 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import moment, { Moment, min, max } from "moment";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 type SearchPaymentListFormData = {
@@ -20,7 +22,9 @@ type SearchEnrollmentPaymentProps = {
 const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProps): JSX.Element => {
   const [startDate, setStartDate] = useState<Moment | null>(moment().startOf("month"));
   const [endDate, setEndDate] = useState<Moment | null>(moment());
+  const { push } = useRouter();
   const apiTransformer = useApiTransformer();
+
   const { formRenderer } = useFormRenderer<SearchPaymentListFormData>(
     {
       disableUseOfDefaultFormConfig: true,
@@ -104,6 +108,7 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
@@ -118,6 +123,19 @@ const SearchEnrollmentPayment = ({ onSearchSubmit }: SearchEnrollmentPaymentProp
           {formRenderer()}
         </CardContent>
       </Card>
+      <Button
+        sx={{ mt: 1 }}
+        startIcon={<AddIcon />}
+        size="small"
+        onClick={() =>
+          push({
+            pathname: "/payment/new"
+          })
+        }
+        variant="text"
+      >
+        <small>Add Enrollment Payment</small>
+      </Button>
     </Box>
   );
 };

@@ -38,7 +38,8 @@ const data: Array<SidebarSection> = [
         url: "/payment",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
-        }
+        },
+        useSubstringIncludeForMarkSelected: true
       },
       {
         icon: People,
