@@ -31,13 +31,16 @@ const data: Array<SidebarSection> = [
   },
   {
     name: "Management",
+    userHasAccess: (userType?: UserType): boolean => {
+      return userType === UserType.ADMIN || userType === UserType.STAFF;
+    },
     items: [
       {
         icon: People,
         text: "Enrollment Payment",
         url: "/payment",
         userHasAccess: (userType?: UserType): boolean => {
-          return userType === UserType.ADMIN;
+          return userType === UserType.ADMIN || userType === UserType.STAFF;
         },
         useSubstringIncludeForMarkSelected: true
       },
@@ -46,7 +49,7 @@ const data: Array<SidebarSection> = [
         text: "Attendance",
         url: "/attendance",
         userHasAccess: (userType?: UserType): boolean => {
-          return userType === UserType.ADMIN;
+          return userType === UserType.ADMIN || userType === UserType.STAFF;
         },
         useSubstringIncludeForMarkSelected: true
       },
@@ -55,23 +58,11 @@ const data: Array<SidebarSection> = [
         text: "Teacher Payment",
         url: "/teacher-payment",
         userHasAccess: (userType?: UserType): boolean => {
-          return userType === UserType.ADMIN;
-        },
-        useSubstringIncludeForMarkSelected: true
-      },
-      {
-        icon: People,
-        text: "Edit Teacher Payment",
-        url: "/edit-teacher-payment",
-        userHasAccess: (userType?: UserType): boolean => {
-          return userType === UserType.ADMIN;
+          return userType === UserType.ADMIN || userType === UserType.STAFF;
         },
         useSubstringIncludeForMarkSelected: true
       }
-    ],
-    userHasAccess: (userType?: UserType): boolean => {
-      return userType === UserType.ADMIN || userType === UserType.STAFF;
-    }
+    ]
   },
   {
     name: "CRUD",

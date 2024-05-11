@@ -20,7 +20,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import TeacherPaymentInvoiceContainer from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentInvoiceContainer";
 import TeacherPaymentClassContainer from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentClassContainer";
 import TeacherPaymentItemContainer from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentItem/TeacherPaymentItemContainer";
-import { FailedResponse, ResponseMany } from "../../api";
+import { FailedResponse, ResponseMany } from "api";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { ArrowBack, SaveAs } from "@mui/icons-material";
 

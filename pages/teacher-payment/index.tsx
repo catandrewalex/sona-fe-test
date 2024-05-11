@@ -46,7 +46,7 @@ const TeacherPaymentPage = (): JSX.Element => {
   }, [query, data]);
 
   return (
-    <PageContainer navTitle="Teacher Payment">
+    <PageContainer navTitle="Create Teacher Payment">
       {data && isReady && checkIfQueryResultAvailable(query) ? (
         <SearchResultTeacherPayment data={data} />
       ) : (

@@ -4,7 +4,7 @@ import SearchResultTeacherPayment from "@sonamusica-fe/components/Pages/TeacherP
 import SearchTeacherPayment from "@sonamusica-fe/components/Pages/TeacherPayment/SearchTeacherPayment";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { TeacherPaymentPaidListItem } from "@sonamusica-fe/types";
-import { ResponseMany } from "../../api";
+import { ResponseMany } from "api";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import React, { useCallback, useEffect, useState } from "react";

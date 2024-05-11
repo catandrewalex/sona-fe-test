@@ -1,4 +1,6 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
 import { TeacherPaymentPaidListItem, TeacherPaymentUnpaidListItem } from "@sonamusica-fe/types";
@@ -37,7 +39,7 @@ const SearchTeacherPayment = ({
   isEdit
 }: SearchTeacherPaymentProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
-  const { replace } = useRouter();
+  const { push, replace } = useRouter();
 
   const yearOptions: number[] = [];
   for (let now = moment().year(), i = now - 10; i <= now + 10; i++) {
@@ -107,6 +109,7 @@ const SearchTeacherPayment = ({
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
@@ -121,6 +124,19 @@ const SearchTeacherPayment = ({
           {formRenderer()}
         </CardContent>
       </Card>
+      <Button
+        sx={{ mt: 1 }}
+        startIcon={!isEdit ? <EditIcon /> : <AddIcon />}
+        size="small"
+        onClick={() =>
+          push({
+            pathname: !isEdit ? "/teacher-payment/edit" : "/teacher-payment"
+          })
+        }
+        variant="text"
+      >
+        <small>{!isEdit ? "Edit" : "Create"} Teacher Payment</small>
+      </Button>
     </Box>
   );
 };
