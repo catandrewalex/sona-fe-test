@@ -63,7 +63,6 @@ const SearchTeacherPayment = ({
           validations: [],
           name: "month",
           formFieldProps: { md: 12, lg: 12 },
-          // inputProps: { required: true },
           selectProps: {
             options: monthOptions,
             getOptionLabel: (option) => option.name,
@@ -76,7 +75,6 @@ const SearchTeacherPayment = ({
           validations: [],
           name: "year",
           formFieldProps: { md: 12, lg: 12 },
-          // inputProps: { required: true },
           selectProps: {
             options: yearOptions,
             getOptionLabel: (option) => option.toString()
