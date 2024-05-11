@@ -181,7 +181,7 @@ export interface TeacherPaymentInvoiceItemModify {
   paidCourseFeeValue: number;
   paidTransportFeeValue: number;
   isDeleted?: boolean;
-  //TODO: optimize this!! not used in API, required for render in TeacherPaymentDetails page
+  //TODO: optimize this!! these 2 fields are not used in backend API. we need this simply for rendering in TeacherPaymentDetails page
   grossCourseFeeValue: number;
   grossTransportFeeValue: number;
 }

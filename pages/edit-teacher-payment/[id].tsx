@@ -88,7 +88,7 @@ const EditTeacherPaymentDetailPage = (): JSX.Element => {
   };
 
   const handleSubmit = () => {
-    showDialog({ title: "Submit Payment", content: "Are you sure to submit the payment?" }, () => {
+    showDialog({ title: "Save Payment", content: "Are you sure to save the payment?" }, () => {
       startLoading();
       API.ModifyTeacherPaymentInvoice(Object.values(submitData))
         .then((response) => {

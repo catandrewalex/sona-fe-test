@@ -116,7 +116,7 @@ const SearchTeacherPayment = ({
       <Card sx={{ height: "fit-content", width: "350px", p: 2 }} elevation={3}>
         <CardContent>
           <Typography variant="h5" align="center" sx={{ mb: 5 }}>
-            Search Teacher Payment
+            Search {isEdit ? "Paid" : "Unpaid"} Teachers
           </Typography>
           {formRenderer()}
         </CardContent>

@@ -141,15 +141,14 @@ a {
   background-color: #eeeeee9e;
 }
 
-.deleted-row, .MuiDataGrid-row:hover.deleted-row {
+// these .deleted-row classes are used in TeacherPaymentItem, to differentiate rows marked as deleted from other rows.
+.deleted-row,
+.MuiDataGrid-row:hover.deleted-row {
   background-color: rgb(253 147 147 / 62%);
 }
-
-
 .deleted-row svg.MuiDataGrid-booleanCell[data-value="true"] {
   color: #f44336;
 }
-
 .dark .deleted-row svg.MuiDataGrid-booleanCell[data-value="true"] {
   color: #ffc2bd;
 }
