@@ -173,5 +173,5 @@ export interface TeacherPaymentInvoiceItemSubmit {
 export interface TeacherPaymentUnpaidListItem {
   teacherId: number;
   user: User;
-  totalUnpaidAttendances: number;
+  totalAttendances: number;
 }
