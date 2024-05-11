@@ -64,7 +64,7 @@ const SearchResultTeacherPayment = ({
                   {isEdit ? "Paid" : "Unpaid"} Attendances:
                 </Typography>
                 <Typography variant="subtitle2" component="span" fontWeight="bold" sx={{ ml: 1 }}>
-                  {teacherPayment.totalUnpaidAttendances}
+                  {teacherPayment.totalAttendances}
                 </Typography>
               </CardContent>
             </Card>
