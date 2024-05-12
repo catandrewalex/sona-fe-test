@@ -1,7 +1,20 @@
 import { SvgIconTypeMap } from "@mui/material";
 import { UserType } from "@sonamusica-fe/types";
 import HomeIcon from "@mui/icons-material/Home";
-import { Hail, People } from "@mui/icons-material";
+import {
+  Payment,
+  PeopleAlt,
+  Person,
+  Piano,
+  RequestQuote,
+  Face,
+  FaceRetouchingNatural,
+  Groups,
+  Man,
+  Savings,
+  School,
+  TrendingUp
+} from "@mui/icons-material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 
 export type SidebarItem = {
@@ -36,7 +49,7 @@ const data: Array<SidebarSection> = [
     },
     items: [
       {
-        icon: People,
+        icon: Payment,
         text: "Enrollment Payment",
         url: "/payment",
         userHasAccess: (userType?: UserType): boolean => {
@@ -45,7 +58,7 @@ const data: Array<SidebarSection> = [
         useSubstringIncludeForMarkSelected: true
       },
       {
-        icon: People,
+        icon: PeopleAlt,
         text: "Attendance",
         url: "/attendance",
         userHasAccess: (userType?: UserType): boolean => {
@@ -54,7 +67,7 @@ const data: Array<SidebarSection> = [
         useSubstringIncludeForMarkSelected: true
       },
       {
-        icon: People,
+        icon: RequestQuote,
         text: "Teacher Payment",
         url: "/teacher-payment",
         userHasAccess: (userType?: UserType): boolean => {
@@ -71,7 +84,7 @@ const data: Array<SidebarSection> = [
     },
     items: [
       {
-        icon: People,
+        icon: Person,
         text: "User",
         url: "/admin/user",
         userHasAccess: (userType?: UserType): boolean => {
@@ -79,7 +92,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: Hail,
+        icon: FaceRetouchingNatural,
         text: "Teacher",
         url: "/admin/teacher",
         userHasAccess: (userType?: UserType): boolean => {
@@ -87,7 +100,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: Face,
         text: "Student",
         url: "/admin/student",
         userHasAccess: (userType?: UserType): boolean => {
@@ -95,7 +108,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: Piano,
         text: "Instrument",
         url: "/admin/instrument",
         userHasAccess: (userType?: UserType): boolean => {
@@ -103,7 +116,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: TrendingUp,
         text: "Grade",
         url: "/admin/grade",
         userHasAccess: (userType?: UserType): boolean => {
@@ -111,7 +124,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: School,
         text: "Course",
         url: "/admin/course",
         userHasAccess: (userType?: UserType): boolean => {
@@ -119,7 +132,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: Groups,
         text: "Class",
         url: "/admin/class",
         userHasAccess: (userType?: UserType): boolean => {
@@ -127,7 +140,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: Man,
         text: "Teacher Special Fee",
         url: "/admin/teacher-special-fee",
         userHasAccess: (userType?: UserType): boolean => {
@@ -135,7 +148,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: Savings,
         text: "Student Learning Token",
         url: "/admin/student-learning-token",
         userHasAccess: (userType?: UserType): boolean => {
@@ -143,7 +156,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: Payment,
         text: "Enrollment Payment",
         url: "/admin/enrollment-payment",
         userHasAccess: (userType?: UserType): boolean => {
@@ -151,7 +164,7 @@ const data: Array<SidebarSection> = [
         }
       },
       {
-        icon: People,
+        icon: PeopleAlt,
         text: "Attendance",
         url: "/admin/attendance",
         userHasAccess: (userType?: UserType): boolean => {
