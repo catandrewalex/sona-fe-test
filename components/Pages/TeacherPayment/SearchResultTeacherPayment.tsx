@@ -25,7 +25,7 @@ const SearchResultTeacherPayment = ({
     (teacherId: number) => {
       return () =>
         push({
-          pathname: (isEdit ? "/edit-teacher-payment/" : "/teacher-payment/") + teacherId,
+          pathname: (isEdit ? "/teacher-payment/edit/" : "/teacher-payment/") + teacherId,
           query
         });
     },
