@@ -126,6 +126,11 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
           forceRenderCounter={forceRenderCounter}
         />
       )}
+      {classData.students.length === 0 && (
+        <Typography mt={1} color={(theme) => theme.palette.warning.main} fontWeight="bold">
+          This class does not have any student.
+        </Typography>
+      )}
       <AttendanceModalForm
         data={selectedData}
         classData={classData}
