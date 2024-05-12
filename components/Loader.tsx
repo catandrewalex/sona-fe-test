@@ -38,7 +38,7 @@ const Loader = ({ animation = false, testIdContext }: LoaderPropsType): JSX.Elem
 
   useEffect(() => {
     if (animation) {
-      const timeout = setTimeout(finishAppLoading, 3000);
+      const timeout = setTimeout(finishAppLoading, 1000);
       return () => clearTimeout(timeout);
     }
   }, [animation, finishAppLoading]);

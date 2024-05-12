@@ -23,7 +23,7 @@ export type SidebarItem = {
   url?: string;
   userHasAccess: (userType?: UserType) => boolean;
   subMenu?: SidebarItem[];
-  useSubstringIncludeForMarkSelected?: boolean;
+  useSubstringStartsWithForMarkSelected?: boolean;
 };
 
 export type SidebarSection = {
@@ -55,7 +55,7 @@ const data: Array<SidebarSection> = [
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN || userType === UserType.STAFF;
         },
-        useSubstringIncludeForMarkSelected: true
+        useSubstringStartsWithForMarkSelected: true
       },
       {
         icon: PeopleAlt,
@@ -64,7 +64,7 @@ const data: Array<SidebarSection> = [
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN || userType === UserType.STAFF;
         },
-        useSubstringIncludeForMarkSelected: true
+        useSubstringStartsWithForMarkSelected: true
       },
       {
         icon: RequestQuote,
@@ -73,7 +73,7 @@ const data: Array<SidebarSection> = [
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN || userType === UserType.STAFF;
         },
-        useSubstringIncludeForMarkSelected: true
+        useSubstringStartsWithForMarkSelected: true
       }
     ]
   },
