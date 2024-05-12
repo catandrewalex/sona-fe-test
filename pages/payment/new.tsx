@@ -194,7 +194,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                           penaltyFeeValue: invoiceData?.penaltyFeeValue || 0,
                           paymentDate: convertMomentDateToRFC3339(moment())
                         },
-                        () => replace("/")
+                        () => replace("/payment")
                       );
                     }}
                   >
