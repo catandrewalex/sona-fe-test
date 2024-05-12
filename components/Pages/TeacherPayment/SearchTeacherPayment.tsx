@@ -1,8 +1,9 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer from "@sonamusica-fe/components/Form/FormRenderer";
-import { useApp } from "@sonamusica-fe/providers/AppProvider";
-import { TeacherPaymentUnpaidListItem } from "@sonamusica-fe/types";
+import { TeacherPaymentPaidListItem, TeacherPaymentUnpaidListItem } from "@sonamusica-fe/types";
 import { FailedResponse, ResponseMany } from "api";
 import moment from "moment";
 import { useRouter } from "next/router";
@@ -29,12 +30,16 @@ type SearchTeacherPaymentFormData = {
 };
 
 interface SearchTeacherPaymentProps {
-  onSearchComplete: (data: TeacherPaymentUnpaidListItem[]) => void;
+  onSearchComplete: (data: TeacherPaymentUnpaidListItem[] | TeacherPaymentPaidListItem[]) => void;
+  isEdit?: boolean;
 }
 
-const SearchTeacherPayment = ({ onSearchComplete }: SearchTeacherPaymentProps): JSX.Element => {
+const SearchTeacherPayment = ({
+  onSearchComplete,
+  isEdit
+}: SearchTeacherPaymentProps): JSX.Element => {
   const apiTransformer = useApiTransformer();
-  const { replace } = useRouter();
+  const { push, replace } = useRouter();
 
   const yearOptions: number[] = [];
   for (let now = moment().year(), i = now - 10; i <= now + 10; i++) {
@@ -57,22 +62,21 @@ const SearchTeacherPayment = ({ onSearchComplete }: SearchTeacherPaymentProps): 
         {
           type: "select",
           label: "Month",
-          validations: [{ name: "required" }],
+          validations: [],
           name: "month",
           formFieldProps: { md: 12, lg: 12 },
-          inputProps: { required: true },
           selectProps: {
             options: monthOptions,
-            getOptionLabel: (option) => option.name
+            getOptionLabel: (option) => option.name,
+            isOptionEqualToValue: (option, value) => option.id === value.id
           }
         },
         {
           type: "select",
           label: "Year",
-          validations: [{ name: "required" }],
+          validations: [],
           name: "year",
           formFieldProps: { md: 12, lg: 12 },
-          inputProps: { required: true },
           selectProps: {
             options: yearOptions,
             getOptionLabel: (option) => option.toString()
@@ -81,14 +85,21 @@ const SearchTeacherPayment = ({ onSearchComplete }: SearchTeacherPaymentProps): 
       ],
       submitHandler: async ({ month, year }, err) => {
         if (err.month || err.year) return Promise.reject();
-        const response = await API.GetUnpaidTeacherPaymentByMonthAndYear({ month: month.id, year });
+        const payload = {
+          month: month?.id,
+          year
+        };
+        const request = isEdit
+          ? API.GetPaidTeacherPaymentByMonthAndYear
+          : API.GetUnpaidTeacherPaymentByMonthAndYear;
+        const response = await request(payload);
         const parsedResponse = apiTransformer(response, false);
         if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
           return parsedResponse as FailedResponse;
         } else {
           onSearchComplete((parsedResponse as ResponseMany<TeacherPaymentUnpaidListItem>).results);
 
-          replace({ query: { month: month.id, year } });
+          await replace({ query: { result: true, month: month?.id, year } });
         }
       }
     },
@@ -98,6 +109,7 @@ const SearchTeacherPayment = ({ onSearchComplete }: SearchTeacherPaymentProps): 
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
@@ -107,11 +119,24 @@ const SearchTeacherPayment = ({ onSearchComplete }: SearchTeacherPaymentProps): 
       <Card sx={{ height: "fit-content", width: "350px", p: 2 }} elevation={3}>
         <CardContent>
           <Typography variant="h5" align="center" sx={{ mb: 5 }}>
-            Search Teacher Payment
+            Search {isEdit ? "Paid" : "Unpaid"} Teachers
           </Typography>
           {formRenderer()}
         </CardContent>
       </Card>
+      <Button
+        sx={{ mt: 1 }}
+        startIcon={!isEdit ? <EditIcon /> : <AddIcon />}
+        size="small"
+        onClick={() =>
+          push({
+            pathname: !isEdit ? "/teacher-payment/edit" : "/teacher-payment"
+          })
+        }
+        variant="text"
+      >
+        <small>{!isEdit ? "Edit" : "Create"} Teacher Payment</small>
+      </Button>
     </Box>
   );
 };

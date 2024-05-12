@@ -37,7 +37,9 @@ const AttendanceResultDetail = (data: Class): JSX.Element => {
         <TableRow>
           <CellTitle width="30%">Fee</CellTitle>
           <CellSemiColon align="center">:</CellSemiColon>
-          <TableCell>{convertNumberToCurrencyString(data.course.defaultFee)}</TableCell>
+          <TableCell>
+            {convertNumberToCurrencyString(data.teacherSpecialFee ?? data.course.defaultFee)}
+          </TableCell>
         </TableRow>
         <TableRow>
           <CellTitle width="30%">Transport Fee</CellTitle>

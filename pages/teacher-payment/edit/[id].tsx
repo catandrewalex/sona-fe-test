@@ -6,8 +6,9 @@ import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import {
   Student,
   TeacherPaymentInvoiceItem,
-  TeacherPaymentInvoiceItemStudentLearningToken,
-  TeacherPaymentInvoiceItemSubmit
+  TeacherPaymentInvoiceItemAttendanceModify,
+  TeacherPaymentInvoiceItemModify,
+  TeacherPaymentInvoiceItemStudentLearningToken
 } from "@sonamusica-fe/types";
 import {
   convertNumberToCurrencyString,
@@ -21,9 +22,9 @@ import TeacherPaymentClassContainer from "@sonamusica-fe/components/Pages/Teache
 import TeacherPaymentItemContainer from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentItem/TeacherPaymentItemContainer";
 import { FailedResponse, ResponseMany } from "api";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, SaveAs } from "@mui/icons-material";
 
-const TeacherPaymentDetailPage = (): JSX.Element => {
+const EditTeacherPaymentDetailPage = (): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   const { showDialog } = useAlertDialog();
 
@@ -33,18 +34,19 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
     startLoading: state.startLoading
   }));
 
+  const [prevPaidTotal, setPrevPaidTotal] = useState<number>(0);
   const [rawData, setRawData] = useState<TeacherPaymentInvoiceItem[] | undefined>(undefined);
-  const [submitData, setSubmitData] = useState<Record<string, TeacherPaymentInvoiceItemSubmit>>({});
-  const [grossGrandTotal, setGrossGrandTotal] = useState<number>(0);
+  const [submitData, setSubmitData] = useState<Record<string, TeacherPaymentInvoiceItemModify>>({});
 
   const apiTransformer = useApiTransformer();
 
   const handleSubmitDataChange = useCallback(
-    (attendanceId: number, paidCourseFeeValue: number, paidTransportFeeValue: number) => {
+    (teacherPaymentId: number, paidCourseFeeValue: number, paidTransportFeeValue: number) => {
       setSubmitData((prevValue) => {
         const newSubmitData = { ...prevValue };
-        newSubmitData[attendanceId.toString()] = {
-          attendanceId,
+        newSubmitData[teacherPaymentId.toString()] = {
+          ...newSubmitData[teacherPaymentId.toString()],
+          teacherPaymentId,
           paidCourseFeeValue,
           paidTransportFeeValue
         };
@@ -54,17 +56,41 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
     []
   );
 
-  const calculateGrandTotal = () => {
+  const handleDeleteData = useCallback((teacherPaymentId: number, value: boolean) => {
+    setSubmitData((prevValue) => {
+      const newSubmitData = { ...prevValue };
+      newSubmitData[teacherPaymentId.toString()] = {
+        ...newSubmitData[teacherPaymentId.toString()],
+        teacherPaymentId,
+        isDeleted: value
+      };
+      return newSubmitData;
+    });
+  }, []);
+
+  const calculateGrandTotal = useCallback(
+    (data: Record<string, TeacherPaymentInvoiceItemModify>) => {
+      return Object.values(data).reduce(
+        (prev, curr) =>
+          curr.isDeleted ? prev : prev + curr.paidCourseFeeValue + curr.paidTransportFeeValue,
+        0
+      );
+    },
+    []
+  );
+
+  const calculateGrossGrandTotal = () => {
     return Object.values(submitData).reduce(
-      (prev, curr) => prev + curr.paidCourseFeeValue + curr.paidTransportFeeValue,
+      (prev, curr) =>
+        curr.isDeleted ? prev : prev + curr.grossCourseFeeValue + curr.grossTransportFeeValue,
       0
     );
   };
 
   const handleSubmit = () => {
-    showDialog({ title: "Submit Payment", content: "Are you sure to submit the payment?" }, () => {
+    showDialog({ title: "Save Payment", content: "Are you sure to save the payment?" }, () => {
       startLoading();
-      API.SubmitTeacherPaymentInvoice(Object.values(submitData))
+      API.ModifyTeacherPaymentInvoice(Object.values(submitData))
         .then((response) => {
           const result = apiTransformer(response);
           if (Object.getPrototypeOf(result) !== FailedResponse.prototype) {
@@ -81,39 +107,42 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isReady && query.id && typeof query.id === "string") {
-      let grossGrandTotalTemp = 0;
       startLoading();
       const year =
         typeof query.year == "string" && query.year !== "" ? parseInt(query.year) : undefined;
       const month =
         typeof query.month == "string" && query.month !== "" ? parseInt(query.month) : undefined;
-      API.GetTeacherPaymentInvoice(parseInt(query.id), year, month).then((response) => {
+      API.GetPaidTeacherPaymentInvoice(parseInt(query.id), year, month).then((response) => {
         const result = apiTransformer(response, false);
         const tempRawData = (result as ResponseMany<TeacherPaymentInvoiceItem>).results;
 
-        const tempSubmitData: Record<string, TeacherPaymentInvoiceItemSubmit> = {};
+        const tempSubmitData: Record<string, TeacherPaymentInvoiceItemModify> = {};
 
         for (const data of tempRawData) {
           for (const student of data.students) {
             for (const studentLearningToken of student.studentLearningTokens) {
               for (const attendance of studentLearningToken.attendances) {
-                tempSubmitData[attendance.attendanceId.toString()] = {
-                  attendanceId: attendance.attendanceId,
+                tempSubmitData[
+                  (
+                    attendance as TeacherPaymentInvoiceItemAttendanceModify
+                  ).teacherPaymentId.toString()
+                ] = {
+                  teacherPaymentId: (attendance as TeacherPaymentInvoiceItemAttendanceModify)
+                    .teacherPaymentId,
                   paidCourseFeeValue:
                     attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
                   paidTransportFeeValue:
-                    attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage
+                    attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage,
+                  grossCourseFeeValue: attendance.grossCourseFeeValue,
+                  grossTransportFeeValue: attendance.grossTransportFeeValue
                 };
-                grossGrandTotalTemp +=
-                  attendance.grossTransportFeeValue + attendance.grossCourseFeeValue;
               }
             }
           }
         }
-
+        setPrevPaidTotal(calculateGrandTotal(tempSubmitData));
         setRawData(tempRawData);
         setSubmitData(tempSubmitData);
-        setGrossGrandTotal(grossGrandTotalTemp);
         finishLoading();
       });
     }
@@ -141,8 +170,8 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
           </Button>
           <Box>
             <TeacherPaymentInvoiceContainer
-              totalPaidValue={calculateGrandTotal()}
-              totalGrossPaidValue={grossGrandTotal}
+              totalPaidValue={calculateGrandTotal(submitData)}
+              totalGrossPaidValue={calculateGrossGrandTotal()}
             >
               {rawData.map((classData, idx, arr) => (
                 <TeacherPaymentClassContainer
@@ -157,7 +186,9 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
                       }
                     ) => (
                       <TeacherPaymentItemContainer
+                        isEdit
                         handleSubmitDataChange={handleSubmitDataChange}
+                        handleDeleteData={handleDeleteData}
                         key={studentData.studentId}
                         data={studentData}
                         classId={classData.classId}
@@ -168,8 +199,14 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
               ))}
             </TeacherPaymentInvoiceContainer>
             <Box display="flex" justifyContent="flex-end" mt={2}>
-              <Button variant="contained" color="primary" size="large" onClick={handleSubmit}>
-                Confirm Payment
+              <Button
+                startIcon={<SaveAs />}
+                variant="contained"
+                color="success"
+                size="large"
+                onClick={handleSubmit}
+              >
+                Save Payment
               </Button>
             </Box>
           </Box>
@@ -188,9 +225,10 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
           <Typography my={4} variant="h3" color={(theme) => theme.palette.success.main}>
             Success!
           </Typography>
-          <Typography variant="h4">
-            {getFullNameFromTeacher(rawData[0].teacher)} has been paid{" "}
-            {convertNumberToCurrencyString(calculateGrandTotal())}
+          <Typography variant="h4" align="center">
+            {getFullNameFromTeacher(rawData[0].teacher)} payment has been updated from{" "}
+            {convertNumberToCurrencyString(prevPaidTotal)} to{" "}
+            {convertNumberToCurrencyString(calculateGrandTotal(submitData))}
           </Typography>
         </Box>
       ) : (
@@ -200,4 +238,4 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
   );
 };
 
-export default TeacherPaymentDetailPage;
+export default EditTeacherPaymentDetailPage;

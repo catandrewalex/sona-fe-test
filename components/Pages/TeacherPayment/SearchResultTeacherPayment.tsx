@@ -8,9 +8,13 @@ import React, { useCallback } from "react";
 
 interface SearchResultTeacherPaymentProps {
   data: TeacherPaymentUnpaidListItem[];
+  isEdit?: boolean;
 }
 
-const SearchResultTeacherPayment = ({ data }: SearchResultTeacherPaymentProps): JSX.Element => {
+const SearchResultTeacherPayment = ({
+  data,
+  isEdit
+}: SearchResultTeacherPaymentProps): JSX.Element => {
   const { push, replace, query } = useRouter();
 
   const handleBackAction = useCallback(() => {
@@ -19,9 +23,13 @@ const SearchResultTeacherPayment = ({ data }: SearchResultTeacherPaymentProps): 
 
   const onCardClick = useCallback(
     (teacherId: number) => {
-      return () => push({ pathname: "/teacher-payment/" + teacherId, query });
+      return () =>
+        push({
+          pathname: (isEdit ? "/edit-teacher-payment/" : "/teacher-payment/") + teacherId,
+          query
+        });
     },
-    [push, query]
+    [isEdit, push, query]
   );
 
   return (
@@ -53,7 +61,7 @@ const SearchResultTeacherPayment = ({ data }: SearchResultTeacherPaymentProps): 
               />
               <CardContent sx={{ py: 1, "&:last-child": { pb: 1 } }}>
                 <Typography variant="subtitle2" fontWeight="300" component="span">
-                  Unpaid Attendances:
+                  {isEdit ? "Paid" : "Unpaid"} Attendances:
                 </Typography>
                 <Typography variant="subtitle2" component="span" fontWeight="bold" sx={{ ml: 1 }}>
                   {teacherPayment.totalAttendances}

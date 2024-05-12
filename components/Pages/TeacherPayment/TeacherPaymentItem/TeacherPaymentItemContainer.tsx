@@ -1,4 +1,4 @@
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import TeacherPaymentItem from "@sonamusica-fe/components/Pages/TeacherPayment/TeacherPaymentItem/TeacherPaymentItem";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { TeacherPaymentInvoiceItemStudent } from "@sonamusica-fe/types";
@@ -9,18 +9,22 @@ import React, { useCallback } from "react";
 export interface TeacherPaymentItemContainerProps {
   classId: number;
   data: TeacherPaymentInvoiceItemStudent;
+  isEdit?: boolean;
   handleSubmitDataChange: (
     attendanceId: number,
     paidCourseFeeValue: number,
     paidTransportFeeValue: number
   ) => void;
+  handleDeleteData?: (teacherPaymentId: number, value: boolean) => void;
 }
 
 const TeacherPaymentItemContainer = React.memo(
   ({
     data,
+    isEdit,
     classId,
-    handleSubmitDataChange
+    handleSubmitDataChange,
+    handleDeleteData
   }: TeacherPaymentItemContainerProps): React.ReactElement => {
     const { push } = useRouter();
     const { showDialog } = useAlertDialog();
@@ -37,7 +41,7 @@ const TeacherPaymentItemContainer = React.memo(
           });
         }
       );
-    }, []);
+    }, [classId, data.studentId, push, showDialog]);
 
     return (
       <>
@@ -50,9 +54,11 @@ const TeacherPaymentItemContainer = React.memo(
         <Box>
           {data.studentLearningTokens.map((val) => (
             <TeacherPaymentItem
+              isEdit={isEdit}
               key={val.studentLearningTokenId}
               data={val}
               handleSubmitDataChange={handleSubmitDataChange}
+              handleDeleteData={handleDeleteData}
             />
           ))}
         </Box>

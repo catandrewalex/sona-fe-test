@@ -164,6 +164,21 @@ const AttendanceDetailTabContainer = ({
                 </Box>
               ))}
 
+            {!loading && !studentIdToSLTDisplay[student.studentId] && (
+              <>
+                <Typography
+                  component="span"
+                  color={(theme) => theme.palette.error.main}
+                  fontWeight="bold"
+                >
+                  This student does not have any learning token.
+                </Typography>
+                <Typography component="span" sx={{ ml: 0.5 }}>
+                  <small>(Has the student paid the enrollment fee?)</small>
+                </Typography>
+              </>
+            )}
+
             <TableContainer sx={{ mt: 2, height: "calc(100vh - 376px)" }}>
               {loading ? (
                 <LoaderSimple />
