@@ -119,6 +119,7 @@ const TeacherPaymentItemDetails = ({
       disableColumnMenu: true,
       cellClassName: "editable-cell",
       headerClassName: "header-break",
+      // TODO(FerdiantJoshua): handle case when grossCourseFee == 0, percentage should always be "N/A"
       valueGetter(params) {
         if (params.row.courseFeeSharingPercentage === undefined)
           return params.row.courseFeeSharingPercentage * 100;
@@ -176,6 +177,7 @@ const TeacherPaymentItemDetails = ({
       disableColumnMenu: true,
       headerClassName: "header-break",
       cellClassName: "editable-cell",
+      // TODO(FerdiantJoshua): handle case when grossTransportFee == 0, percentage should always be "N/A"
       valueGetter(params) {
         if (params.row.transportFeeSharingPercentage === undefined)
           return params.row.transportFeeSharingPercentage * 100;
@@ -240,11 +242,15 @@ const TeacherPaymentItemDetails = ({
             originalRow.paidCourseFeeValue !== updatedRow.paidCourseFeeValue &&
             updatedRow.paidCourseFeeValue !== undefined
           ) {
-            if (updatedRow.paidCourseFeeValue > updatedRow.grossCourseFeeValue) {
-              showSnackbar("Paid Course Fee must be less than Gross Course Fee!", "error");
-            } else if (updatedRow.paidCourseFeeValue < 0) {
+            if (updatedRow.paidCourseFeeValue < 0) {
               showSnackbar("Paid Course Fee must be greater than 0!", "error");
             } else {
+              if (updatedRow.paidCourseFeeValue > updatedRow.grossCourseFeeValue) {
+                showSnackbar(
+                  "Paid Course Fee is greater than Gross Course Fee. Are you sure?",
+                  "warning"
+                );
+              }
               updatedRow.courseFeeSharingPercentage =
                 updatedRow.paidCourseFeeValue / updatedRow.grossCourseFeeValue;
               invokeHandleSubmit();
@@ -254,11 +260,15 @@ const TeacherPaymentItemDetails = ({
             originalRow.courseFeeSharingPercentage !== updatedRow.courseFeeSharingPercentage &&
             updatedRow.courseFeeSharingPercentage !== undefined
           ) {
-            if (updatedRow.courseFeeSharingPercentage > 100) {
-              showSnackbar("Percentage Course Fee must be less than 100%!", "error");
-            } else if (updatedRow.courseFeeSharingPercentage < 0) {
+            if (updatedRow.courseFeeSharingPercentage < 0) {
               showSnackbar("Percentage Course Fee must be greater than 0%!", "error");
             } else {
+              if (updatedRow.courseFeeSharingPercentage > 100) {
+                showSnackbar(
+                  "Percentage Course Fee is greater than 100%. Are you sure?",
+                  "warning"
+                );
+              }
               updatedRow.paidCourseFeeValue =
                 (updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage) / 100;
               updatedRow.courseFeeSharingPercentage = updatedRow.courseFeeSharingPercentage / 100;
@@ -270,11 +280,15 @@ const TeacherPaymentItemDetails = ({
               updatedRow.transportFeeSharingPercentage &&
             updatedRow.transportFeeSharingPercentage !== undefined
           ) {
-            if (updatedRow.transportFeeSharingPercentage > 100) {
-              showSnackbar("Percentage Transport Fee must be less than 100%!", "error");
-            } else if (updatedRow.transportFeeSharingPercentage < 0) {
+            if (updatedRow.transportFeeSharingPercentage < 0) {
               showSnackbar("Percentage Transport Fee must be greater than 0%!", "error");
             } else {
+              if (updatedRow.transportFeeSharingPercentage > 100) {
+                showSnackbar(
+                  "Percentage Transport Fee is greater than 100%. Are you sure?",
+                  "warning"
+                );
+              }
               updatedRow.paidTransportFeeValue =
                 (updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage) /
                 100;
@@ -287,11 +301,15 @@ const TeacherPaymentItemDetails = ({
             originalRow.paidTransportFeeValue !== updatedRow.paidTransportFeeValue &&
             updatedRow.paidTransportFeeValue !== undefined
           ) {
-            if (updatedRow.paidTransportFeeValue > updatedRow.grossTransportFeeValue) {
-              showSnackbar("Paid Transport Fee must be less than Gross Transport Fee!", "error");
-            } else if (updatedRow.paidTransportFeeValue < 0) {
+            if (updatedRow.paidTransportFeeValue < 0) {
               showSnackbar("Paid Transport Fee must be greater than 0!", "error");
             } else {
+              if (updatedRow.paidTransportFeeValue > updatedRow.grossTransportFeeValue) {
+                showSnackbar(
+                  "Paid Transport Fee is greater than Gross Transport Fee. Are you sure?",
+                  "warning"
+                );
+              }
               if (updatedRow.grossTransportFeeValue !== 0) {
                 updatedRow.transportFeeSharingPercentage =
                   updatedRow.paidTransportFeeValue / updatedRow.grossTransportFeeValue;

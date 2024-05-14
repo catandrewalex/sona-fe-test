@@ -76,6 +76,7 @@ export const convertNumberToCurrencyStringWithoutPrefixAndSuffix = (value: numbe
   return result.substring(3, result.length - 3);
 };
 
+// TODO(FerdiantJoshua): the inputed value should always be around 0-1. This utility should multiply the input by 100, then append the "%"
 export const convertNumberToPercentage = (value: number, useComma?: boolean): string => {
   const result = `${value} %`;
   if (useComma) return result.replaceAll(".", ",");

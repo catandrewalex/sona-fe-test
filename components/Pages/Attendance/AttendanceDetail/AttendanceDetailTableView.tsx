@@ -134,7 +134,9 @@ const AttendanceDetailTableView = ({
             <StyledTableCell sx={{ textAlign: "center" }}>
               {item.teacher.teacherId !== teacherId ? getFullNameFromTeacher(item.teacher) : "-"}
             </StyledTableCell>
+            {/* TODO(FerdiantJoshua): render the row as green when the attendance is paid */}
             <StyledTableCell>{item.isPaid ? "Yes" : "No"}</StyledTableCell>
+            {/* TODO(FerdiantJoshua): add new column, contains a button to show which studentLearningToken this attendance is using (there are some detail, so we should use modal) */}
           </TableRow>
         ))}
       </TableBody>
