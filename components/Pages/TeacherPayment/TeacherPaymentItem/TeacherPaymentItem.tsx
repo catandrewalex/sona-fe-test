@@ -74,9 +74,9 @@ const TeacherPaymentItem = React.memo(
             teacherPaymentId: (attendance as TeacherPaymentInvoiceItemAttendanceModify)
               .teacherPaymentId,
             paidCourseFeeValue:
-              attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
+              (attendance as TeacherPaymentInvoiceItemAttendanceModify).paidCourseFeeValue ?? 0,
             paidTransportFeeValue:
-              attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage,
+              (attendance as TeacherPaymentInvoiceItemAttendanceModify).paidTransportFeeValue ?? 0,
             grossCourseFeeValue: attendance.grossCourseFeeValue,
             grossTransportFeeValue: attendance.grossTransportFeeValue
           };

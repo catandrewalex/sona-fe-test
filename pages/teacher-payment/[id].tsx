@@ -157,10 +157,10 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
                       }
                     ) => (
                       <TeacherPaymentItemContainer
-                        handleSubmitDataChange={handleSubmitDataChange}
                         key={studentData.studentId}
-                        data={studentData}
                         classId={classData.classId}
+                        data={studentData}
+                        handleSubmitDataChange={handleSubmitDataChange}
                       />
                     )
                   )}

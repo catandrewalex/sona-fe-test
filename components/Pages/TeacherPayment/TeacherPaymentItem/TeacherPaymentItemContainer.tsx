@@ -7,9 +7,9 @@ import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 
 export interface TeacherPaymentItemContainerProps {
+  isEdit?: boolean;
   classId: number;
   data: TeacherPaymentInvoiceItemStudent;
-  isEdit?: boolean;
   handleSubmitDataChange: (
     attendanceId: number,
     paidCourseFeeValue: number,
@@ -20,9 +20,9 @@ export interface TeacherPaymentItemContainerProps {
 
 const TeacherPaymentItemContainer = React.memo(
   ({
-    data,
     isEdit,
     classId,
+    data,
     handleSubmitDataChange,
     handleDeleteData
   }: TeacherPaymentItemContainerProps): React.ReactElement => {

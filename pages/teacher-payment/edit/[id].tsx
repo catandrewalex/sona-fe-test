@@ -130,9 +130,11 @@ const EditTeacherPaymentDetailPage = (): JSX.Element => {
                   teacherPaymentId: (attendance as TeacherPaymentInvoiceItemAttendanceModify)
                     .teacherPaymentId,
                   paidCourseFeeValue:
-                    attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
+                    (attendance as TeacherPaymentInvoiceItemAttendanceModify).paidCourseFeeValue ??
+                    0,
                   paidTransportFeeValue:
-                    attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage,
+                    (attendance as TeacherPaymentInvoiceItemAttendanceModify)
+                      .paidTransportFeeValue ?? 0,
                   grossCourseFeeValue: attendance.grossCourseFeeValue,
                   grossTransportFeeValue: attendance.grossTransportFeeValue
                 };
@@ -187,11 +189,11 @@ const EditTeacherPaymentDetailPage = (): JSX.Element => {
                     ) => (
                       <TeacherPaymentItemContainer
                         isEdit
+                        key={studentData.studentId}
+                        classId={classData.classId}
+                        data={studentData}
                         handleSubmitDataChange={handleSubmitDataChange}
                         handleDeleteData={handleDeleteData}
-                        key={studentData.studentId}
-                        data={studentData}
-                        classId={classData.classId}
                       />
                     )
                   )}

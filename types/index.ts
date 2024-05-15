@@ -168,6 +168,9 @@ export type TeacherPaymentInvoiceItemAttendance = Omit<
 
 export type TeacherPaymentInvoiceItemAttendanceModify = TeacherPaymentInvoiceItemAttendance & {
   teacherPaymentId: number;
+  paidCourseFeeValue: number;
+  paidTransportFeeValue: number;
+  addedAt: string;
 };
 
 export interface TeacherPaymentInvoiceItemSubmit {
