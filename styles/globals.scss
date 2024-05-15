@@ -153,6 +153,11 @@ a {
   color: #ffc2bd;
 }
 
+.attendance-unpaid-row,
+.MuiDataGrid-row:hover.attendance-unpaid-row {
+  background-color: rgba(255, 248, 140, 0.55);
+}
+
 svg.MuiDataGrid-booleanCell[data-value="false"].MuiDataGrid-booleanCell[data-testid="CheckIcon"] {
   color: #66bb6a;
 }

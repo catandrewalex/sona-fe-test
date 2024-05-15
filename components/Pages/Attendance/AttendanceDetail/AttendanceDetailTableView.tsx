@@ -19,6 +19,7 @@ import moment from "moment";
 import React from "react";
 import FormDataViewerTable from "@sonamusica-fe/components/Table/FormDataViewerTable";
 import { FailedResponse } from "api";
+import Tooltip from "@sonamusica-fe/components/Tooltip";
 
 type AttendanceDetailTableViewProps = {
   data: Attendance[];
@@ -102,24 +103,56 @@ const AttendanceDetailTableView = ({
       <TableHead>
         <TableRow>
           <StyledTableCell sx={{ maxWidth: 64 }}></StyledTableCell>
+          <StyledTableCell sx={{ maxWidth: 64 }}>Is Paid</StyledTableCell>
           <StyledTableCell sx={{ maxWidth: 200 }}>Date</StyledTableCell>
           <StyledTableCell sx={{ maxWidth: 200 }}>Duration (minutes)</StyledTableCell>
           <StyledTableCell sx={{ maxWidth: 100 }}>Used Quota</StyledTableCell>
           <StyledTableCell>Notes</StyledTableCell>
           <StyledTableCell>Teacher Substitute</StyledTableCell>
-          <StyledTableCell>Is Paid</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {data.map((item) => (
-          <TableRow hover key={item.attendanceId}>
+          <TableRow
+            hover
+            key={item.attendanceId}
+            className={item.isPaid ? "" : "attendance-unpaid-row"}
+          >
             <StyledTableCell>
-              <IconButton onClick={() => openForm(item)} color="secondary">
-                <Edit />
-              </IconButton>
-              <IconButton onClick={() => handleDelete(item)} color="error">
-                <Delete />
-              </IconButton>
+              <Tooltip
+                content={
+                  item.isPaid
+                    ? "De-register this attendance from the teacher payment to edit/delete"
+                    : ""
+                }
+              >
+                <>
+                  <IconButton
+                    disabled={item.isPaid ? true : false}
+                    onClick={() => openForm(item)}
+                    color="secondary"
+                  >
+                    <Edit />
+                  </IconButton>
+                  <IconButton
+                    disabled={item.isPaid ? true : false}
+                    onClick={() => handleDelete(item)}
+                    color="error"
+                  >
+                    <Delete />
+                  </IconButton>
+                </>
+              </Tooltip>
+            </StyledTableCell>
+            <StyledTableCell>
+              <Typography
+                color={(theme) =>
+                  item.isPaid ? theme.palette.success.main : theme.palette.error.main
+                }
+                fontWeight="bold"
+              >
+                {item.isPaid ? "Yes" : "No"}
+              </Typography>
             </StyledTableCell>
             <StyledTableCell sx={{ textAlign: "center", maxWidth: 200 }}>
               {moment(item.date).format("DD MMMM YYYY HH:mm:ss")}
@@ -134,8 +167,6 @@ const AttendanceDetailTableView = ({
             <StyledTableCell sx={{ textAlign: "center" }}>
               {item.teacher.teacherId !== teacherId ? getFullNameFromTeacher(item.teacher) : "-"}
             </StyledTableCell>
-            {/* TODO(FerdiantJoshua): render the row as green when the attendance is paid */}
-            <StyledTableCell>{item.isPaid ? "Yes" : "No"}</StyledTableCell>
             {/* TODO(FerdiantJoshua): add new column, contains a button to show which studentLearningToken this attendance is using (there are some detail, so we should use modal) */}
           </TableRow>
         ))}
