@@ -190,6 +190,15 @@ const PageAdminStudentLearningTokenTable = ({
           },
           {
             type: "text-input",
+            field: "quota",
+            columnLabel: "Quota",
+            helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            md: 4,
+            lg: 4,
+            filterHandler: (data, value) => advancedNumberFilter(data.quota, value.trim())
+          },
+          {
+            type: "text-input",
             field: "courseFeeValue",
             columnLabel: "Course Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
