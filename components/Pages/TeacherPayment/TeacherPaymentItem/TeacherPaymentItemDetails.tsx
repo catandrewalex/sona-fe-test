@@ -119,14 +119,13 @@ const TeacherPaymentItemDetails = ({
       disableColumnMenu: true,
       cellClassName: "editable-cell",
       headerClassName: "header-break",
-      // TODO(FerdiantJoshua): handle case when grossCourseFee == 0, percentage should always be "N/A"
       valueGetter(params) {
         if (params.row.courseFeeSharingPercentage === undefined)
           return params.row.courseFeeSharingPercentage * 100;
         return params.value * 100;
       },
       valueFormatter(params) {
-        return convertNumberToPercentage(params.value.toFixed(2), true);
+        return convertNumberToPercentage(params.value, 2);
       },
       editable: true
     },
@@ -177,14 +176,13 @@ const TeacherPaymentItemDetails = ({
       disableColumnMenu: true,
       headerClassName: "header-break",
       cellClassName: "editable-cell",
-      // TODO(FerdiantJoshua): handle case when grossTransportFee == 0, percentage should always be "N/A"
       valueGetter(params) {
         if (params.row.transportFeeSharingPercentage === undefined)
           return params.row.transportFeeSharingPercentage * 100;
         return params.value * 100;
       },
       valueFormatter(params) {
-        return convertNumberToPercentage(params.value.toFixed(2), true);
+        return convertNumberToPercentage(params.value, 2);
       },
       editable: true
     }
@@ -251,8 +249,10 @@ const TeacherPaymentItemDetails = ({
                   "warning"
                 );
               }
-              updatedRow.courseFeeSharingPercentage =
-                updatedRow.paidCourseFeeValue / updatedRow.grossCourseFeeValue;
+              if (updatedRow.grossCourseFeeValue !== 0) {
+                updatedRow.courseFeeSharingPercentage =
+                  updatedRow.paidCourseFeeValue / updatedRow.grossCourseFeeValue;
+              }
               invokeHandleSubmit();
               return updatedRow;
             }
