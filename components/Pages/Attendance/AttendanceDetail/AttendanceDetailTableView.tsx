@@ -102,6 +102,7 @@ const AttendanceDetailTableView = ({
     <Table stickyHeader sx={{ "& .MuiTableCell-root": { py: 1.5 } }}>
       <TableHead>
         <TableRow>
+          {/* TODO(FerdiantJoshua): hide these edit/delete button if in this class, the user is Member (or below) and is a student */}
           <StyledTableCell sx={{ maxWidth: 64 }}></StyledTableCell>
           <StyledTableCell sx={{ maxWidth: 64 }}>Is Paid</StyledTableCell>
           <StyledTableCell sx={{ maxWidth: 200 }}>Date</StyledTableCell>
@@ -118,6 +119,7 @@ const AttendanceDetailTableView = ({
             key={item.attendanceId}
             className={item.isPaid ? "" : "attendance-unpaid-row"}
           >
+            {/* TODO(FerdiantJoshua): hide these edit/delete button if in this class, the user is Member (or below) and is a student */}
             <StyledTableCell>
               <Tooltip
                 content={

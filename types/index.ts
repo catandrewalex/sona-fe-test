@@ -13,6 +13,13 @@ export interface UserDetail {
   lastName?: string;
 }
 
+export interface UserTeachingInfo {
+  teacherId: number;
+  studentId: number;
+  isTeacher: boolean;
+  isStudent: boolean;
+}
+
 export interface LoginResponse {
   user: User;
   authToken: string;

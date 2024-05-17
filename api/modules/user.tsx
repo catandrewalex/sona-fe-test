@@ -1,4 +1,4 @@
-import { User } from "@sonamusica-fe/types";
+import { User, UserTeachingInfo } from "@sonamusica-fe/types";
 import API, { FailedResponse, Routes, SuccessResponse } from "api";
 
 const GetUserProfile = (): Promise<FailedResponse | SuccessResponse<User>> => {
@@ -7,4 +7,10 @@ const GetUserProfile = (): Promise<FailedResponse | SuccessResponse<User>> => {
   });
 };
 
-export default { GetUserProfile };
+const GetUserTeachingInfo = (): Promise<FailedResponse | SuccessResponse<UserTeachingInfo>> => {
+  return API.get<UserTeachingInfo>({
+    url: `${Routes.USER_TEACHING_INFO}`
+  });
+};
+
+export default { GetUserProfile, GetUserTeachingInfo };

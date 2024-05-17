@@ -18,10 +18,39 @@ import { useRouter } from "next/router";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import AttendanceResultDetail from "@sonamusica-fe/components/Pages/Attendance/AttendanceResultDetail";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
+import { DeduplicateArrayOfObjects } from "@sonamusica-fe/utils/GeneralUtil";
 
 type SearchResultAttendanceProps = {
   backButtonHandler: () => void;
 };
+
+type StudentsTeachersCourses = {
+  students: Array<Student>;
+  teachers: Array<Teacher>;
+  courses: Array<Course>;
+};
+
+function getStudentsTeachersCoursesFromClasses(classes: Array<Class>): StudentsTeachersCourses {
+  let students: Array<Student> = [];
+  let teachers: Array<Teacher> = [];
+  let courses: Array<Course> = [];
+
+  classes.forEach((_class) => {
+    students.push(..._class.students);
+    if (_class.teacher) teachers.push(_class.teacher);
+    courses.push(_class.course);
+  });
+
+  students = DeduplicateArrayOfObjects(students, "studentId");
+  teachers = DeduplicateArrayOfObjects(teachers, "teacherId");
+  courses = DeduplicateArrayOfObjects(courses, "courseId");
+
+  students.sort((x, y) => (getFullNameFromStudent(x) < getFullNameFromStudent(y) ? -1 : 1));
+  courses.sort((x, y) => (getCourseName(x) < getCourseName(y) ? -1 : 1));
+  teachers.sort((x, y) => (getFullNameFromTeacher(x) < getFullNameFromTeacher(y) ? -1 : 1));
+
+  return { students, teachers, courses };
+}
 
 const SearchResultAttendance = ({
   backButtonHandler
@@ -64,8 +93,9 @@ const SearchResultAttendance = ({
             setDisplayData((parsedResponse as ResponseMany<Class>).results);
           }
         } else {
-          showSnackbar("Failed to fetch students data!", "error");
+          showSnackbar("Failed to fetch classes data!", "error");
         }
+
         if (value[1].status === "fulfilled") {
           const response = value[1].value as SuccessResponse<Student>;
           const parsedResponse = apiTransformer(response, false);
@@ -97,6 +127,16 @@ const SearchResultAttendance = ({
       });
     }
   }, [user, query]);
+
+  useEffect(() => {
+    // generate filter data from existing Class[] data on empty dropdown option
+    if ((studentData.length === 0, teacherData.length === 0, courseData.length === 0)) {
+      const { students, teachers, courses } = getStudentsTeachersCoursesFromClasses(data);
+      setStudentData(students);
+      setTeacherData(teachers);
+      setCourseData(courses);
+    }
+  }, [studentData, teacherData, courseData]);
 
   return (
     <Box sx={{ mt: 1, position: "relative" }}>

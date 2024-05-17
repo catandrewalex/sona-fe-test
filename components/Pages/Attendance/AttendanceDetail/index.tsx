@@ -22,7 +22,7 @@ type AttendanceDetailContainerProps = {
 const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps): JSX.Element => {
   const [selectedData, setSelectedData] = useState<Attendance>();
   const [teacherOptions, setTeacherOptions] = useState<Teacher[]>([]);
-  // we switch this true/false to force render on AttendanceDetailTabContainer, whenever the AttendanceForm is submitted
+  // we increment this counter to force render on AttendanceDetailTabContainer, whenever the AttendanceForm is submitted (both add & edit)
   const [forceRenderCounter, forceRender] = useReducer((prev) => prev + 1, 0);
 
   const { query } = useRouter();
@@ -103,6 +103,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
             cellValueComponentProps={{ variant: "h5", fontSize: 16 }}
           />
         </Box>
+        {/* TODO(FerdiantJoshua): hide this button if in this class, the user is Member (or below) and is a student */}
         <Box width={200}>
           <Button
             disabled={classData.students.length === 0}
