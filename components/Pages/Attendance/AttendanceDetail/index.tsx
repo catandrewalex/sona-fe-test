@@ -5,7 +5,7 @@ import AttendanceDetailTabContainer from "@sonamusica-fe/components/Pages/Attend
 import FormDataViewerTable from "@sonamusica-fe/components/Table/FormDataViewerTable";
 import AttendanceModalForm from "@sonamusica-fe/components/Pages/Attendance/AttendanceModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { Attendance, Class, Teacher } from "@sonamusica-fe/types";
+import { Attendance, Class, Teacher, User, UserTeachingInfo } from "@sonamusica-fe/types";
 import {
   convertNumberToCurrencyString,
   getCourseName,
@@ -17,9 +17,13 @@ import React, { useCallback, useEffect, useReducer, useState } from "react";
 
 type AttendanceDetailContainerProps = {
   classData: Class;
+  isUserHasWriteAccess: boolean;
 };
 
-const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps): JSX.Element => {
+const AttendanceDetailContainer = ({
+  classData,
+  isUserHasWriteAccess
+}: AttendanceDetailContainerProps): JSX.Element => {
   const [selectedData, setSelectedData] = useState<Attendance>();
   const [teacherOptions, setTeacherOptions] = useState<Teacher[]>([]);
   // we increment this counter to force render on AttendanceDetailTabContainer, whenever the AttendanceForm is submitted (both add & edit)
@@ -48,7 +52,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
   const { showSnackbar } = useSnack();
 
   const fetchTeacherOptions = useCallback(() => {
-    API.GetTeacherDropdownOptions().then((response) => {
+    API.GetTeacherForAttendanceDropdownOptions().then((response) => {
       const parsedClassData = apiTransformer(response, false);
       if (Object.getPrototypeOf(parsedClassData) !== FailedResponse.prototype) {
         setTeacherOptions((parsedClassData as ResponseMany<Teacher>).results);
@@ -103,10 +107,9 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
             cellValueComponentProps={{ variant: "h5", fontSize: 16 }}
           />
         </Box>
-        {/* TODO(FerdiantJoshua): hide this button if in this class, the user is Member (or below) and is a student */}
         <Box width={200}>
           <Button
-            disabled={classData.students.length === 0}
+            disabled={classData.students.length === 0 || !isUserHasWriteAccess}
             onClick={() => openForm()}
             startIcon={<Add />}
             fullWidth
@@ -122,6 +125,7 @@ const AttendanceDetailContainer = ({ classData }: AttendanceDetailContainerProps
           studentsData={classData.students}
           teacherId={classData.teacher?.teacherId || 0}
           classId={classData.classId}
+          isUserHasWriteAccess={isUserHasWriteAccess}
           openForm={openForm}
           preSelectedStudentId={preSelectedStudentId}
           forceRenderCounter={forceRenderCounter}

@@ -254,6 +254,7 @@ export enum Routes {
   USER_TEACHING_INFO = "/userTeachingInfo",
   PAYMENT = "/enrollmentPayments",
   TEACHER = "/teachers",
+  TEACHER_FOR_ATTENDANCE = "/teachersForAttendance",
   STUDENT = "/students",
   COURSE = "/courses",
   CLASS = "/classes",

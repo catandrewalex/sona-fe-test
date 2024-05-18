@@ -3,17 +3,19 @@ import { Alert, Button, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import AttendanceDetailContainer from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail";
-import { useApp } from "@sonamusica-fe/providers/AppProvider";
+import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { Class } from "@sonamusica-fe/types";
+import { Class, UserTeachingInfo, UserType } from "@sonamusica-fe/types";
 import { isValidNumericString } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "api";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 
 const AttendanceDetailPage = (): JSX.Element => {
-  const [classData, setClassData] = useState<Class>();
   const { query } = useRouter();
+  const user = useUser((state) => state.user);
+  const [classData, setClassData] = useState<Class>();
+  const [userTeachingInfo, setUserTeachingInfo] = useState<UserTeachingInfo>();
   const { finishLoading, startLoading } = useApp((state) => ({
     finishLoading: state.finishLoading,
     startLoading: state.startLoading
@@ -38,12 +40,32 @@ const AttendanceDetailPage = (): JSX.Element => {
     }
   }, [query]);
 
+  useEffect(() => {
+    API.GetUserTeachingInfo().then((response) => {
+      const parsedResponse = apiTransformer(response, false);
+      if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
+        setUserTeachingInfo(parsedResponse as UserTeachingInfo);
+      }
+    });
+    // TODO: connect with loading, just like fetchClassData? so that the page only renders after all endpoint has been properly fetched.
+    // Currently, this API is lighter than fetchClassData, so in most cases it should return much earlier than fetchClassData.
+  }, []);
+
   useEffect(fetchClassData, [query]);
+
+  const isUserHasWriteAccess =
+    user !== undefined &&
+    (user.privilegeType >= UserType.STAFF ||
+      (userTeachingInfo !== undefined &&
+        userTeachingInfo.teacherId === classData?.teacher?.teacherId));
 
   return (
     <PageContainer navTitle="Attendance Detail" pageTitle="Attendance Detail">
       {classData ? (
-        <AttendanceDetailContainer classData={classData} />
+        <AttendanceDetailContainer
+          classData={classData}
+          isUserHasWriteAccess={isUserHasWriteAccess}
+        />
       ) : (
         <Alert severity="error" variant="filled" sx={{ mt: 2 }}>
           <Typography component="span">Failed to load class data!</Typography>

@@ -4,12 +4,7 @@ import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
 import AttendanceDetailTableView from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTableView";
 import Pagination from "@sonamusica-fe/components/Pagination";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import {
-  Attendance,
-  Student,
-  StudentLearningTokenDisplay,
-  StudentWithStudentLearningTokensDisplay
-} from "@sonamusica-fe/types";
+import { Attendance, Student, StudentLearningTokenDisplay } from "@sonamusica-fe/types";
 import {
   convertNumberToCurrencyString,
   getFullNameFromStudent
@@ -23,6 +18,7 @@ type AttendanceDetailTabContainerProps = {
   studentsData: Student[];
   classId: number;
   teacherId: number;
+  isUserHasWriteAccess: boolean;
   openForm: (data: Attendance) => void;
   preSelectedStudentId: number;
   forceRenderCounter: number;
@@ -38,6 +34,7 @@ const AttendanceDetailTabContainer = ({
   studentsData,
   classId,
   teacherId,
+  isUserHasWriteAccess,
   openForm,
   preSelectedStudentId,
   forceRenderCounter
@@ -186,6 +183,7 @@ const AttendanceDetailTabContainer = ({
                 <AttendanceDetailTableView
                   data={attendanceData}
                   teacherId={teacherId}
+                  isUserHasWriteAccess={isUserHasWriteAccess}
                   openForm={openForm}
                   onDelete={onDelete}
                 />

@@ -24,6 +24,7 @@ import Tooltip from "@sonamusica-fe/components/Tooltip";
 type AttendanceDetailTableViewProps = {
   data: Attendance[];
   teacherId: number;
+  isUserHasWriteAccess: boolean;
   openForm: (data: Attendance) => void;
   onDelete: () => void;
 };
@@ -39,6 +40,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const AttendanceDetailTableView = ({
   data,
   teacherId,
+  isUserHasWriteAccess,
   openForm,
   onDelete
 }: AttendanceDetailTableViewProps): JSX.Element => {
@@ -102,8 +104,7 @@ const AttendanceDetailTableView = ({
     <Table stickyHeader sx={{ "& .MuiTableCell-root": { py: 1.5 } }}>
       <TableHead>
         <TableRow>
-          {/* TODO(FerdiantJoshua): hide these edit/delete button if in this class, the user is Member (or below) and is a student */}
-          <StyledTableCell sx={{ maxWidth: 64 }}></StyledTableCell>
+          {isUserHasWriteAccess && <StyledTableCell sx={{ maxWidth: 64 }}></StyledTableCell>}
           <StyledTableCell sx={{ maxWidth: 64 }}>Is Paid</StyledTableCell>
           <StyledTableCell sx={{ maxWidth: 200 }}>Date</StyledTableCell>
           <StyledTableCell sx={{ maxWidth: 200 }}>Duration (minutes)</StyledTableCell>
@@ -119,35 +120,37 @@ const AttendanceDetailTableView = ({
             key={item.attendanceId}
             className={item.isPaid ? "" : "attendance-unpaid-row"}
           >
-            {/* TODO(FerdiantJoshua): hide these edit/delete button if in this class, the user is Member (or below) and is a student */}
-            <StyledTableCell>
-              <Tooltip
-                content={
-                  item.isPaid
-                    ? "De-register this attendance from the teacher payment to edit/delete"
-                    : ""
-                }
-              >
-                <>
-                  <IconButton
-                    disabled={item.isPaid ? true : false}
-                    onClick={() => openForm(item)}
-                    color="secondary"
-                  >
-                    <Edit />
-                  </IconButton>
-                  <IconButton
-                    disabled={item.isPaid ? true : false}
-                    onClick={() => handleDelete(item)}
-                    color="error"
-                  >
-                    <Delete />
-                  </IconButton>
-                </>
-              </Tooltip>
-            </StyledTableCell>
+            {isUserHasWriteAccess && (
+              <StyledTableCell>
+                <Tooltip
+                  content={
+                    item.isPaid
+                      ? "De-register this attendance from the teacher payment to edit/delete"
+                      : ""
+                  }
+                >
+                  <>
+                    <IconButton
+                      disabled={item.isPaid ? true : false}
+                      onClick={() => openForm(item)}
+                      color="secondary"
+                    >
+                      <Edit />
+                    </IconButton>
+                    <IconButton
+                      disabled={item.isPaid ? true : false}
+                      onClick={() => handleDelete(item)}
+                      color="error"
+                    >
+                      <Delete />
+                    </IconButton>
+                  </>
+                </Tooltip>
+              </StyledTableCell>
+            )}
             <StyledTableCell>
               <Typography
+                align="center"
                 color={(theme) =>
                   item.isPaid ? theme.palette.success.main : theme.palette.error.main
                 }

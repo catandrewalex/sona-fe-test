@@ -11,4 +11,14 @@ const GetTeacherDropdownOptions = ({
   });
 };
 
-export default { GetTeacherDropdownOptions };
+const GetTeacherForAttendanceDropdownOptions = ({
+  page = 1,
+  resultsPerPage = 10000
+}: GetRequestConfig = {}): Promise<FailedResponse | SuccessResponse<Teacher>> => {
+  return API.get<Teacher>({
+    url: Routes.TEACHER_FOR_ATTENDANCE,
+    config: { params: { page, resultsPerPage } }
+  });
+};
+
+export default { GetTeacherDropdownOptions, GetTeacherForAttendanceDropdownOptions };
