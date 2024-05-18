@@ -111,6 +111,19 @@ const TextInput = <T extends unknown>({
     [emailCheck, matchCheck, GTEZeroCheck, GTZeroCheck, requiredCheck, validations, valueRef]
   );
 
+  const internalOnChange = useCallback(
+    (e) => {
+      setInternalValue(e.target.value);
+      errorRef.current[field] = validationHandler(e.target.value);
+      if (onChange) onChange(e);
+      valueRef.current[field] =
+        props.type === "number"
+          ? (parseFloat(e.target.value ?? 0) as unknown as T[keyof T])
+          : (e.target.value as unknown as T[keyof T]);
+    },
+    [setInternalValue, validationHandler, onChange, errorRef, valueRef, props.type, field]
+  );
+
   useEffect(() => {
     setInternalValue(initialValue || "");
   }, [initialValue]);
@@ -132,15 +145,7 @@ const TextInput = <T extends unknown>({
         fullWidth
         value={internalValue}
         label={label}
-        onChange={(e) => {
-          setInternalValue(e.target.value);
-          errorRef.current[field] = validationHandler(e.target.value);
-          if (onChange) onChange(e);
-          valueRef.current[field] =
-            props.type === "number"
-              ? (parseInt(e.target.value) as unknown as T[keyof T])
-              : (e.target.value as unknown as T[keyof T]);
-        }}
+        onChange={internalOnChange}
         error={internalErrorMsg !== ""}
         inputProps={finalInputProps}
         InputProps={{
