@@ -16,7 +16,7 @@ const useModalRenderer = ({ ...props }: Partial<ModalProps> = {}): {
 
   const ModalRenderer = ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element => {
     return (
-      <Modal {...props} open={open} onClose={closeModal}>
+      <Modal {...props} open={open} onClose={closeModal} disableEscape={false}>
         {children}
       </Modal>
     );

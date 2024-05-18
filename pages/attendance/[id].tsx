@@ -47,7 +47,7 @@ const AttendanceDetailPage = (): JSX.Element => {
         setUserTeachingInfo(parsedResponse as UserTeachingInfo);
       }
     });
-    // TODO: connect with loading, just like fetchClassData? so that the page only renders after all endpoint has been properly fetched.
+    // TODO(FerdiantJoshua): connect with loading, just like fetchClassData? so that the page only renders after all endpoint has been properly fetched.
     // Currently, this API is lighter than fetchClassData, so in most cases it should return much earlier than fetchClassData.
   }, []);
 
