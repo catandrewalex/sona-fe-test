@@ -123,8 +123,12 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
   return (
     <PageContainer
       navTitle={
-        rawData && rawData[0]?.teacher
-          ? `Invoice - ${getFullNameFromTeacher(rawData[0].teacher)}`
+        // we need to do this, as class' teacher can be different from attendance's teacher (i.e. teacher substitution).
+        //  so, to get the real attendance's teacher, we need to traverse down to the first attendance/teacherPayment record, then get the teacher.
+        rawData && rawData[0]?.students[0]?.studentLearningTokens[0]?.attendances[0]?.teacher
+          ? `Invoice - ${getFullNameFromTeacher(
+              rawData[0].students[0].studentLearningTokens[0].attendances[0].teacher
+            )}`
           : "Invoice"
       }
     >
