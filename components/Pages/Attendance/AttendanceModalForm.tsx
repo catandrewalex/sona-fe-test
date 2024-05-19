@@ -92,7 +92,7 @@ const AttendanceModalForm = ({
       type: "select",
       name: "teacher",
       label: "Teacher",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, md: 6, xs: 12 },
       inputProps: { required: true },
       selectProps: {
         options: teacherOptions,

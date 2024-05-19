@@ -56,7 +56,7 @@ const LoginForm = (): JSX.Element => {
           name: "email",
           inputProps: { testIdContext: "LoginEmail", required: true },
           validations: [{ name: "required" }],
-          formFieldProps: { lg: 12 }
+          formFieldProps: { xs: 12 }
         },
         {
           type: "text",
@@ -64,7 +64,7 @@ const LoginForm = (): JSX.Element => {
           name: "password",
           inputProps: { testIdContext: "LoginPassword", required: true, type: "password" },
           validations: [{ name: "required" }],
-          formFieldProps: { lg: 12, sx: { pt: "0px !important" } }
+          formFieldProps: { xs: 12, sx: { pt: "0px !important" } }
         }
       ],
       submitHandler: async (data, errors) => {
@@ -115,7 +115,8 @@ const LoginForm = (): JSX.Element => {
         onClick: () => setState(State.LOGIN),
         startIcon: <ArrowBackOutlined />,
         fullWidth: true,
-        color: "inherit"
+        variant: "outlined",
+        color: "secondary"
       },
       fields: [
         {
@@ -124,7 +125,7 @@ const LoginForm = (): JSX.Element => {
           name: "email",
           inputProps: { testIdContext: "ForgotPassword", required: true, sx: { my: 2 } },
           validations: [{ name: "required" }, { name: "email" }],
-          formFieldProps: { lg: 12 }
+          formFieldProps: { xs: 12 }
         }
       ],
       submitHandler: async (data, errors) => {
@@ -173,8 +174,9 @@ const LoginForm = (): JSX.Element => {
         sx={{
           px: 3,
           py: 1,
+          mx: 2,
           mt: 5,
-          width: "500px",
+          maxWidth: "500px",
           display: "flex",
           flexDirection: "column"
         }}

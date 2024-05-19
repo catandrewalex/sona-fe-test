@@ -55,7 +55,7 @@ const AttendanceDetailTableView = ({
     onClose: () => setSelectedAttendance(undefined),
     closeIcon: true,
     minWidth: "30vw",
-    maxWidth: "50vw"
+    maxWidth: "75vw"
   });
 
   const apiTransformer = useApiTransformer();
@@ -204,8 +204,7 @@ const AttendanceDetailTableView = ({
       {selectedAttendance && (
         <ModalRenderer>
           <Typography variant="h5" sx={{ mb: 2 }}>
-            #{selectedAttendance.studentLearningToken.studentLearningTokenId} Student Learning Token
-            Detail
+            Token #{selectedAttendance.studentLearningToken.studentLearningTokenId} Detail
           </Typography>
           <FormDataViewerTable
             tableProps={{ size: "small", sx: { mt: 1 } }}

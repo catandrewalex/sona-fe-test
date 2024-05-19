@@ -38,7 +38,7 @@ const PageAdminClassTable = ({
     onClose: () => setSelectedStudentDetail(undefined),
     closeIcon: true,
     minWidth: "30vw",
-    maxWidth: "50vw"
+    maxWidth: "75vw"
   });
 
   return (

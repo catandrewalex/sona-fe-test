@@ -87,8 +87,8 @@ const AttendanceDetailContainer = ({
 
   return (
     <Box mt={1}>
-      <Box display="flex">
-        <Box flexGrow={1}>
+      <Box display="flex" flexWrap="wrap" rowGap={2}>
+        <Box flexGrow={8}>
           <FormDataViewerTable
             tableProps={{ size: "small" }}
             tableRowProps={{
@@ -107,7 +107,7 @@ const AttendanceDetailContainer = ({
             cellValueComponentProps={{ variant: "h5", fontSize: 16 }}
           />
         </Box>
-        <Box width={200}>
+        <Box width={184} flexGrow={1}>
           <Button
             disabled={classData.students.length === 0 || !isUserHasWriteAccess}
             onClick={() => openForm()}

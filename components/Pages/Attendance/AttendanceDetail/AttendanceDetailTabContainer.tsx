@@ -176,6 +176,7 @@ const AttendanceDetailTabContainer = ({
               </>
             )}
 
+            {/* TODO(FerdiantJoshua): set this TableContainer, not to have excess width on lots of column & small screens */}
             <TableContainer sx={{ mt: 2, height: "calc(100vh - 376px)" }}>
               {loading ? (
                 <LoaderSimple />
