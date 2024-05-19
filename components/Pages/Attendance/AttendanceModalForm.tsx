@@ -51,7 +51,7 @@ const AttendanceModalForm = ({
       type: "date-time",
       name: "date",
       label: "Date",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, md: 6, xs: 12 },
       validations: [],
       dateProps: { slotProps: { textField: { required: true } } }
     },
@@ -59,7 +59,7 @@ const AttendanceModalForm = ({
       type: "text",
       name: "usedStudentTokenQuota",
       label: "Used Quota",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, md: 6, xs: 12 },
       inputProps: {
         type: "number",
         required: true
@@ -70,7 +70,7 @@ const AttendanceModalForm = ({
       type: "text",
       name: "duration",
       label: "Duration (minute)",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, md: 6, xs: 12 },
       inputProps: {
         type: "number",
         required: true
@@ -81,7 +81,7 @@ const AttendanceModalForm = ({
       type: "text",
       name: "note",
       label: "Notes",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, md: 6, xs: 12 },
       inputProps: {
         type: "text",
         multiline: true
