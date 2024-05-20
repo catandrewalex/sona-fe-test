@@ -80,8 +80,7 @@ const PageAdminInstrumentTable = ({
           {
             type: "text-input",
             field: "name",
-            md: 12,
-            lg: 12
+            xs: 12
           }
         ]}
       />

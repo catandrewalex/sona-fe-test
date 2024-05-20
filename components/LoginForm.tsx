@@ -56,7 +56,7 @@ const LoginForm = (): JSX.Element => {
           name: "email",
           inputProps: { testIdContext: "LoginEmail", required: true },
           validations: [{ name: "required" }],
-          formFieldProps: { xs: 12 }
+          formFieldProps: { lg: 12, md: 12, sm: 12, xs: 12 }
         },
         {
           type: "text",
@@ -64,7 +64,7 @@ const LoginForm = (): JSX.Element => {
           name: "password",
           inputProps: { testIdContext: "LoginPassword", required: true, type: "password" },
           validations: [{ name: "required" }],
-          formFieldProps: { xs: 12, sx: { pt: "0px !important" } }
+          formFieldProps: { lg: 12, md: 12, sm: 12, xs: 12, sx: { pt: "0px !important" } }
         }
       ],
       submitHandler: async (data, errors) => {
@@ -125,7 +125,7 @@ const LoginForm = (): JSX.Element => {
           name: "email",
           inputProps: { testIdContext: "ForgotPassword", required: true, sx: { my: 2 } },
           validations: [{ name: "required" }, { name: "email" }],
-          formFieldProps: { xs: 12 }
+          formFieldProps: { lg: 12, xs: 12 }
         }
       ],
       submitHandler: async (data, errors) => {

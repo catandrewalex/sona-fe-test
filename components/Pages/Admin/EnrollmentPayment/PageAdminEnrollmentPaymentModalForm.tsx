@@ -48,7 +48,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       type: "select",
       name: "studentEnrollment",
       label: "Student Enrollment",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 12, md: 12, sm: 12, xs: 12 },
       inputProps: { required: true },
       selectProps: {
         options: studentEnrollmentData,
@@ -61,7 +61,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       type: "text",
       name: "courseFeeValue",
       label: "Course Fee",
-      formFieldProps: { lg: 3, md: 6 },
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
         type: "number",
@@ -73,7 +73,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       type: "text",
       name: "transportFeeValue",
       label: "Transport Fee",
-      formFieldProps: { lg: 3, md: 6 },
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
         type: "number",
@@ -85,7 +85,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       type: "text",
       name: "penaltyFeeValue",
       label: "Penalty Fee",
-      formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
         type: "number",
@@ -97,7 +97,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       type: "text",
       name: "balanceTopUp",
       label: "Balance Top Up",
-      formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
       inputProps: {
         type: "number",
         required: true
@@ -108,7 +108,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
       type: "date",
       name: "paymentDate",
       label: "Payment Date",
-      formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
       validations: [],
       dateProps: { defaultValue: moment(), slotProps: { textField: { required: true } } }
     }
@@ -124,7 +124,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
     type: "date",
     name: "paymentDate",
     label: "Payment Date",
-    formFieldProps: { lg: 3, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
+    formFieldProps: { lg: 4, sx: selectedData ? {} : { pt: "8px !important" } },
     validations: [],
     dateProps: { slotProps: { textField: { required: true } } }
   });

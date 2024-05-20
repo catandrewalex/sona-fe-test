@@ -55,7 +55,7 @@ const PageAdminStudentLearningTokenModalForm = ({
       type: "text",
       name: "courseFeeValue",
       label: "Course Fee",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
       inputProps: {
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,

@@ -138,6 +138,7 @@ const PageAdminClassTable = ({
             {
               type: "text-input",
               field: "teacher",
+              xs: 6,
               md: 4,
               lg: 4,
               filterHandler: (data, value) => searchFullNameByValue(value, data.teacher?.user)
@@ -146,6 +147,7 @@ const PageAdminClassTable = ({
               type: "text-input",
               field: "instrument-grade",
               columnLabel: "Course",
+              xs: 6,
               md: 4,
               lg: 4,
               filterHandler: (data, value) => searchCourseNameByValue(value, data.course)
@@ -155,6 +157,7 @@ const PageAdminClassTable = ({
               data: studentData,
               field: "students",
               getOptionLabel: (option) => getFullNameFromStudent(option),
+              xs: 6,
               md: 4,
               lg: 4,
               filterHandler: (data, value) => {
@@ -172,6 +175,7 @@ const PageAdminClassTable = ({
               field: "teacherSpecialFee",
               columnLabel: "Teacher Special Fee",
               helperText: "Equality signs can be used (<=700000, >100000, 375000, etc.)",
+              xs: 6,
               md: 4,
               lg: 4,
               filterHandler: (data, value) =>
@@ -182,6 +186,7 @@ const PageAdminClassTable = ({
               field: "defaultFee",
               columnLabel: "Fee",
               helperText: "Equality signs can be used (<=700000, >100000, 375000, etc.)",
+              xs: 6,
               md: 4,
               lg: 4,
               filterHandler: (data, value) =>
@@ -192,6 +197,7 @@ const PageAdminClassTable = ({
               field: "defaultDurationMinute",
               columnLabel: "Duration",
               helperText: "Equality signs can be used (<60, >=45, 30, etc.)",
+              xs: 6,
               md: 4,
               lg: 4,
               filterHandler: (data, value) =>

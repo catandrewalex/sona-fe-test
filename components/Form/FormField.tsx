@@ -26,15 +26,16 @@ export interface FormFieldTypes extends GridProps {
  * @props FormFieldProps
  */
 const FormField = ({ children, testIdContext, ...props }: FormFieldTypes): JSX.Element => {
-  const { lg, md } = props;
+  const { lg, md, sm, xs } = props;
 
   return (
     <Grid
       {...props}
       item
-      lg={lg || 6}
-      md={md || 12}
-      sm={12}
+      lg={lg || 4}
+      md={md || 6}
+      sm={sm || 6}
+      xs={xs || 12}
       data-testid={`${testIdContext}-FormField`}
     >
       {children}

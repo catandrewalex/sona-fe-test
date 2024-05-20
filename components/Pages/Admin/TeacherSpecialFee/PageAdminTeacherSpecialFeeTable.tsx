@@ -108,7 +108,7 @@ const PageAdminTeacherSpecialFeeTable = ({
             data: teacherData,
             field: "teacher",
             getOptionLabel: (option) => getFullNameFromTeacher(option),
-            md: 6,
+            xs: 6,
             lg: 6,
             filterHandler: (data, value) => {
               for (const val of value) {
@@ -122,7 +122,7 @@ const PageAdminTeacherSpecialFeeTable = ({
             type: "text-input",
             field: "course",
             columnLabel: "Course",
-            md: 6,
+            xs: 6,
             lg: 6,
             filterHandler: (data, value) => searchCourseNameByValue(value, data.course)
           }

@@ -157,7 +157,8 @@ const PageAdminEnrollmentPaymentTable = ({
             data: studentData,
             field: "students",
             getOptionLabel: (option) => getFullNameFromStudent(option),
-            md: 6,
+            xs: 6,
+            md: 4,
             lg: 4,
             filterHandler: (data, value) => {
               for (const val of value) {
@@ -172,7 +173,8 @@ const PageAdminEnrollmentPaymentTable = ({
             data: teacherData,
             field: "teachers",
             getOptionLabel: (option) => getFullNameFromTeacher(option),
-            md: 6,
+            xs: 6,
+            md: 4,
             lg: 4,
             filterHandler: (data, value) => {
               for (const val of value) {
@@ -186,7 +188,8 @@ const PageAdminEnrollmentPaymentTable = ({
             type: "text-input",
             field: "instrument-grade",
             columnLabel: "Course",
-            md: 6,
+            xs: 6,
+            md: 4,
             lg: 4,
             filterHandler: (data, value) =>
               searchCourseNameByValue(value, data.studentEnrollment.class.course)
@@ -197,6 +200,7 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "courseFeeValue",
             columnLabel: "Course Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) => advancedNumberFilter(data.courseFeeValue, value.trim())
@@ -206,6 +210,7 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "penaltyFeeValue",
             columnLabel: "Penalty Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) => advancedNumberFilter(data.penaltyFeeValue, value.trim())
@@ -215,6 +220,7 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "transportFeeValue",
             columnLabel: "Transport Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) =>

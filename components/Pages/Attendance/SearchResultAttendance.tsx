@@ -78,65 +78,26 @@ const SearchResultAttendance = ({
       if (queryStudent) searchConfig.studentId = parseInt(query.student as string);
       if (queryCourse) searchConfig.courseId = parseInt(query.course as string);
 
-      const promises = [
-        API.SearchClassByTeacherStudentCourse(searchConfig),
-        API.GetStudentDropdownOptions(),
-        API.GetTeacherDropdownOptions(),
-        API.GetCourseDropdownOptions()
-      ];
-      Promise.allSettled(promises).then((value) => {
-        if (value[0].status === "fulfilled") {
-          const response = value[0].value as SuccessResponse<Class>;
+      API.SearchClassByTeacherStudentCourse(searchConfig)
+        .then((response) => {
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
             setData((parsedResponse as ResponseMany<Class>).results);
             setDisplayData((parsedResponse as ResponseMany<Class>).results);
+          } else {
+            showSnackbar("Failed to fetch classes data!", "error");
           }
-        } else {
-          showSnackbar("Failed to fetch classes data!", "error");
-        }
-
-        if (value[1].status === "fulfilled") {
-          const response = value[1].value as SuccessResponse<Student>;
-          const parsedResponse = apiTransformer(response, false);
-          if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setStudentData((parsedResponse as ResponseMany<Student>).results);
-          }
-        } else {
-          showSnackbar("Failed to fetch students data!", "error");
-        }
-        if (value[2].status === "fulfilled") {
-          const response = value[2].value as SuccessResponse<Teacher>;
-          const parsedResponse = apiTransformer(response, false);
-          if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setTeacherData((parsedResponse as ResponseMany<Teacher>).results);
-          }
-        } else {
-          showSnackbar("Failed to fetch teachers data!", "error");
-        }
-        if (value[3].status === "fulfilled") {
-          const response = value[3].value as SuccessResponse<Course>;
-          const parsedResponse = apiTransformer(response, false);
-          if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            setCourseData((parsedResponse as ResponseMany<Course>).results);
-          }
-        } else {
-          showSnackbar("Failed to fetch courses data!", "error");
-        }
-        setLoading(false);
-      });
+        })
+        .finally(() => setLoading(false));
     }
   }, [user, query]);
 
   useEffect(() => {
-    // generate filter data from existing Class[] data on empty dropdown option
-    if ((studentData.length === 0, teacherData.length === 0, courseData.length === 0)) {
-      const { students, teachers, courses } = getStudentsTeachersCoursesFromClasses(data);
-      setStudentData(students);
-      setTeacherData(teachers);
-      setCourseData(courses);
-    }
-  }, [studentData, teacherData, courseData]);
+    const { students, teachers, courses } = getStudentsTeachersCoursesFromClasses(data);
+    setStudentData(students);
+    setTeacherData(teachers);
+    setCourseData(courses);
+  }, [data]);
 
   return (
     <Box sx={{ mt: 1, position: "relative" }}>
@@ -160,7 +121,8 @@ const SearchResultAttendance = ({
             },
             filterHandle(data, value) {
               for (const val of value) {
-                if (data.students.map((student) => student.studentId).includes(val)) return true;
+                if (data.students.map((student) => student.studentId).includes(val.studentId))
+                  return true;
               }
               return false;
             }

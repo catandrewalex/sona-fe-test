@@ -45,7 +45,7 @@ const PageAdminTeacherSpecialFeeModalForm = ({
       type: "select",
       name: "teacher",
       label: "Teacher",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6 },
       inputProps: { required: true },
       selectProps: {
         options: teacherData,
@@ -57,7 +57,7 @@ const PageAdminTeacherSpecialFeeModalForm = ({
       type: "select",
       name: "course",
       label: "Course",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
       inputProps: { required: true },
       selectProps: {
         options: courseData,
@@ -69,7 +69,7 @@ const PageAdminTeacherSpecialFeeModalForm = ({
       type: "text",
       name: "fee",
       label: "Fee",
-      formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
         type: "number",

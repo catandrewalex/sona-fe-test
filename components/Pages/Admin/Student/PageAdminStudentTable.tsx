@@ -109,23 +109,26 @@ const PageAdminStudentTable = ({
           {
             type: "text-input",
             field: "username",
-            md: 6,
-            lg: 6,
+            xs: 6,
+            md: 4,
+            lg: 3,
             filterHandler: (data, value) =>
               data.user.username.toLowerCase().includes(value.toLowerCase())
           },
           {
             type: "text-input",
             field: "name",
-            md: 6,
-            lg: 6,
+            xs: 6,
+            md: 4,
+            lg: 3,
             filterHandler: (data, value) => searchFullNameByValue(value, data.user)
           },
           {
             type: "text-input",
             field: "email",
-            md: 6,
-            lg: 6,
+            xs: 6,
+            md: 4,
+            lg: 3,
             filterHandler: (data, value) =>
               data.user.email.toLowerCase().includes(value.toLowerCase())
           },
@@ -133,9 +136,10 @@ const PageAdminStudentTable = ({
             type: "select",
             data: [UserType.ADMIN, UserType.STAFF, UserType.MEMBER],
             field: "privilegeType",
+            xs: 6,
+            md: 4,
+            lg: 3,
             getOptionLabel: (option) => UserType[option],
-            md: 6,
-            lg: 6,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.user.privilegeType === val;

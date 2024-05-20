@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { InputAdornment, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import useFormRenderer, {
   FormField as FormFieldType
@@ -69,11 +69,12 @@ const AttendanceModalForm = ({
     {
       type: "text",
       name: "duration",
-      label: "Duration (minute)",
+      label: "Duration",
       formFieldProps: { lg: 6, md: 6, xs: 12 },
       inputProps: {
         type: "number",
-        required: true
+        required: true,
+        endAdornment: <InputAdornment position="end">minute(s)</InputAdornment>
       },
       validations: [{ name: "required" }, { name: "gt-zero" }]
     },

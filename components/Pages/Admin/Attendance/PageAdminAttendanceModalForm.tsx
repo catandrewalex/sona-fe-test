@@ -58,7 +58,7 @@ const PageAdminAttendanceModalForm = ({
       type: "select",
       name: "student",
       label: "Student",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6 },
       inputProps: { required: true },
       selectProps: {
         options: studentData,
@@ -70,7 +70,7 @@ const PageAdminAttendanceModalForm = ({
       type: "select",
       name: "teacher",
       label: "Teacher",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
       inputProps: { required: true },
       selectProps: {
         options: teacherData,
@@ -82,7 +82,7 @@ const PageAdminAttendanceModalForm = ({
       type: "select",
       name: "class",
       label: "Class",
-      formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
       inputProps: { required: true },
       selectProps: {
         options: classData,
@@ -95,7 +95,7 @@ const PageAdminAttendanceModalForm = ({
       type: "select",
       name: "studentLearningToken",
       label: "Student Learning Token",
-      formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
       inputProps: { required: true },
       selectProps: {
         options: studentLearningTokenData,
@@ -110,7 +110,7 @@ const PageAdminAttendanceModalForm = ({
       type: "text",
       name: "usedStudentTokenQuota",
       label: "Quota Used",
-      formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 4, md: 4, sx: { pt: "8px !important" } },
       inputProps: {
         type: "number",
         required: true
@@ -121,7 +121,7 @@ const PageAdminAttendanceModalForm = ({
       type: "text",
       name: "duration",
       label: "Duration (minute)",
-      formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 4, md: 4, sx: { pt: "8px !important" } },
       inputProps: {
         type: "number",
         required: true
@@ -132,7 +132,7 @@ const PageAdminAttendanceModalForm = ({
       type: "date-time",
       name: "date",
       label: "Date",
-      formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 4, md: 4, sx: { pt: "8px !important" } },
       validations: [],
       dateProps: { defaultValue: selectedData ? moment(selectedData.date) : moment() }
     },

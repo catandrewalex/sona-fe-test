@@ -99,9 +99,10 @@ const StudentSelectorInput = <T extends unknown>({
         </>
       )}
       <Grid container>
-        <Grid item md={6} xl={8}>
+        <Grid item xs={12}>
           <StandardSelect
             testIdContext={testIdContext}
+            blurOnSelect
             errorMsg={internalErrorMsg}
             options={options.filter(
               (option) => !internalValue.map((val) => val.studentId).includes(option.studentId)
@@ -112,21 +113,9 @@ const StudentSelectorInput = <T extends unknown>({
             }
             inputProps={{ label: "Choose Student", placeholder: "(No Student)" }}
             onChange={(_e, value) => {
-              setSelectValue(value);
-            }}
-          />
-        </Grid>
-        <Grid
-          md={6}
-          xl={4}
-          item
-          sx={{ justifyContent: "flex-end", display: "flex", alignItems: "center" }}
-        >
-          <Button
-            onClick={() => {
-              if (selectValue) {
+              if (value) {
                 const newValue = [...internalValue];
-                newValue.push(selectValue);
+                newValue.push(value);
                 setInternalValue(newValue);
                 setSelectValue(null);
                 errorRef.current[field] = validationHandler(newValue);
@@ -134,11 +123,7 @@ const StudentSelectorInput = <T extends unknown>({
                 valueRef.current[field] = newValue as unknown as T[keyof T];
               }
             }}
-            color="info"
-            variant="outlined"
-          >
-            Add Student
-          </Button>
+          />
         </Grid>
       </Grid>
     </>

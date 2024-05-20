@@ -14,6 +14,7 @@ import {
   searchCourseNameByValue
 } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
+import { useApp } from "@sonamusica-fe/providers/AppProvider";
 
 type PageAdminAttendanceTableProps = {
   data: Attendance[];
@@ -36,15 +37,15 @@ const PageAdminAttendanceTable = ({
   setLoading,
   setData
 }: PageAdminAttendanceTableProps): JSX.Element => {
+  const { drawerOpen } = useApp();
   const apiTransformer = useApiTransformer();
   const { showDialog } = useAlertDialog();
 
+  // TODO: although this works well, it lags the page severely when we open/close the sidedrawer. Find a better alternative to responsively adjust "TableContainer" width
+  const tableWidth = drawerOpen ? "calc(100vw - 300px)" : "calc(100vw - 120px)";
+
   return (
-    <TableContainer
-      testIdContext="AdminAttendance"
-      height="calc(80vh - 8px)"
-      width="calc(100vw - 360px)"
-    >
+    <TableContainer testIdContext="AdminAttendance" height="calc(80vh - 8px)" width={tableWidth}>
       <Table
         name="Attendance"
         testIdContext="AdminAttendance"
@@ -174,6 +175,7 @@ const PageAdminAttendanceTable = ({
             data: studentData,
             field: "students",
             getOptionLabel: (option) => getFullNameFromStudent(option),
+            xs: 6,
             md: 6,
             lg: 3,
             filterHandler: (data, value) => {
@@ -189,6 +191,7 @@ const PageAdminAttendanceTable = ({
             data: teacherData,
             field: "teachers",
             getOptionLabel: (option) => getFullNameFromTeacher(option),
+            xs: 6,
             md: 6,
             lg: 3,
             filterHandler: (data, value) => {
@@ -203,8 +206,9 @@ const PageAdminAttendanceTable = ({
             type: "text-input",
             field: "instrument-grade",
             columnLabel: "Course",
-            md: 8,
-            lg: 4,
+            xs: 6,
+            md: 6,
+            lg: 3,
             filterHandler: (data, value) => searchCourseNameByValue(value, data.class.course)
           },
           {
@@ -212,8 +216,9 @@ const PageAdminAttendanceTable = ({
             data: [true, false],
             field: "isPaid",
             getOptionLabel: (option) => (option ? "Yes" : "No"),
-            md: 4,
-            lg: 2,
+            xs: 6,
+            md: 6,
+            lg: 3,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.isPaid === val;

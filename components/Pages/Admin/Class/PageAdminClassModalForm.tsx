@@ -44,7 +44,7 @@ const PageAdminClassModalForm = ({
       type: "select",
       name: "teacher",
       label: "Teacher",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6 },
       inputProps: { required: true },
       selectProps: {
         options: teacherData,
@@ -56,7 +56,7 @@ const PageAdminClassModalForm = ({
       type: "select",
       name: "course",
       label: "Course",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
       inputProps: { required: true },
       selectProps: {
         options: courseData,
@@ -68,7 +68,7 @@ const PageAdminClassModalForm = ({
       type: "custom",
       name: "students",
       label: "Student(s)",
-      formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
       validations: [],
       Component: StudentSelectorInput,
       props: { options: studentData }
@@ -77,7 +77,7 @@ const PageAdminClassModalForm = ({
       type: "text",
       name: "transportFee",
       label: "Transport Fee",
-      formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
       inputProps: {
         placeholder: "0",
         type: "number",
@@ -94,7 +94,7 @@ const PageAdminClassModalForm = ({
       type: "switch",
       name: "isActive",
       label: "Active?",
-      formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
       validations: [{ name: "required" }]
     }
   ];

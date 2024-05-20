@@ -66,7 +66,7 @@ const PageAdminStudentModalForm = ({
       type: "select",
       name: "userId",
       label: "=== Select User ===",
-      formFieldProps: { lg: 12, md: 12 },
+      formFieldProps: { lg: 12, md: 12, sm: 12, xs: 12 },
       validations: [],
       selectProps: {
         options: users,
@@ -114,7 +114,7 @@ const PageAdminStudentModalForm = ({
       type: "text",
       name: "email",
       label: "Email",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6 },
       inputProps: {
         type: "email",
         disabled: Boolean(selectedUser)
@@ -125,7 +125,7 @@ const PageAdminStudentModalForm = ({
       type: "text",
       name: "username",
       label: "Username",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
       inputProps: {
         required: true,
         disabled: Boolean(selectedUser)
@@ -138,7 +138,7 @@ const PageAdminStudentModalForm = ({
             type: "text",
             name: "password",
             label: "Password",
-            formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+            formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
             inputProps: { type: "password" },
             validations: []
           },
@@ -146,7 +146,7 @@ const PageAdminStudentModalForm = ({
             type: "text",
             name: "passwordConfirm",
             label: "Confirm Password",
-            formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+            formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
             inputProps: { type: "password" },
             validations: [
               { name: "match", parameters: { matcherField: "password", matcherLabel: "Password" } }
@@ -158,7 +158,7 @@ const PageAdminStudentModalForm = ({
       type: "text",
       name: "firstName",
       label: "First Name",
-      formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { sx: { pt: "8px !important" } },
       inputProps: {
         required: true,
         disabled: Boolean(selectedUser)
@@ -169,7 +169,7 @@ const PageAdminStudentModalForm = ({
       type: "text",
       name: "lastName",
       label: "Last Name",
-      formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { sx: { pt: "8px !important" } },
       inputProps: { disabled: Boolean(selectedUser) },
       validations: []
     },
@@ -177,7 +177,7 @@ const PageAdminStudentModalForm = ({
       type: "select",
       name: "privilegeType",
       label: "Privilege Type",
-      formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { sx: { pt: "8px !important" } },
       inputProps: { required: true },
       selectProps: {
         options,

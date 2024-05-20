@@ -12,6 +12,7 @@ type SelectFilterProps = {
   data: any[];
   onChange?: (value: string[]) => void;
   xs?: GridSize;
+  sm?: GridSize;
   md?: GridSize;
   lg?: GridSize;
   xl?: GridSize;
@@ -29,6 +30,7 @@ const SelectFilter = ({
   xl,
   lg,
   md,
+  sm,
   xs,
   sx,
   value,
@@ -51,6 +53,7 @@ const SelectFilter = ({
       xl={xl}
       lg={lg}
       md={md}
+      sm={sm}
       xs={xs}
       sx={{ pt: "0 !important", px: 1, py: 0.5 }}
       alignSelf="flex-start"

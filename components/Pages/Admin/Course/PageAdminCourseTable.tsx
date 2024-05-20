@@ -102,8 +102,7 @@ const PageAdminCourseTable = ({
             type: "text-input",
             field: "instrument-grade",
             columnLabel: "Instrument or Grade",
-            md: 12,
-            lg: 12,
+            xs: 12,
             filterHandler: (data, value) => searchCourseNameByValue(value, data as Course)
           }
         ]}

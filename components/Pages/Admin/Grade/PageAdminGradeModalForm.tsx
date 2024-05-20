@@ -26,8 +26,8 @@ const defaultFields: FormFieldType<GradeUpsertFormData>[] = [
     type: "text",
     name: "name",
     label: "Name",
-    formFieldProps: { lg: 12, md: 12 },
-    inputProps: { type: "text" },
+    formFieldProps: { lg: 12, md: 12, sm: 12 },
+    inputProps: { required: true, type: "text" },
     validations: [{ name: "required" }]
   }
 ];

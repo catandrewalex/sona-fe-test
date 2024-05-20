@@ -29,6 +29,7 @@ interface DefaultFilterConfig {
   xl?: GridSize;
   lg?: GridSize;
   md?: GridSize;
+  sm?: GridSize;
   xs?: GridSize;
   sx?: CSSProperties;
 }
@@ -242,6 +243,7 @@ const Table = ({
             helperText={item.helperText}
             xs={item.xs}
             md={item.md}
+            sm={item.sm}
             lg={item.lg}
             xl={item.xl}
             sx={item.sx}
@@ -260,6 +262,7 @@ const Table = ({
             data={item.data}
             xs={item.xs}
             md={item.md}
+            sm={item.sm}
             lg={item.lg}
             xl={item.xl}
             sx={item.sx}
@@ -278,6 +281,7 @@ const Table = ({
             key={"custom-filter" + index}
             lg={item.lg}
             md={item.md}
+            sm={item.sm}
             xs={item.xs}
             sx={{ pt: "0 !important", ...item.sx }}
             alignSelf="flex-start"

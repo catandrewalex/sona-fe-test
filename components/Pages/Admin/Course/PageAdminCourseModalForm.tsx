@@ -35,7 +35,7 @@ const PageAdminCourseModalForm = ({
       type: "select",
       name: "grade",
       label: "Grade",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6 },
       inputProps: { required: true },
       selectProps: {
         options: gradeData,
@@ -47,7 +47,7 @@ const PageAdminCourseModalForm = ({
       type: "select",
       name: "instrument",
       label: "Instrument",
-      formFieldProps: { lg: 6, md: 6 },
+      formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
       inputProps: { required: true },
       selectProps: {
         options: instrumentData,
@@ -59,7 +59,7 @@ const PageAdminCourseModalForm = ({
       type: "text",
       name: "defaultDurationMinute",
       label: "Course Duration",
-      formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
       inputProps: {
         type: "number",
         required: true,
@@ -71,7 +71,7 @@ const PageAdminCourseModalForm = ({
       type: "text",
       name: "defaultFee",
       label: "Course Fee",
-      formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
       inputProps: {
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,

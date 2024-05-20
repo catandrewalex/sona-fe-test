@@ -154,6 +154,7 @@ const PageAdminStudentLearningTokenTable = ({
             data: studentData,
             field: "students",
             getOptionLabel: (option) => getFullNameFromStudent(option),
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) => {
@@ -169,6 +170,7 @@ const PageAdminStudentLearningTokenTable = ({
             data: teacherData,
             field: "teachers",
             getOptionLabel: (option) => getFullNameFromTeacher(option),
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) => {
@@ -183,6 +185,7 @@ const PageAdminStudentLearningTokenTable = ({
             type: "text-input",
             field: "instrument-grade",
             columnLabel: "Course",
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) =>
@@ -193,6 +196,7 @@ const PageAdminStudentLearningTokenTable = ({
             field: "quota",
             columnLabel: "Quota",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) => advancedNumberFilter(data.quota, value.trim())
@@ -202,6 +206,7 @@ const PageAdminStudentLearningTokenTable = ({
             field: "courseFeeValue",
             columnLabel: "Course Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) => advancedNumberFilter(data.courseFeeValue, value.trim())
@@ -211,6 +216,7 @@ const PageAdminStudentLearningTokenTable = ({
             field: "transportFeeValue",
             columnLabel: "Transport Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
             md: 4,
             lg: 4,
             filterHandler: (data, value) =>

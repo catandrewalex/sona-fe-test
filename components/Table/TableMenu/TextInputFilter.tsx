@@ -11,6 +11,7 @@ type TextInputFilterProps = {
   column: string;
   columnLabel?: string;
   xs?: GridSize;
+  sm?: GridSize;
   md?: GridSize;
   lg?: GridSize;
   xl?: GridSize;
@@ -28,6 +29,7 @@ const TextInputFilter = ({
   xl,
   lg,
   md,
+  sm,
   xs,
   sx,
   onChange,
@@ -51,6 +53,7 @@ const TextInputFilter = ({
       xl={xl}
       lg={lg}
       md={md}
+      sm={sm}
       xs={xs}
       sx={{ pt: "0 !important", px: 1, py: 0.5 }}
       alignSelf="flex-start"

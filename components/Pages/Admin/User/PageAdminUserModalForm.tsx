@@ -35,7 +35,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     type: "text",
     name: "email",
     label: "Email",
-    formFieldProps: { lg: 6, md: 6 },
+    formFieldProps: { lg: 6 },
     inputProps: { type: "email" },
     validations: [{ name: "email" }]
   },
@@ -43,7 +43,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     type: "text",
     name: "username",
     label: "Username",
-    formFieldProps: { lg: 6, md: 6 },
+    formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
     inputProps: { required: true },
     validations: [{ name: "required" }]
   },
@@ -51,7 +51,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     type: "text",
     name: "password",
     label: "Password",
-    formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+    formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
     inputProps: { type: "password" },
     validations: []
   },
@@ -59,7 +59,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     type: "text",
     name: "passwordConfirm",
     label: "Confirm Password",
-    formFieldProps: { lg: 6, md: 6, sx: { pt: "8px !important" } },
+    formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
     inputProps: { type: "password" },
     validations: [
       { name: "match", parameters: { matcherField: "password", matcherLabel: "Password" } }
@@ -69,7 +69,7 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     type: "text",
     name: "firstName",
     label: "First Name",
-    formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+    formFieldProps: { sx: { pt: "8px !important" } },
     inputProps: { required: true },
     validations: [{ name: "required" }]
   },
@@ -77,14 +77,14 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     type: "text",
     name: "lastName",
     label: "Last Name",
-    formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+    formFieldProps: { sx: { pt: "8px !important" } },
     validations: []
   },
   {
     type: "select",
     name: "privilegeType",
     label: "Privilege Type",
-    formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+    formFieldProps: { sx: { pt: "8px !important" } },
     inputProps: { required: true },
     selectProps: {
       options,
@@ -102,7 +102,7 @@ updateFields.push({
   type: "switch",
   name: "isActive",
   label: "Active?",
-  formFieldProps: { lg: 4, md: 6, sx: { pt: "8px !important" } },
+  formFieldProps: { sx: { pt: { xs: "8px !important", sm: "30px !important" } } },
   validations: [{ name: "required" }]
 });
 
