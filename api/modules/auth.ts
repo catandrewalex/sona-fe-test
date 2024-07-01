@@ -38,7 +38,7 @@ const ChangePassword = (
   newPassword: string
 ): Promise<FailedResponse | SuccessResponse<string>> => {
   return API.put<string>({
-    url: `/admin/user/${userId}/password`,
+    url: `/users/${userId}/password`,
     config: { data: { newPassword } }
   });
 };
