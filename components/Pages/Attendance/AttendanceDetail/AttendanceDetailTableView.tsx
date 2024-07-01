@@ -179,7 +179,7 @@ const AttendanceDetailTableView = ({
                 </Typography>
               </StyledTableCell>
               <StyledTableCell sx={{ textAlign: "center", maxWidth: 200 }}>
-                {moment(item.date).format("DD MMMM YYYY HH:mm:ss")}
+                {moment(item.date).format("DD MMMM YYYY HH:mm")}
               </StyledTableCell>
               <StyledTableCell sx={{ textAlign: "center", maxWidth: 200 }}>
                 {item.duration}
@@ -193,7 +193,7 @@ const AttendanceDetailTableView = ({
               </StyledTableCell>
               <StyledTableCell>
                 <Button color="primary" onClick={() => onClickViewTokenDetail(item)}>
-                  View
+                  View #{item.studentLearningToken.studentLearningTokenId}
                 </Button>
               </StyledTableCell>
             </TableRow>
@@ -224,13 +224,13 @@ const AttendanceDetailTableView = ({
               {
                 title: "Active",
                 value: moment(selectedAttendance.studentLearningToken.createdAt).format(
-                  "DD MMMM YYYY"
+                  "DD MMMM YYYY HH:mm"
                 )
               },
               {
                 title: "Last Updated",
                 value: moment(selectedAttendance.studentLearningToken.lastUpdatedAt).format(
-                  "DD MMMM YYYY"
+                  "DD MMMM YYYY HH:mm"
                 )
               },
               {

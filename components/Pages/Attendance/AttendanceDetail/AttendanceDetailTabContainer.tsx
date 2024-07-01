@@ -129,8 +129,14 @@ const AttendanceDetailTabContainer = ({
             {studentIdToSLTDisplay[student.studentId] &&
               studentIdToSLTDisplay[student.studentId].map((data) => (
                 <Box key={data.studentLearningTokenId}>
+                  <Typography component="span" sx={{ mr: 0.25 }}>
+                    <small>#{data.studentLearningTokenId}</small>
+                  </Typography>
+                  <Typography fontSize={16} component="span" sx={{ mr: 0.25, ml: 0.25 }}>
+                    |
+                  </Typography>
                   <Typography
-                    sx={{ mr: 1 }}
+                    sx={{ mr: 1, ml: 0.25 }}
                     component="span"
                     color={(theme) =>
                       data.quota === 0

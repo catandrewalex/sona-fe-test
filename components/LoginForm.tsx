@@ -100,7 +100,7 @@ const LoginForm = (): JSX.Element => {
         xs: 12,
         md: 9,
         lg: 9,
-        xl: 10,
+        xl: 9,
         submitText: "Send Confirmation Link",
         testIdContext: "ForgotPassword",
         fullWidth: true
@@ -109,7 +109,7 @@ const LoginForm = (): JSX.Element => {
         xs: 12,
         md: 3,
         lg: 3,
-        xl: 2,
+        xl: 3,
         submitText: "Back",
         testIdContext: "ForgotPassword-Back",
         onClick: () => setState(State.LOGIN),
@@ -125,7 +125,7 @@ const LoginForm = (): JSX.Element => {
           name: "email",
           inputProps: { testIdContext: "ForgotPassword", required: true, sx: { my: 2 } },
           validations: [{ name: "required" }, { name: "email" }],
-          formFieldProps: { lg: 12, xs: 12 }
+          formFieldProps: { lg: 12, md: 12, sm: 12, xs: 12 }
         }
       ],
       submitHandler: async (data, errors) => {
