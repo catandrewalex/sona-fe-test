@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   DataGrid,
-  GridColDef,
-  GridInitialState,
-  GridRowParams,
-  GridRowsProp,
-  GridSlotsComponent,
-  GridSlotsComponentsProps,
   GridCallbackDetails,
-  GridRowModel,
-  GridRowSelectionModel,
+  GridColDef,
+  GridColumnVisibilityModel,
+  GridInitialState,
   GridInputRowSelectionModel,
   GridRowIdGetter,
-  GridColumnVisibilityModel
+  GridRowModel,
+  GridRowParams,
+  GridRowSelectionModel,
+  GridRowsProp,
+  GridSlotsComponent,
+  GridSlotsComponentsProps
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { GridSize } from "@mui/material/Grid";
@@ -25,6 +25,7 @@ import { UncapitalizeObjectKeys } from "@mui/x-data-grid/internals";
 import Toolbar from "@sonamusica-fe/components/Table/Toolbar";
 import { titleCase } from "@sonamusica-fe/utils/StringUtil";
 import { Grid } from "@mui/material";
+
 interface DefaultFilterConfig {
   xl?: GridSize;
   lg?: GridSize;
@@ -353,7 +354,9 @@ const Table = ({
         rows={data}
         style={{
           width: "100%",
-          ...style
+          ...style,
+          display: "grid",
+          gridTemplateRows: "auto 1f auto"
         }}
         getRowClassName={(params) => getRowClassNameFunction(params)}
         pagination
