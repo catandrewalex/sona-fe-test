@@ -62,10 +62,13 @@ const Navigation = ({ title = "", children }: NavigationProps): JSX.Element => {
   }, []);
 
   return (
-    <Box className={loading ? "container flex-row" : "flex full-height"} sx={styles(theme).content}>
+    <Box
+      className={loading ? "container flex-row" : "flex full-height"}
+      sx={{ ...styles(theme).content, width: "100%" }}
+    >
       <TopBar title={title} />
       <SideBar />
-      <Box component="main" id="main" sx={styles(theme).content}>
+      <Box component="main" id="main" sx={{ ...styles(theme).content, px: 1 }}>
         {loading ? <Loader /> : children}
       </Box>
     </Box>

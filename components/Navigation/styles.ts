@@ -7,8 +7,7 @@ const styles = (theme: Theme) =>
     content: {
       // height: "calc(100vh - 24px)",
       pt: 4.5,
-      px: 1.5,
-      width: "100%",
+      width: "calc(100% - 57px)",
       "& > *:last-child": {
         pb: 1.5
       }
