@@ -37,15 +37,11 @@ const PageAdminAttendanceTable = ({
   setLoading,
   setData
 }: PageAdminAttendanceTableProps): JSX.Element => {
-  const { drawerOpen } = useApp();
   const apiTransformer = useApiTransformer();
   const { showDialog } = useAlertDialog();
 
-  // TODO: although this works well, it lags the page severely when we open/close the sidedrawer. Find a better alternative to responsively adjust "TableContainer" width
-  const tableWidth = drawerOpen ? "calc(100vw - 300px)" : "calc(100vw - 120px)";
-
   return (
-    <TableContainer testIdContext="AdminAttendance" height="calc(80vh - 8px)" width={tableWidth}>
+    <TableContainer testIdContext="AdminAttendance">
       <Table
         name="Attendance"
         testIdContext="AdminAttendance"
