@@ -10,17 +10,17 @@ import HomeIcon from "@mui/icons-material/Home";
 
 import {
   Box,
+  Collapse,
   Divider,
-  Tooltip,
-  Typography,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   ListSubheader,
-  Collapse,
   SvgIconTypeMap,
-  Theme
+  Theme,
+  Tooltip,
+  Typography
 } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 
@@ -153,19 +153,22 @@ const DrawerItem = (): JSX.Element => {
       );
     } else {
       return (
-        <SingleLevel
-          testIdContext={section.name.replaceAll(" ", "")}
-          key={`sidebar-section-${idx}`}
-          text={section.name}
-          icon={section.icon || HomeIcon}
-          url={section.url}
-          disabled={isLoading}
-          hidden={
-            (typeof section.userHasAccess === "function" &&
-              !section.userHasAccess(user?.privilegeType)) ||
-            section.userHasAccess === false
-          }
-        />
+        <Box>
+          <SingleLevel
+            testIdContext={section.name.replaceAll(" ", "")}
+            key={`sidebar-section-${idx}`}
+            text={section.name}
+            icon={section.icon || HomeIcon}
+            url={section.url}
+            disabled={isLoading}
+            hidden={
+              (typeof section.userHasAccess === "function" &&
+                !section.userHasAccess(user?.privilegeType)) ||
+              section.userHasAccess === false
+            }
+          />
+          <Divider />
+        </Box>
       );
     }
   });
@@ -184,11 +187,34 @@ const Container = ({ children, text, divider }: DrawerItemContainerProps) => {
             sx={
               drawerOpen
                 ? undefined
-                : { display: "inline-block", height: "3px", width: "100%", px: 0 }
+                : {
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    px: 0.5,
+                    height: "32px"
+                  }
             }
-            component="span"
+            component="div"
           >
-            {drawerOpen ? text : <Divider />}
+            <Box
+              component={"span"}
+              sx={
+                drawerOpen
+                  ? undefined
+                  : {
+                      display: "inline-block",
+                      width: "50px",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      textAlign: "center",
+                      fontSize: "12px",
+                      overflow: "hidden"
+                    }
+              }
+            >
+              {text}
+            </Box>
           </ListSubheader>
         }
       >
