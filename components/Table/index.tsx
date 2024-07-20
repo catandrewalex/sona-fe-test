@@ -356,7 +356,7 @@ const Table = ({
           width: "100%",
           ...style,
           display: "grid",
-          gridTemplateRows: "auto 1f auto"
+          gridTemplateRows: "max-content max-content min-content auto min-content"
         }}
         getRowClassName={(params) => getRowClassNameFunction(params)}
         pagination
