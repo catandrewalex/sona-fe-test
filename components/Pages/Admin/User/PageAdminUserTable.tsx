@@ -91,7 +91,7 @@ const PageAdminUserTable = ({
             field: "username",
             xs: 6,
             md: 4,
-            lg: 3,
+            lg: 2.5,
             filterHandler: (data, value) =>
               data.username.toLowerCase().includes(value.toLowerCase())
           },
@@ -100,7 +100,7 @@ const PageAdminUserTable = ({
             field: "name",
             xs: 6,
             md: 4,
-            lg: 3,
+            lg: 2.5,
             filterHandler: (data, value) => searchFullNameByValue(value, data as User)
           },
           {
@@ -108,7 +108,7 @@ const PageAdminUserTable = ({
             field: "email",
             xs: 6,
             md: 4,
-            lg: 3,
+            lg: 2.5,
             filterHandler: (data, value) => data.email.toLowerCase().includes(value.toLowerCase())
           },
           {
@@ -118,10 +118,26 @@ const PageAdminUserTable = ({
             getOptionLabel: (option) => UserType[option],
             xs: 6,
             md: 4,
-            lg: 3,
+            lg: 2.5,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.privilegeType === val;
+                if (result) return true;
+              }
+              return false;
+            }
+          },
+          {
+            type: "select",
+            data: [true, false],
+            field: "isDeactivated",
+            xs: 6,
+            md: 4,
+            lg: 2,
+            getOptionLabel: (option) => (option ? "Yes" : "No"),
+            filterHandler: (data, value) => {
+              for (const val of value) {
+                const result = data.isDeactivated === val;
                 if (result) return true;
               }
               return false;

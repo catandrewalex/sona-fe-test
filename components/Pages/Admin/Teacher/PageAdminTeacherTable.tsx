@@ -33,6 +33,9 @@ const PageAdminTeacherTable = ({
         name="Teacher"
         loading={loading}
         getRowId={(row) => row.teacherId}
+        getRowClassNameAddition={(params) =>
+          params.row.user.isDeactivated ? "deactivated-row" : "default"
+        }
         disableSelectionOnClick
         addItemToolbar
         addItemToolbarHandler={openModal}
@@ -111,7 +114,7 @@ const PageAdminTeacherTable = ({
             field: "username",
             xs: 6,
             md: 4,
-            lg: 3,
+            lg: 2.5,
             filterHandler: (data, value) =>
               data.user.username.toLowerCase().includes(value.toLowerCase())
           },
@@ -120,7 +123,7 @@ const PageAdminTeacherTable = ({
             field: "name",
             xs: 6,
             md: 4,
-            lg: 3,
+            lg: 2.5,
             filterHandler: (data, value) => searchFullNameByValue(value, data.user)
           },
           {
@@ -128,7 +131,7 @@ const PageAdminTeacherTable = ({
             field: "email",
             xs: 6,
             md: 4,
-            lg: 3,
+            lg: 2.5,
             filterHandler: (data, value) =>
               data.user.email.toLowerCase().includes(value.toLowerCase())
           },
@@ -138,11 +141,27 @@ const PageAdminTeacherTable = ({
             field: "privilegeType",
             xs: 6,
             md: 4,
-            lg: 3,
+            lg: 2.5,
             getOptionLabel: (option) => UserType[option],
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.user.privilegeType === val;
+                if (result) return true;
+              }
+              return false;
+            }
+          },
+          {
+            type: "select",
+            data: [true, false],
+            field: "isDeactivated",
+            xs: 6,
+            md: 4,
+            lg: 2,
+            getOptionLabel: (option) => (option ? "Yes" : "No"),
+            filterHandler: (data, value) => {
+              for (const val of value) {
+                const result = data.user.isDeactivated === val;
                 if (result) return true;
               }
               return false;
