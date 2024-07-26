@@ -203,3 +203,80 @@ export interface TeacherPaymentUnpaidListItem {
 }
 
 export type TeacherPaymentPaidListItem = TeacherPaymentUnpaidListItem;
+
+export interface DashboardChartBaseData {
+  name: string;
+  value: number;
+}
+
+export interface DashboardPieChartData {
+  label: string;
+  value: number;
+  percentage?: number;
+}
+
+export interface DashboardTimeRangeFilterData {
+  month: number;
+  year: number;
+}
+
+export interface DashboardOverviewRequestBody {
+  startDate: DashboardTimeRangeFilterData;
+  endDate: DashboardTimeRangeFilterData;
+}
+
+export interface ExpenseDashboardOverviewRequestBody extends DashboardOverviewRequestBody {
+  teacherIds: number[];
+  instrumentIds: number[];
+}
+
+export interface ExpenseDashboardDetailRequestBody
+  extends Pick<ExpenseDashboardOverviewRequestBody, "teacherIds" | "instrumentIds"> {
+  selectedDate: DashboardTimeRangeFilterData;
+}
+
+//
+// export interface IncomeDashboardOverviewRequestBody extends DashboardOverviewRequestBody {
+//   studentIds: number[];
+//   instrumentIds: number[];
+// }
+
+/**
+ * A. Overview
+ *
+ * POST /dashboard/expense/overview
+ *    body: {
+ *      startDate: {
+ *        month: 2,
+ *        year: 2023
+ *      },
+ *      endDate: {
+ *      month: 2,
+ *      year: 2024,
+ *      }
+ *      teacherIds: [1,2,3,4,5,8] | []
+ *      instrumentIds: [2,8,9] | []
+ *    }
+ *
+ * RESPONSE: data: [
+ *    {name: balbla, value: 2000}
+ *  ]
+ *
+ * B. Detail
+ *
+ * POST /dashboard/expense/detail
+ *    body: {
+ *      selectedDate: {
+ *        month: 2,
+ *        year: 2024
+ *      },
+ *      teacherIds: [1,2,3,4,5,8] | []
+ *      instrumentIds: [2,8,9] | []
+ *    }
+ *
+ * RESPONSE: data: {
+ *   instruments: [{name: asdfa, value: 23423, percentage: 39.4}],
+ *   teachers: [{name: asdfasd, value: 134234, percentage: 2.4}]
+ * }
+ *
+ */

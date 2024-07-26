@@ -121,6 +121,7 @@ async function httpResponseHandler(request: Promise<AxiosResponse<any, any>>) {
     return new FailedResponse("Failed to send the request! Please check your internet connection.");
   }
 }
+
 /**
  * Wrapper for axios request call
  */
@@ -257,10 +258,12 @@ export enum Routes {
   TEACHER_FOR_ATTENDANCE = "/teachersForAttendance",
   STUDENT = "/students",
   COURSE = "/courses",
+  INSTRUMENT = "/admin/instruments",
   CLASS = "/classes",
   STUDENT_ENROLLMENT = "/studentEnrollments",
   ATTENDANCE = "/attendances",
-  TEACHER_SALARY = "/teacherPayments"
+  TEACHER_SALARY = "/teacherPayments",
+  DASHBOARD = "/dashboard"
 }
 
 export default API;

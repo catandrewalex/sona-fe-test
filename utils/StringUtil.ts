@@ -143,3 +143,39 @@ export const removeNonNumericCharacter = (num: string): string =>
 export const isValidNumericString = (value: unknown): boolean => {
   return Boolean(value) && typeof value === "string" && !isNaN(+value);
 };
+
+export type FormattedMonthName = {
+  text: string;
+  month: number;
+  year: number;
+};
+
+export const getMonthNamesFromTwoMomentInstance = <
+  B extends boolean | undefined = undefined,
+  R = B extends boolean ? (B extends true ? FormattedMonthName[] : string[]) : string[]
+>(
+  start: Moment,
+  end: Moment,
+  config?: {
+    asObject?: B;
+    format?: string;
+  }
+): R => {
+  const interim = start.clone();
+  const result: any[] = [];
+
+  while (end > interim || interim.format("M") === end.format("M")) {
+    const formattedText = interim.format(config?.format ?? "MMM'YY");
+    if (config?.asObject) {
+      result.push({
+        text: formattedText,
+        month: interim.month() + 1,
+        year: interim.year()
+      });
+    } else {
+      result.push(formattedText);
+    }
+    interim.add(1, "month");
+  }
+  return result as unknown as R;
+};

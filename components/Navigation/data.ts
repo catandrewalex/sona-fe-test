@@ -2,15 +2,16 @@ import { SvgIconTypeMap } from "@mui/material";
 import { UserType } from "@sonamusica-fe/types";
 import HomeIcon from "@mui/icons-material/Home";
 import {
+  Face,
+  FaceRetouchingNatural,
+  Groups,
+  LocalAtm,
+  Man,
   Payment,
   PeopleAlt,
   Person,
   Piano,
   RequestQuote,
-  Face,
-  FaceRetouchingNatural,
-  Groups,
-  Man,
   Savings,
   School,
   TrendingUp
@@ -76,6 +77,30 @@ const data: Array<SidebarSection> = [
         useSubstringStartsWithForMarkSelected: true
       }
     ]
+  },
+  {
+    name: "Dashboard",
+    items: [
+      {
+        icon: LocalAtm,
+        text: "Expenses",
+        url: "/dashboard/expenses",
+        userHasAccess: (userType?: UserType): boolean => {
+          return userType === UserType.ADMIN;
+        }
+      },
+      {
+        icon: Savings,
+        text: "Income",
+        url: "/dashboard/expenses",
+        userHasAccess: (userType?: UserType): boolean => {
+          return userType === UserType.ADMIN;
+        }
+      }
+    ],
+    userHasAccess: (userType?: UserType): boolean => {
+      return userType === UserType.ADMIN;
+    }
   },
   {
     name: "CRUD",
