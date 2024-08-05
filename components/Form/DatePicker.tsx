@@ -6,7 +6,7 @@ import {
   DatePicker as MuiDatePicker,
   DatePickerProps as MuiDatePickerProps
 } from "@mui/x-date-pickers/DatePicker";
-import moment, { Moment } from "moment";
+import { Moment } from "moment";
 import { merge } from "lodash";
 
 const errorMapping: Record<string, string> = {

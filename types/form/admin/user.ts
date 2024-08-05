@@ -7,7 +7,7 @@ export type UserUpdateFormData = Pick<User, "username" | "privilegeType"> & {
   email?: string;
   isActive: boolean;
 
-  birthdate?: Moment;
+  birthdate: Moment | null;
   address?: string;
   phoneNumber?: string;
   instagramAccount?: string;

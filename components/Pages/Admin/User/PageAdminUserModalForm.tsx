@@ -174,7 +174,7 @@ const PageAdminUserModalForm = ({
     firstName: "",
     lastName: "",
 
-    birthdate: undefined,
+    birthdate: null,
     address: "",
     phoneNumber: "",
     instagramAccount: "",
@@ -299,7 +299,7 @@ const PageAdminUserModalForm = ({
 
         birthdate: selectedData.userDetail.birthdate
           ? moment(selectedData.userDetail.birthdate)
-          : undefined,
+          : null,
         address: selectedData.userDetail.address,
         phoneNumber: selectedData.userDetail.phoneNumber,
         instagramAccount: selectedData.userDetail.instagramAccount,
