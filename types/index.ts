@@ -11,6 +11,14 @@ export interface User {
 export interface UserDetail {
   firstName: string;
   lastName?: string;
+
+  birthdate?: string;
+  address?: string;
+  phoneNumber?: string;
+  instagramAccount?: string;
+  twitterAccount?: string;
+  parentName?: string;
+  parentPhoneNumber?: string;
 }
 
 export interface UserTeachingInfo {

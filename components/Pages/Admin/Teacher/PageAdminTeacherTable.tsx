@@ -1,6 +1,6 @@
 import { ADMIN_API, useApiTransformer } from "@sonamusica-fe/api";
 import Table from "@sonamusica-fe/components/Table";
-import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
+import createTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Teacher, UserType } from "@sonamusica-fe/types";
@@ -41,7 +41,7 @@ const PageAdminTeacherTable = ({
         addItemToolbarHandler={openModal}
         rows={data}
         columns={[
-          useTableActions({
+          createTableActions({
             editDisableMessage: "Please go to user list page to edit user data.",
             deleteHandler: ({ id, row }) => {
               showDialog(

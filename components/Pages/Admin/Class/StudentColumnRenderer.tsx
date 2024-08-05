@@ -39,5 +39,4 @@ const StudentColumnRenderer = ({
   }
 };
 
-const MemoizeStudentColumnRenderer = React.memo(StudentColumnRenderer);
-export default MemoizeStudentColumnRenderer;
+export default StudentColumnRenderer;

@@ -58,7 +58,7 @@ interface CustomConfig extends DefaultFilterConfig {
   component: React.ReactNode;
 }
 
-type TableMenuConfig = TextInputConfig | SelectConfig | CustomConfig;
+export type TableMenuConfig = TextInputConfig | SelectConfig | CustomConfig;
 
 type TableProps = {
   tableMenu?: TableMenuConfig[];
@@ -382,5 +382,7 @@ const Table = ({
     </>
   );
 };
+
+export const MemoizedTable = React.memo(Table);
 
 export default Table;

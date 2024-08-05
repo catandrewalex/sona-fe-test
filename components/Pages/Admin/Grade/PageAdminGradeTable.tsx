@@ -1,5 +1,5 @@
 import Table from "@sonamusica-fe/components/Table";
-import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
+import createTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Grade } from "@sonamusica-fe/types";
@@ -39,7 +39,7 @@ const PageAdminGradeTable = ({
         addItemToolbarHandler={openModal}
         rows={data}
         columns={[
-          useTableActions({
+          createTableActions({
             editHandler: ({ id }) => {
               setSelectedData(data.filter((val) => val.gradeId === id)[0]);
               openModal();

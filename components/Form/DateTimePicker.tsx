@@ -60,6 +60,8 @@ const DateTimePicker = <T extends unknown>({
       <MuiDateTimePicker<Moment>
         value={internalValue}
         label={label}
+        format="DD/MM/YYYY HH:mm"
+        ampm={false}
         onChange={(value, context) => {
           setInternalValue(value);
           if (onChange) onChange(value, context);

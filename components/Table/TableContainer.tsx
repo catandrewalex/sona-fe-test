@@ -42,4 +42,6 @@ const TableContainer = ({
   );
 };
 
+export const MemoizedTableContainer = React.memo(TableContainer);
+
 export default TableContainer;
