@@ -1,9 +1,9 @@
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import useModalRenderer from "@sonamusica-fe/components/Modal/ModalRenderer";
+import UserDetailModalContent from "@sonamusica-fe/components/Pages/Admin/User/UserDetail/UserDetailRenderer";
 import { MemoizedTable, TableMenuConfig } from "@sonamusica-fe/components/Table";
 import createTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
-import FormDataViewerTable from "@sonamusica-fe/components/Table/FormDataViewerTable";
 import { MemoizedTableContainer } from "@sonamusica-fe/components/Table/TableContainer";
 import { User, UserType } from "@sonamusica-fe/types";
 import { getFullNameFromUser, searchFullNameByValue } from "@sonamusica-fe/utils/StringUtil";
@@ -190,55 +190,7 @@ const PageAdminUserTable = ({
 
       {selectedUser && (
         <ModalRenderer>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            #{selectedUser.userId} {getFullNameFromUser(selectedUser)}
-          </Typography>
-          <FormDataViewerTable
-            tableProps={{ size: "small", sx: { mt: 1 } }}
-            tableRowProps={{
-              sx: {
-                "& .MuiTableCell-root:first-child": {
-                  width: "160px",
-                  pl: 0
-                }
-              }
-            }}
-            data={[
-              {
-                title: "Birthdate",
-                value:
-                  selectedUser.userDetail.birthdate !== undefined
-                    ? moment(selectedUser.userDetail.birthdate).format("DD MMMM YYYY")
-                    : "-"
-              },
-              {
-                title: "Address",
-                value: selectedUser.userDetail.address ?? "-"
-              },
-              {
-                title: "Phone Number",
-                value: selectedUser.userDetail.phoneNumber ?? "-"
-              },
-              {
-                title: "Instagram Account",
-                value: selectedUser.userDetail.instagramAccount ?? "-"
-              },
-              {
-                title: "Twitter Account",
-                value: selectedUser.userDetail.twitterAccount ?? "-"
-              },
-              {
-                title: "Parent Name",
-                value: selectedUser.userDetail.parentName ?? "-"
-              },
-              {
-                title: "Parent Phone Number",
-                value: selectedUser.userDetail.parentPhoneNumber ?? "-"
-              }
-            ]}
-            CellValueComponent={Typography}
-            cellValueComponentProps={{ variant: "h5", fontSize: 16 }}
-          />
+          <UserDetailModalContent selectedUser={selectedUser} />
         </ModalRenderer>
       )}
     </>

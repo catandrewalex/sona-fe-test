@@ -2,7 +2,7 @@ import { Button, Typography } from "@mui/material";
 import { Student } from "@sonamusica-fe/types";
 import React from "react";
 
-type StudentColumRendererProps = {
+type StudentColumnRendererProps = {
   students: Student[];
   detailClickHandler: () => void;
 };
@@ -10,7 +10,7 @@ type StudentColumRendererProps = {
 const StudentColumnRenderer = ({
   students,
   detailClickHandler
-}: StudentColumRendererProps): JSX.Element => {
+}: StudentColumnRendererProps): JSX.Element => {
   if (students.length === 0) {
     return (
       <Typography component="span" variant="body2">
