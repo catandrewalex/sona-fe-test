@@ -1,5 +1,5 @@
 import Table from "@sonamusica-fe/components/Table";
-import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
+import createTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Course } from "@sonamusica-fe/types";
@@ -44,7 +44,7 @@ const PageAdminCourseTable = ({
         addItemToolbarHandler={openModal}
         rows={data}
         columns={[
-          useTableActions({
+          createTableActions({
             editHandler: ({ id }) => {
               setSelectedData(data.filter((val) => val.courseId === id)[0]);
               openModal();

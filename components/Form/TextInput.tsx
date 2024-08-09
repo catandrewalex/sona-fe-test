@@ -130,13 +130,13 @@ const TextInput = <T extends unknown>({
 
   useEffect(() => {
     setInternalValue((valueRef.current[field] as unknown as string) || "");
-  }, [field, valueRef]);
+  }, [valueRef.current[field]]);
 
   useEffect(() => {
     if (errorRef.current[field] !== undefined && errorRef.current[field] !== internalErrorMsg) {
       setInternalErrorMsg(errorRef.current[field]);
     }
-  }, [errorRef, field, internalErrorMsg]);
+  }, [errorRef.current[field], internalErrorMsg]);
 
   return (
     <>

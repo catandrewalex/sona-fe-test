@@ -11,7 +11,9 @@ import {
   UserUpdateFormRequest,
   UserInsertFormRequest
 } from "@sonamusica-fe/types/form/admin/user";
+import { convertMomentDateToRFC3339 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
+import moment from "moment";
 import React, { useEffect } from "react";
 
 type PageAdminUserFormProps = {
@@ -81,6 +83,55 @@ const insertFields: FormFieldType<UserInsertFormData>[] = [
     validations: []
   },
   {
+    type: "date",
+    name: "birthdate",
+    label: "Birthdate",
+    formFieldProps: { sx: { pt: "8px !important" } },
+    validations: []
+  },
+  {
+    type: "text",
+    name: "address",
+    label: "Address",
+    formFieldProps: { sx: { pt: "8px !important" } },
+    validations: []
+  },
+  {
+    type: "text",
+    name: "phoneNumber",
+    label: "Phone Number",
+    formFieldProps: { sx: { pt: "8px !important" } },
+    validations: []
+  },
+  {
+    type: "text",
+    name: "instagramAccount",
+    label: "Instagram Account",
+    formFieldProps: { sx: { pt: "8px !important" } },
+    validations: []
+  },
+  {
+    type: "text",
+    name: "twitterAccount",
+    label: "Twitter Account",
+    formFieldProps: { sx: { pt: "8px !important" } },
+    validations: []
+  },
+  {
+    type: "text",
+    name: "parentName",
+    label: "Parent Name",
+    formFieldProps: { sx: { pt: "8px !important" } },
+    validations: []
+  },
+  {
+    type: "text",
+    name: "parentPhoneNumber",
+    label: "Parent Phone Number",
+    formFieldProps: { sx: { pt: "8px !important" } },
+    validations: []
+  },
+  {
     type: "select",
     name: "privilegeType",
     label: "Privilege Type",
@@ -122,6 +173,15 @@ const PageAdminUserModalForm = ({
     passwordConfirm: "",
     firstName: "",
     lastName: "",
+
+    birthdate: null,
+    address: "",
+    phoneNumber: "",
+    instagramAccount: "",
+    twitterAccount: "",
+    parentName: "",
+    parentPhoneNumber: "",
+
     privilegeType: UserType.MEMBER
   };
 
@@ -151,7 +211,16 @@ const PageAdminUserModalForm = ({
           privilegeType: formData.privilegeType,
           userDetail: {
             firstName: formData.firstName,
-            lastName: formData.lastName
+            lastName: formData.lastName,
+            birthdate: formData.birthdate
+              ? convertMomentDateToRFC3339(formData.birthdate)
+              : undefined,
+            address: formData.address,
+            phoneNumber: formData.phoneNumber,
+            instagramAccount: formData.instagramAccount,
+            twitterAccount: formData.twitterAccount,
+            parentName: formData.parentName,
+            parentPhoneNumber: formData.parentPhoneNumber
           }
         };
         const response = await ADMIN_API.CreateUser([payload]);
@@ -188,7 +257,16 @@ const PageAdminUserModalForm = ({
             privilegeType: formData.privilegeType,
             userDetail: {
               firstName: formData.firstName,
-              lastName: formData.lastName
+              lastName: formData.lastName,
+              birthdate: formData.birthdate
+                ? convertMomentDateToRFC3339(formData.birthdate)
+                : undefined,
+              address: formData.address,
+              phoneNumber: formData.phoneNumber,
+              instagramAccount: formData.instagramAccount,
+              twitterAccount: formData.twitterAccount,
+              parentName: formData.parentName,
+              parentPhoneNumber: formData.parentPhoneNumber
             },
             isDeactivated: !formData.isActive
           };
@@ -218,6 +296,17 @@ const PageAdminUserModalForm = ({
         lastName: selectedData.userDetail.lastName,
         email: selectedData.email,
         username: selectedData.username,
+
+        birthdate: selectedData.userDetail.birthdate
+          ? moment(selectedData.userDetail.birthdate)
+          : null,
+        address: selectedData.userDetail.address,
+        phoneNumber: selectedData.userDetail.phoneNumber,
+        instagramAccount: selectedData.userDetail.instagramAccount,
+        twitterAccount: selectedData.userDetail.twitterAccount,
+        parentName: selectedData.userDetail.parentName,
+        parentPhoneNumber: selectedData.userDetail.parentPhoneNumber,
+
         privilegeType: selectedData.privilegeType,
         isActive: !selectedData.isDeactivated
       };

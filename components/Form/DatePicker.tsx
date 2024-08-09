@@ -6,7 +6,7 @@ import {
   DatePicker as MuiDatePicker,
   DatePickerProps as MuiDatePickerProps
 } from "@mui/x-date-pickers/DatePicker";
-import moment, { Moment } from "moment";
+import { Moment } from "moment";
 import { merge } from "lodash";
 
 const errorMapping: Record<string, string> = {
@@ -39,7 +39,7 @@ const DatePicker = <T extends unknown>({
   const [internalErrorMsg, setInternalErrorMsg] = useState<string>("");
 
   useEffect(() => {
-    setInternalValue((valueRef.current[field] as unknown as Moment) || moment());
+    setInternalValue(valueRef.current[field] as unknown as Moment);
   }, [valueRef.current[field]]);
 
   useEffect(() => {
@@ -60,6 +60,7 @@ const DatePicker = <T extends unknown>({
       <MuiDatePicker<Moment>
         value={internalValue}
         label={label}
+        format="DD/MM/YYYY"
         onChange={(value, context) => {
           setInternalValue(value);
           if (onChange) onChange(value, context);

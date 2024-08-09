@@ -4,19 +4,19 @@ import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid
 import { Edit, Delete } from "@mui/icons-material";
 import Tooltip from "@sonamusica-fe/components/Tooltip";
 
-type useTableActionsParam = {
+type createTableActionsParam = {
   editHandler?: (params: GridRowParams<any>) => void;
   editDisableMessage?: string;
   deleteHandler?: (params: GridRowParams<any>) => void;
   deleteDisableMessage?: string;
 };
 
-const useTableActions = ({
+const createTableActions = ({
   editHandler,
   editDisableMessage,
   deleteHandler,
   deleteDisableMessage
-}: useTableActionsParam = {}): GridColDef => {
+}: createTableActionsParam = {}): GridColDef => {
   return {
     field: "actions",
     type: "actions",
@@ -52,4 +52,4 @@ const useTableActions = ({
   };
 };
 
-export default useTableActions;
+export default createTableActions;

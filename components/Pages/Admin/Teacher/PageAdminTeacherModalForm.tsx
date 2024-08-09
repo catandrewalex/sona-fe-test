@@ -6,8 +6,9 @@ import useFormRenderer, {
 import Modal from "@sonamusica-fe/components/Modal";
 import { Teacher, UserType, User } from "@sonamusica-fe/types";
 import { TeacherInsertFormData } from "@sonamusica-fe/types/form/admin/teacher";
-import { getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
+import { convertMomentDateToRFC3339, getFullNameFromUser } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany, SuccessResponse } from "api";
+import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 
 type PageAdminTeacherFormProps = {
@@ -53,9 +54,18 @@ const PageAdminTeacherModalForm = ({
       passwordConfirm: "",
       firstName: "",
       lastName: "",
+
+      birthdate: null,
+      address: "",
+      phoneNumber: "",
+      instagramAccount: "",
+      twitterAccount: "",
+      parentName: "",
+      parentPhoneNumber: "",
+
       privilegeType: UserType.MEMBER
     };
-  }, [selectedUser, open]);
+  }, []);
 
   useEffect(() => {
     setSelectedUser(null);
@@ -76,11 +86,18 @@ const PageAdminTeacherModalForm = ({
           setSelectedUser(value);
           if (value)
             valueRef.current = {
-              userId: value,
+              userId: value.userId.userId,
               email: value.email,
               username: value.username,
               firstName: value.userDetail.firstName,
               lastName: value.userDetail.lastName,
+              birthdate: value.userDetail.birthdate ? moment(value.userDetail.birthdate) : null,
+              address: value.userDetail.address,
+              phoneNumber: value.userDetail.phoneNumber,
+              instagramAccount: value.userDetail.instagramAccount,
+              twitterAccount: value.userDetail.twitterAccount,
+              parentName: value.userDetail.parentName,
+              parentPhoneNumber: value.userDetail.parentPhoneNumber,
               privilegeType: value.privilegeType
             };
           else {
@@ -92,6 +109,13 @@ const PageAdminTeacherModalForm = ({
               passwordConfirm: "",
               firstName: "",
               lastName: "",
+              birthdate: null,
+              address: "",
+              phoneNumber: "",
+              instagramAccount: "",
+              twitterAccount: "",
+              parentName: "",
+              parentPhoneNumber: "",
               privilegeType: UserType.MEMBER
             };
             formProperties.hasUnsavedChangesRef.current = false;
@@ -105,6 +129,13 @@ const PageAdminTeacherModalForm = ({
             firstName: "",
             privilegeType: "",
             lastName: "",
+            birthdate: "",
+            address: "",
+            phoneNumber: "",
+            instagramAccount: "",
+            twitterAccount: "",
+            parentName: "",
+            parentPhoneNumber: "",
             userId: ""
           };
         }
@@ -174,6 +205,62 @@ const PageAdminTeacherModalForm = ({
       validations: []
     },
     {
+      type: "date",
+      name: "birthdate",
+      label: "Birthdate",
+      formFieldProps: { sx: { pt: "8px !important" } },
+      dateProps: { disabled: Boolean(selectedUser) },
+      validations: []
+    },
+    {
+      type: "text",
+      name: "address",
+      label: "Address",
+      formFieldProps: { sx: { pt: "8px !important" } },
+      inputProps: { disabled: Boolean(selectedUser) },
+      validations: []
+    },
+    {
+      type: "text",
+      name: "phoneNumber",
+      label: "Phone Number",
+      formFieldProps: { sx: { pt: "8px !important" } },
+      inputProps: { disabled: Boolean(selectedUser) },
+      validations: []
+    },
+    {
+      type: "text",
+      name: "instagramAccount",
+      label: "Instagram Account",
+      formFieldProps: { sx: { pt: "8px !important" } },
+      inputProps: { disabled: Boolean(selectedUser) },
+      validations: []
+    },
+    {
+      type: "text",
+      name: "twitterAccount",
+      label: "Twitter Account",
+      formFieldProps: { sx: { pt: "8px !important" } },
+      inputProps: { disabled: Boolean(selectedUser) },
+      validations: []
+    },
+    {
+      type: "text",
+      name: "parentName",
+      label: "Parent Name",
+      formFieldProps: { sx: { pt: "8px !important" } },
+      inputProps: { disabled: Boolean(selectedUser) },
+      validations: []
+    },
+    {
+      type: "text",
+      name: "parentPhoneNumber",
+      label: "Parent Phone Number",
+      formFieldProps: { sx: { pt: "8px !important" } },
+      inputProps: { disabled: Boolean(selectedUser) },
+      validations: []
+    },
+    {
       type: "select",
       name: "privilegeType",
       label: "Privilege Type",
@@ -220,7 +307,16 @@ const PageAdminTeacherModalForm = ({
               privilegeType: formData.privilegeType,
               userDetail: {
                 firstName: formData.firstName,
-                lastName: formData.lastName
+                lastName: formData.lastName,
+                birthdate: formData.birthdate
+                  ? convertMomentDateToRFC3339(formData.birthdate)
+                  : undefined,
+                address: formData.address,
+                phoneNumber: formData.phoneNumber,
+                instagramAccount: formData.instagramAccount,
+                twitterAccount: formData.twitterAccount,
+                parentName: formData.parentName,
+                parentPhoneNumber: formData.parentPhoneNumber
               }
             }
           ]);

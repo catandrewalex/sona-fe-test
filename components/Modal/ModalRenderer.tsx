@@ -1,5 +1,5 @@
 import Modal, { ModalProps } from "@sonamusica-fe/components/Modal";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const useModalRenderer = ({ ...props }: Partial<ModalProps> = {}): {
   open: boolean;
@@ -8,11 +8,11 @@ const useModalRenderer = ({ ...props }: Partial<ModalProps> = {}): {
   ModalRenderer: ({ children }: { children: JSX.Element | JSX.Element[] }) => JSX.Element;
 } => {
   const [open, setOpen] = useState<boolean>(false);
-  const openModal = () => setOpen(true);
-  const closeModal = () => {
+  const openModal = useCallback(() => setOpen(true), [setOpen]);
+  const closeModal = useCallback(() => {
     props.onClose?.();
     setOpen(false);
-  };
+  }, [props, setOpen]);
 
   const ModalRenderer = ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element => {
     return (

@@ -1,5 +1,5 @@
 import Table from "@sonamusica-fe/components/Table";
-import useTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
+import createTableActions from "@sonamusica-fe/components/Table/CustomCell/TableActions";
 import TableContainer from "@sonamusica-fe/components/Table/TableContainer";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
 import { Attendance, Student, Teacher } from "@sonamusica-fe/types";
@@ -55,7 +55,7 @@ const PageAdminAttendanceTable = ({
         }}
         rows={data}
         columns={[
-          useTableActions({
+          createTableActions({
             editHandler: ({ id }) => {
               setSelectedData(data.filter((val) => val.attendanceId === id)[0]);
               openModal();
