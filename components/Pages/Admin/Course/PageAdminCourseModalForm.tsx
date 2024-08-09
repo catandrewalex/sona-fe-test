@@ -33,6 +33,19 @@ const PageAdminCourseModalForm = ({
   const defaultInsertFields: FormFieldType<CourseInsertFormData>[] = [
     {
       type: "select",
+      name: "instrument",
+      label: "Instrument",
+      formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
+      inputProps: { required: true },
+      selectProps: {
+        options: instrumentData,
+        getOptionLabel: (option) => option.name,
+        disabled: Boolean(selectedData)
+      },
+      validations: [{ name: "required" }]
+    },
+    {
+      type: "select",
       name: "grade",
       label: "Grade",
       formFieldProps: { lg: 6 },
@@ -44,16 +57,15 @@ const PageAdminCourseModalForm = ({
       validations: [{ name: "required" }]
     },
     {
-      type: "select",
-      name: "instrument",
-      label: "Instrument",
-      formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
-      inputProps: { required: true },
-      selectProps: {
-        options: instrumentData,
-        getOptionLabel: (option) => option.name
+      type: "text",
+      name: "defaultFee",
+      label: "Course Fee",
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
+      inputProps: {
+        type: "number",
+        startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
-      validations: [{ name: "required" }]
+      validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
@@ -66,36 +78,19 @@ const PageAdminCourseModalForm = ({
         endAdornment: <InputAdornment position="end">minute(s)</InputAdornment>
       },
       validations: [{ name: "required" }, { name: "gt-zero" }]
-    },
-    {
-      type: "text",
-      name: "defaultFee",
-      label: "Course Fee",
-      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
-      inputProps: {
-        type: "number",
-        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
-        required: true
-      },
-      validations: [{ name: "required" }, { name: "gte-zero" }]
     }
   ];
 
-  const defaultUpdateFields: FormFieldType<CourseUpdateFormData>[] = defaultInsertFields.filter(
-    (val): val is FormFieldType<CourseUpdateFormData> =>
-      val.name !== "grade" && val.name !== "instrument"
-  );
+  const defaultUpdateFields: FormFieldType<CourseUpdateFormData>[] = [...defaultInsertFields];
 
   const defaultUpdateFieldValue: CourseUpdateFormData = {
-    defaultDurationMinute: 0,
-    defaultFee: 0
+    instrument: null,
+    grade: null,
+    defaultFee: 0,
+    defaultDurationMinute: 0
   };
 
-  const defaultInsertFieldValue: CourseInsertFormData = {
-    ...defaultUpdateFieldValue,
-    grade: null,
-    instrument: null
-  };
+  const defaultInsertFieldValue: CourseInsertFormData = { ...defaultUpdateFieldValue };
 
   const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
     useFormRenderer<CourseUpdateFormData>(
@@ -106,13 +101,19 @@ const PageAdminCourseModalForm = ({
         },
         fields: defaultUpdateFields,
         errorResponseMapping: {
-          defaultDurationMinute: "defaultDurationMinute",
-          defaultFee: "defaultFee"
+          defaultFee: "defaultFee",
+          defaultDurationMinute: "defaultDurationMinute"
         },
-        submitHandler: async ({ defaultDurationMinute, defaultFee }, error) => {
-          if (error.defaultDurationMinute || error.defaultFee) return Promise.reject();
+        submitHandler: async ({ grade, defaultFee, defaultDurationMinute }, error) => {
+          if (error.grade || error.defaultDurationMinute || error.defaultFee)
+            return Promise.reject();
           const response = await ADMIN_API.UpdateCourse([
-            { courseId: selectedData?.courseId || 0, defaultFee, defaultDurationMinute }
+            {
+              courseId: selectedData?.courseId || 0,
+              gradeId: grade?.gradeId || 0,
+              defaultFee,
+              defaultDurationMinute
+            }
           ]);
           const parsedResponse = apiTransformer(response, true);
           if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
@@ -140,20 +141,20 @@ const PageAdminCourseModalForm = ({
       },
       fields: defaultInsertFields,
       errorResponseMapping: {
-        defaultDurationMinute: "defaultDurationMinute",
-        defaultFee: "defaultFee",
+        instrument: "instrumentId",
         grade: "gradeId",
-        instrument: "instrumentId"
+        defaultFee: "defaultFee",
+        defaultDurationMinute: "defaultDurationMinute"
       },
-      submitHandler: async ({ defaultDurationMinute, defaultFee, grade, instrument }, error) => {
-        if (error.defaultDurationMinute || error.defaultFee || error.grade || error.instrument)
+      submitHandler: async ({ instrument, grade, defaultFee, defaultDurationMinute }, error) => {
+        if (error.instrument || error.grade || error.defaultFee || error.defaultDurationMinute)
           return Promise.reject();
         const response = await ADMIN_API.InsertCourse([
           {
-            defaultDurationMinute,
-            defaultFee,
+            instrumentId: instrument?.instrumentId || 0,
             gradeId: grade?.gradeId || 0,
-            instrumentId: instrument?.instrumentId || 0
+            defaultFee,
+            defaultDurationMinute
           }
         ]);
 
@@ -172,8 +173,10 @@ const PageAdminCourseModalForm = ({
   useEffect(() => {
     if (selectedData) {
       updateFormProperties.valueRef.current = {
-        defaultDurationMinute: selectedData.defaultDurationMinute,
-        defaultFee: selectedData.defaultFee
+        instrument: selectedData.instrument,
+        grade: selectedData.grade,
+        defaultFee: selectedData.defaultFee,
+        defaultDurationMinute: selectedData.defaultDurationMinute
       };
       updateFormProperties.errorRef.current = {} as Record<keyof CourseUpdateFormData, string>;
     }

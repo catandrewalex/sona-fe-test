@@ -1,18 +1,19 @@
 import { Course, Grade, Instrument } from "@sonamusica-fe/types";
 
-export type CourseInsertFormData = Pick<Course, "defaultDurationMinute" | "defaultFee"> & {
-  grade: Grade | null;
+export type CourseInsertFormData = {
   instrument: Instrument | null;
-};
+  grade: Grade | null;
+} & Pick<Course, "defaultDurationMinute" | "defaultFee">;
 
-export type CourseUpdateFormData = Omit<Course, "grade" | "instrument" | "courseId">;
-
-export type CourseInsertFormRequest = Omit<CourseUpdateFormData, "courseId"> & {
+export type CourseInsertFormRequest = {
   instrumentId: number;
   gradeId: number;
-};
+} & Pick<CourseInsertFormData, "defaultDurationMinute" | "defaultFee">;
 
-export type CourseUpdateFormRequest = CourseUpdateFormData & Pick<Course, "courseId">;
+export type CourseUpdateFormData = Omit<CourseInsertFormData, "courseId">;
+
+export type CourseUpdateFormRequest = Omit<CourseInsertFormRequest, "instrumentId"> &
+  Pick<Course, "courseId">;
 
 export type CourseDeleteRequest = {
   courseId: number;
