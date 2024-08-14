@@ -65,7 +65,7 @@ const PageAdminCourseModalForm = ({
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>
       },
-      validations: [{ name: "required" }, { name: "gte-zero" }]
+      validations: [{ name: "gte-zero" }]
     },
     {
       type: "text",
