@@ -21,4 +21,18 @@ const GetTeacherForAttendanceDropdownOptions = ({
   });
 };
 
-export default { GetTeacherDropdownOptions, GetTeacherForAttendanceDropdownOptions };
+const GetTeacherForDashboardOptions = ({
+  page = 1,
+  resultsPerPage = 10000
+}: GetRequestConfig = {}): Promise<FailedResponse | SuccessResponse<Teacher>> => {
+  return API.get<Teacher>({
+    url: Routes.TEACHER_FOR_DASHBOARD,
+    config: { params: { page, resultsPerPage } }
+  });
+};
+
+export default {
+  GetTeacherDropdownOptions,
+  GetTeacherForAttendanceDropdownOptions,
+  GetTeacherForDashboardOptions
+};

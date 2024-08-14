@@ -146,7 +146,7 @@ const useFormRenderer = <T extends unknown>(
                 errorRef.current = {} as Record<keyof T, string>;
               }
             })
-            .catch(console.log)
+            .catch(console.error)
             .finally(() => setLoading(false));
         }}
         formSubmit={

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 const normalizeSrc = (src) => {
   return src.startsWith("/") ? src.slice(1) : src;

@@ -40,8 +40,8 @@ const ExpensesDetail = ({ data }: ExpensesDetailProps): JSX.Element => {
     let timeout: NodeJS.Timeout;
     if (data) {
       const temp = getMonthNamesFromTwoMomentInstance(
-        moment(`${data.startDate.year}-${data.startDate.month}`, "yyyy-MM"),
-        moment(`${data.endDate.year}-${data.endDate.month}`, "yyyy-MM"),
+        moment(`${data.dateRange.startDate.year}-${data.dateRange.startDate.month}`, "yyyy-MM"),
+        moment(`${data.dateRange.endDate.year}-${data.dateRange.endDate.month}`, "yyyy-MM"),
         { asObject: true }
       );
       setMonthNames(temp);

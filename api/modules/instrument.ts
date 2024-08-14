@@ -10,4 +10,14 @@ const GetInstrumentDropdownOptions = ({
     config: { params: { page, resultsPerPage } }
   });
 };
-export default { GetInstrumentDropdownOptions };
+
+const GetInstrumentForDashboardOptions = ({
+  page = 1,
+  resultsPerPage = 10000
+}: GetRequestConfig = {}): Promise<FailedResponse | SuccessResponse<Instrument>> => {
+  return API.get<Instrument>({
+    url: Routes.INSTRUMENT_FOR_DASHBOARD,
+    config: { params: { page, resultsPerPage } }
+  });
+};
+export default { GetInstrumentDropdownOptions, GetInstrumentForDashboardOptions };

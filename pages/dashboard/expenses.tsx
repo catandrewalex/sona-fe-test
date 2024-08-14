@@ -10,23 +10,22 @@ import ExpensesDetail from "@sonamusica-fe/components/Pages/Dashboard/Expenses/d
 const ExpensesDashboardPage = (): JSX.Element => {
   const [filterState, setFilterState] = useState<ExpenseDashboardOverviewRequestBody>();
 
-  const { finishLoading, startLoading } = useApp((state) => ({
-    finishLoading: state.finishLoading,
-    startLoading: state.startLoading
-  }));
+  const finishLoading = useApp((state) => state.finishLoading);
 
   useEffect(() => {
     finishLoading();
   }, []);
 
-  console.log(filterState);
-
   return (
     <PageContainer navTitle="Dashboard - Expenses">
       <Box sx={{ position: "relative" }}>
         <ExpensesFilter onFilterChange={setFilterState} />
-        <ExpensesOverview data={filterState} />
-        <ExpensesDetail data={filterState} />
+        {filterState && (
+          <>
+            <ExpensesOverview data={filterState} />
+            <ExpensesDetail data={filterState} />
+          </>
+        )}
       </Box>
     </PageContainer>
   );

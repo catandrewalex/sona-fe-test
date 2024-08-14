@@ -1,14 +1,9 @@
 import Grid2 from "@mui/material/Unstable_Grid2";
 import PieChart from "@sonamusica-fe/components/Chart/PieChart";
-import { useCallback, useEffect, useState } from "react";
-import {
-  DashboardPieChartData,
-  ExpenseDashboardOverviewRequestBody,
-  Instrument,
-  Teacher
-} from "@sonamusica-fe/types";
-import { FormattedMonthName, getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
-import { pieArcLabelClasses } from "@mui/x-charts";
+import { useEffect, useState } from "react";
+import { DashboardPieChartData, ExpenseDashboardOverviewRequestBody } from "@sonamusica-fe/types";
+import { FormattedMonthName } from "@sonamusica-fe/utils/StringUtil";
+import { DefaultizedPieValueType, pieArcLabelClasses } from "@mui/x-charts";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { FailedResponse, ResponseMany } from "../../../../../api";
 import { Typography } from "@mui/material";
@@ -18,21 +13,6 @@ interface ExpenseDetailPieChartProps {
   data: ExpenseDashboardOverviewRequestBody | undefined;
 }
 
-// TODO REMOVE AFTER API FINISH
-function generateRandomData(label: string[]) {
-  const temp = label.map((val) => ({
-    label: val,
-    value: Math.floor(Math.random() * (10000 - 500 + 1) + 500) * 1000
-  }));
-
-  const total = temp.reduce((prev, curr) => prev + curr.value, 0);
-
-  return temp.map((val) => ({
-    ...val,
-    percentage: (val.value / total) * 100.0
-  }));
-}
-
 const ExpensesDetailPieChart = ({ data, selected }: ExpenseDetailPieChartProps): JSX.Element => {
   const [teacherChartData, setTeacherChartData] = useState<DashboardPieChartData[]>([]);
   const [instrumentChartData, setInstrumentChartData] = useState<DashboardPieChartData[]>([]);
@@ -40,49 +20,49 @@ const ExpensesDetailPieChart = ({ data, selected }: ExpenseDetailPieChartProps):
 
   const apiTransformer = useApiTransformer();
 
-  const fetchTeacherChart = useCallback((data, selected) => {
-    return API.GetTeacherDropdownOptions().then((response) => {
-      const parsedResponse = apiTransformer(response, false);
-      if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-        return generateRandomData(
-          (parsedResponse as ResponseMany<Teacher>).results.map((val) =>
-            getFullNameFromTeacher(val)
-          )
-        );
-      }
-      return [];
-    });
-  }, []);
-
-  const fetchInstrumentChart = useCallback((data, selected) => {
-    return API.GetInstrumentDropdownOptions().then((response) => {
-      const parsedResponse = apiTransformer(response, false);
-      if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-        return generateRandomData(
-          (parsedResponse as ResponseMany<Instrument>).results.map((val) => val.name)
-        );
-      }
-      return [];
-    });
-  }, []);
-
   useEffect(() => {
     setLoading(true);
-    if (data) {
-      Promise.allSettled([fetchTeacherChart(data, selected), fetchInstrumentChart(data, selected)])
+    if (data && selected) {
+      Promise.allSettled([
+        API.GetExpenseDetailData({
+          groupBy: "INSTRUMENT",
+          selectedDate: {
+            month: selected.month,
+            year: selected.year
+          },
+          teacherIds: data.teacherIds,
+          instrumentIds: data.instrumentIds
+        }),
+        API.GetExpenseDetailData({
+          groupBy: "TEACHER",
+          selectedDate: {
+            month: selected.month,
+            year: selected.year
+          },
+          teacherIds: data.teacherIds,
+          instrumentIds: data.instrumentIds
+        })
+      ])
         .then((result) => {
           if (result[0].status === "fulfilled") {
-            setTeacherChartData(result[0].value);
+            const parsedResponse = apiTransformer(result[0].value, false);
+            if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
+              setInstrumentChartData(
+                (parsedResponse as ResponseMany<DashboardPieChartData>).results
+              );
+            }
           }
           if (result[1].status === "fulfilled") {
-            setInstrumentChartData(result[1].value);
+            const parsedResponse = apiTransformer(result[1].value, false);
+            if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
+              setTeacherChartData((parsedResponse as ResponseMany<DashboardPieChartData>).results);
+            }
           }
         })
         .finally(() => setLoading(false));
     }
   }, [data, selected]);
 
-  console.log(teacherChartData);
   return (
     <Grid2 container spacing={3} sx={{ mt: 2 }}>
       <Grid2 sm={12} xl={6}>
@@ -93,10 +73,16 @@ const ExpensesDetailPieChart = ({ data, selected }: ExpenseDetailPieChartProps):
           containerHeight={"50vh"}
           series={[
             {
+              arcLabelMinAngle: 30,
               highlightScope: { faded: "global", highlighted: "item" },
               faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
               data: loading ? [] : teacherChartData,
-              arcLabel: (item) => `${item.percentage.toFixed(2)}%`
+              arcLabel: (
+                item: Omit<DefaultizedPieValueType, "label"> &
+                  Omit<DashboardPieChartData, "label"> & {
+                    label?: string | undefined;
+                  }
+              ) => `${((item.percentage || 0) * 100).toFixed(2)}%`
             }
           ]}
           margin={{ right: loading ? 0 : 400 }}
@@ -119,7 +105,12 @@ const ExpensesDetailPieChart = ({ data, selected }: ExpenseDetailPieChartProps):
               highlightScope: { fade: "global", highlight: "item" },
               faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
               data: loading ? [] : instrumentChartData,
-              arcLabel: (item) => `${item.percentage.toFixed(2)}%`
+              arcLabel: (
+                item: Omit<DefaultizedPieValueType, "label"> &
+                  Omit<DashboardPieChartData, "label"> & {
+                    label?: string | undefined;
+                  }
+              ) => `${((item.percentage || 0) * 100).toFixed(2)}%`
             }
           ]}
           margin={{ right: loading ? 0 : 250 }}
