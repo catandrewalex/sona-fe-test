@@ -75,8 +75,7 @@ const ExpenseDetail = ({ data, ready }: ExpenseDetailProps): JSX.Element => {
           selected={selectedDate}
         />
       </Box>
-      <ExpenseDetailPieChart data={data} selected={selectedDate} />
-      <ExpensesDetailPieChart data={data} selected={selectedDate} ready={ready} />
+      <ExpenseDetailPieChart data={data} selected={selectedDate} ready={ready} />
     </Box>
   );
 };
