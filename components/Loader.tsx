@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { animated, useSpring } from "@react-spring/web";
 import clsx from "clsx";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { CircularProgress } from "@mui/material";
+import { animated, useSpring } from "@react-spring/web";
 
 /**
  * Loader component prop types.
