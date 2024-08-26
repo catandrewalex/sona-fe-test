@@ -2,12 +2,12 @@ import PageContainer from "@sonamusica-fe/components/PageContainer";
 import { useCallback, useEffect, useState } from "react";
 import { useApp } from "@sonamusica-fe/providers/AppProvider";
 import { Box } from "@mui/material";
-import ExpensesFilter from "@sonamusica-fe/components/Pages/Dashboard/Expenses/ExpensesFilter";
+import ExpenseFilter from "@sonamusica-fe/components/Pages/Dashboard/Expense/ExpenseFilter";
 import { ExpenseDashboardOverviewRequestBody } from "@sonamusica-fe/types";
-import ExpensesOverview from "@sonamusica-fe/components/Pages/Dashboard/Expenses/ExpensesOverview";
-import ExpensesDetail from "@sonamusica-fe/components/Pages/Dashboard/Expenses/detail/ExpensesDetail";
+import ExpenseOverview from "@sonamusica-fe/components/Pages/Dashboard/Expense/ExpenseOverview";
+import ExpenseDetail from "@sonamusica-fe/components/Pages/Dashboard/Expense/detail/ExpenseDetail";
 
-const ExpensesDashboardPage = (): JSX.Element => {
+const ExpenseDashboardPage = (): JSX.Element => {
   const [filterState, setFilterState] = useState<ExpenseDashboardOverviewRequestBody>();
   const [firstVisit, setFirstVisit] = useState<boolean>(true);
 
@@ -22,13 +22,13 @@ const ExpensesDashboardPage = (): JSX.Element => {
   }, []);
 
   return (
-    <PageContainer navTitle="Dashboard - Expenses">
+    <PageContainer navTitle="Dashboard - Expense">
       <Box sx={{ position: "relative" }}>
-        <ExpensesFilter onFilterChange={setFilterState} markFirstVisit={markFirstVisit} />
+        <ExpenseFilter onFilterChange={setFilterState} markFirstVisit={markFirstVisit} />
         {filterState && (
           <>
-            <ExpensesOverview data={filterState} ready={!firstVisit} />
-            <ExpensesDetail data={filterState} ready={!firstVisit} />
+            <ExpenseOverview data={filterState} ready={!firstVisit} />
+            <ExpenseDetail data={filterState} ready={!firstVisit} />
           </>
         )}
       </Box>
@@ -36,4 +36,4 @@ const ExpensesDashboardPage = (): JSX.Element => {
   );
 };
 
-export default ExpensesDashboardPage;
+export default ExpenseDashboardPage;

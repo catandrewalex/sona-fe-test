@@ -22,7 +22,7 @@ interface ExpenseFilterProps {
   markFirstVisit: () => void;
 }
 
-const ExpensesFilter = React.memo(
+const ExpenseFilter = React.memo(
   ({ onFilterChange, markFirstVisit }: ExpenseFilterProps): JSX.Element => {
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [instruments, setInstruments] = useState<Instrument[]>([]);
@@ -153,4 +153,4 @@ const ExpensesFilter = React.memo(
   }
 );
 
-export default ExpensesFilter;
+export default ExpenseFilter;

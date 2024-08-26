@@ -8,14 +8,14 @@ import {
 import moment from "moment/moment";
 import DashboardDetailMenuButton from "@sonamusica-fe/components/Dashboard/DashboardDetailMenuButton";
 import DashboardDetailButtonGroupTab from "@sonamusica-fe/components/Dashboard/DashboardDetailButtonGroupTab";
-import ExpensesDetailPieChart from "@sonamusica-fe/components/Pages/Dashboard/Expenses/detail/ExpensesDetailPieChart";
+import ExpenseDetailPieChart from "@sonamusica-fe/components/Pages/Dashboard/Expense/detail/ExpenseDetailPieChart";
 
-interface ExpensesDetailProps {
+interface ExpenseDetailProps {
   data: ExpenseDashboardOverviewRequestBody | undefined;
   ready: boolean;
 }
 
-const ExpensesDetail = ({ data, ready }: ExpensesDetailProps): JSX.Element => {
+const ExpenseDetail = ({ data, ready }: ExpenseDetailProps): JSX.Element => {
   const [selectedDate, setSelectedDate] = useState<FormattedMonthName>();
   const [monthNames, setMonthNames] = useState<FormattedMonthName[]>([]);
   const buttonGroupRef = useRef<HTMLDivElement | null>(null);
@@ -75,9 +75,10 @@ const ExpensesDetail = ({ data, ready }: ExpensesDetailProps): JSX.Element => {
           selected={selectedDate}
         />
       </Box>
+      <ExpenseDetailPieChart data={data} selected={selectedDate} />
       <ExpensesDetailPieChart data={data} selected={selectedDate} ready={ready} />
     </Box>
   );
 };
 
-export default ExpensesDetail;
+export default ExpenseDetail;

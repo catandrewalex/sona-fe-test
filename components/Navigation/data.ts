@@ -83,8 +83,8 @@ const data: Array<SidebarSection> = [
     items: [
       {
         icon: LocalAtm,
-        text: "Expenses",
-        url: "/dashboard/expenses",
+        text: "Expense",
+        url: "/dashboard/expense",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }
@@ -92,7 +92,7 @@ const data: Array<SidebarSection> = [
       {
         icon: Savings,
         text: "Income",
-        url: "/dashboard/expenses",
+        url: "/dashboard/expense#",
         userHasAccess: (userType?: UserType): boolean => {
           return userType === UserType.ADMIN;
         }

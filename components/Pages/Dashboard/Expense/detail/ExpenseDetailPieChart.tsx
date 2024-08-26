@@ -14,7 +14,7 @@ interface ExpenseDetailPieChartProps {
   ready: boolean;
 }
 
-const ExpensesDetailPieChart = ({
+const ExpenseDetailPieChart = ({
   data,
   selected,
   ready
@@ -132,4 +132,4 @@ const ExpensesDetailPieChart = ({
   );
 };
 
-export default ExpensesDetailPieChart;
+export default ExpenseDetailPieChart;

@@ -8,12 +8,12 @@ import { convertNumberToCurrencyString } from "@sonamusica-fe/utils/StringUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { FailedResponse, ResponseMany } from "../../../../api";
 
-interface ExpensesOverviewProps {
+interface ExpenseOverviewProps {
   data: ExpenseDashboardOverviewRequestBody | undefined;
   ready: boolean;
 }
 
-const ExpensesOverview = ({ data, ready }: ExpensesOverviewProps): JSX.Element => {
+const ExpenseOverview = ({ data, ready }: ExpenseOverviewProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(data === undefined);
   const [chartData, setChartData] = useState<DashboardChartBaseData[]>([]);
   const apiTransformer = useApiTransformer();
@@ -80,4 +80,4 @@ const ExpensesOverview = ({ data, ready }: ExpensesOverviewProps): JSX.Element =
   );
 };
 
-export default ExpensesOverview;
+export default ExpenseOverview;
