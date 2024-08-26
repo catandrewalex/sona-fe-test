@@ -11,9 +11,14 @@ import { Typography } from "@mui/material";
 interface ExpenseDetailPieChartProps {
   selected?: FormattedMonthName;
   data: ExpenseDashboardOverviewRequestBody | undefined;
+  ready: boolean;
 }
 
-const ExpensesDetailPieChart = ({ data, selected }: ExpenseDetailPieChartProps): JSX.Element => {
+const ExpensesDetailPieChart = ({
+  data,
+  selected,
+  ready
+}: ExpenseDetailPieChartProps): JSX.Element => {
   const [teacherChartData, setTeacherChartData] = useState<DashboardPieChartData[]>([]);
   const [instrumentChartData, setInstrumentChartData] = useState<DashboardPieChartData[]>([]);
   const [loading, setLoading] = useState<boolean>(data === undefined);
@@ -22,7 +27,7 @@ const ExpensesDetailPieChart = ({ data, selected }: ExpenseDetailPieChartProps):
 
   useEffect(() => {
     setLoading(true);
-    if (data && selected) {
+    if (data && selected && ready) {
       Promise.allSettled([
         API.GetExpenseDetailData({
           groupBy: "INSTRUMENT",
@@ -61,7 +66,7 @@ const ExpensesDetailPieChart = ({ data, selected }: ExpenseDetailPieChartProps):
         })
         .finally(() => setLoading(false));
     }
-  }, [data, selected]);
+  }, [data, selected, ready]);
 
   return (
     <Grid2 container spacing={3} sx={{ mt: 2 }}>

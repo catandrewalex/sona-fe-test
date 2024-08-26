@@ -12,9 +12,10 @@ import ExpensesDetailPieChart from "@sonamusica-fe/components/Pages/Dashboard/Ex
 
 interface ExpensesDetailProps {
   data: ExpenseDashboardOverviewRequestBody | undefined;
+  ready: boolean;
 }
 
-const ExpensesDetail = ({ data }: ExpensesDetailProps): JSX.Element => {
+const ExpensesDetail = ({ data, ready }: ExpensesDetailProps): JSX.Element => {
   const [selectedDate, setSelectedDate] = useState<FormattedMonthName>();
   const [monthNames, setMonthNames] = useState<FormattedMonthName[]>([]);
   const buttonGroupRef = useRef<HTMLDivElement | null>(null);
@@ -74,7 +75,7 @@ const ExpensesDetail = ({ data }: ExpensesDetailProps): JSX.Element => {
           selected={selectedDate}
         />
       </Box>
-      <ExpensesDetailPieChart data={data} selected={selectedDate} />
+      <ExpensesDetailPieChart data={data} selected={selectedDate} ready={ready} />
     </Box>
   );
 };

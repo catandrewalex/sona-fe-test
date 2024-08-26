@@ -10,16 +10,17 @@ import { FailedResponse, ResponseMany } from "../../../../api";
 
 interface ExpensesOverviewProps {
   data: ExpenseDashboardOverviewRequestBody | undefined;
+  ready: boolean;
 }
 
-const ExpensesOverview = ({ data }: ExpensesOverviewProps): JSX.Element => {
+const ExpensesOverview = ({ data, ready }: ExpensesOverviewProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(data === undefined);
   const [chartData, setChartData] = useState<DashboardChartBaseData[]>([]);
   const apiTransformer = useApiTransformer();
 
   useEffect(() => {
     setLoading(true);
-    if (data) {
+    if (data && ready) {
       API.GetExpenseOverviewData(data)
         .then((response) => {
           const parsedResponse = apiTransformer(response, false);
@@ -29,7 +30,7 @@ const ExpensesOverview = ({ data }: ExpensesOverviewProps): JSX.Element => {
         })
         .finally(() => setLoading(false));
     }
-  }, [data]);
+  }, [data, ready]);
 
   return (
     <Box>
