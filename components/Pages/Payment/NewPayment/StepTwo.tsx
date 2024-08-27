@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
+import StandardDatePicker from "@sonamusica-fe/components/Form/StandardDatePicker";
 import StandardTextInput from "@sonamusica-fe/components/Form/StandardTextInput";
 import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
 import FormDataViewerTable, {
@@ -8,6 +9,7 @@ import FormDataViewerTable, {
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { Class, EnrollmentPaymentInvoice, Student, StudentEnrollment } from "@sonamusica-fe/types";
 import {
+  convertMomentDateToRFC3339,
   convertNumberToCurrencyString,
   convertNumberToCurrencyStringWithoutPrefixAndSuffix,
   getCourseName,
@@ -53,7 +55,8 @@ const NewPaymentStepTwo = ({
               transportFeeValue: invoiceData.transportFeeValue,
               penaltyFeeValue: invoiceData.penaltyFeeValue,
               lastPaymentDate: invoiceData.lastPaymentDate,
-              daysLate: invoiceData.daysLate
+              daysLate: invoiceData.daysLate,
+              paymentDate: invoiceData.paymentDate
             });
             setRecalculateInvoice(false);
           } else {
@@ -175,6 +178,21 @@ const NewPaymentStepTwo = ({
               margin="dense"
               size="small"
               startAdornment="Rp"
+            />
+          )
+        },
+        {
+          title: "Payment Date",
+          value: (
+            <StandardDatePicker
+              format="DD/MM/YYYY"
+              defaultValue={moment(invoiceData?.paymentDate)}
+              onChange={(e) =>
+                setInvoiceData({ ...data, paymentDate: convertMomentDateToRFC3339(e || moment()) })
+              }
+              closeOnSelect={true}
+              slotProps={{ textField: { size: "small", margin: "dense" } }}
+              sx={{ width: "100%" }}
             />
           )
         },

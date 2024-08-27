@@ -13,7 +13,7 @@ export type AddAttendanceFormRequest = Pick<
   Attendance,
   "usedStudentTokenQuota" | "duration" | "note"
 > & {
-  date: Moment;
+  date: string;
   teacherId: number;
 };
 

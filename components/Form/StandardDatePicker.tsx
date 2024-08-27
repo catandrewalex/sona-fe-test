@@ -22,10 +22,6 @@ const StandardDatePicker = ({
   const [internalErrorMsg, setInternalErrorMsg] = useState<string>("");
   const [internalValue, setInternalValue] = useState<Moment | null>(defaultValue ?? null);
 
-  useEffect(() => {
-    setInternalValue(defaultValue ?? null);
-  }, [defaultValue]);
-
   return (
     <>
       <MuiDatePicker<Moment>

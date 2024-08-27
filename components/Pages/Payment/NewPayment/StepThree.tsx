@@ -2,11 +2,13 @@ import { Box, Divider, Table, TableCell, TableRow, Typography } from "@mui/mater
 import { styled } from "@mui/system";
 import { EnrollmentPaymentInvoice, StudentEnrollment } from "@sonamusica-fe/types";
 import {
+  convertMomentDateToRFC3339,
   convertNumberToCurrencyString,
   getCourseName,
   getFullNameFromStudent,
   getFullNameFromTeacher
 } from "@sonamusica-fe/utils/StringUtil";
+import moment from "moment";
 import React from "react";
 
 type NewPaymentStepThreeProps = {
@@ -25,6 +27,7 @@ const NewPaymentStepThree = ({
   const courseFeeValue = invoiceData?.courseFeeValue || 0;
   const transportFeeValue = invoiceData?.transportFeeValue || 0;
   const penaltyFeeValue = invoiceData?.penaltyFeeValue || 0;
+  const paymentDate = invoiceData?.paymentDate || "";
 
   return (
     <Box width="100%" margin="auto" p={2}>
@@ -78,6 +81,13 @@ const NewPaymentStepThree = ({
           <CellNoBorder></CellNoBorder>
           <CellNoBorder sx={{ textAlign: "right" }}>
             {convertNumberToCurrencyString(penaltyFeeValue)}
+          </CellNoBorder>
+        </TableRow>
+        <TableRow>
+          <CellNoBorder>Payment Date</CellNoBorder>
+          <CellNoBorder></CellNoBorder>
+          <CellNoBorder sx={{ textAlign: "right" }}>
+            {moment(paymentDate).format("DD MMMM YYYY")}
           </CellNoBorder>
         </TableRow>
       </Table>

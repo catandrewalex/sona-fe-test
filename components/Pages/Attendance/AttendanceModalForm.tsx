@@ -11,7 +11,10 @@ import {
   EditAttendanceFormData,
   EditAttendanceFormRequest
 } from "@sonamusica-fe/types/form/attendance";
-import { getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
+import {
+  convertMomentDateToRFC3339,
+  getFullNameFromTeacher
+} from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "../../../api";
 import moment from "moment";
 import React, { useEffect, useMemo } from "react";
@@ -121,7 +124,7 @@ const AttendanceModalForm = ({
           )
             return Promise.reject();
           const response = await API.EditAttendance(data?.attendanceId || 0, {
-            date: date,
+            date: convertMomentDateToRFC3339(date),
             usedStudentTokenQuota: usedStudentTokenQuota,
             duration: duration,
             note: note,
@@ -157,7 +160,7 @@ const AttendanceModalForm = ({
           )
             return Promise.reject();
           const response = await API.AddAttendance(classData.classId || 0, {
-            date: date,
+            date: convertMomentDateToRFC3339(date),
             usedStudentTokenQuota: usedStudentTokenQuota,
             duration: duration,
             note: note,

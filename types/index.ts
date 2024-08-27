@@ -38,7 +38,8 @@ export enum UserType {
   ANONYMOUS = 100,
   MEMBER = 200,
   STAFF = 300,
-  ADMIN = 400
+  ADMIN = 400,
+  SUPER_ADMIN = 500
 }
 
 export interface Teacher {
@@ -126,6 +127,7 @@ export type EnrollmentPaymentInvoice = Omit<
 > & {
   lastPaymentDate?: string;
   daysLate?: number;
+  paymentDate: string;
 };
 
 export interface Attendance {

@@ -192,7 +192,8 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                           courseFeeValue: invoiceData?.courseFeeValue || 0,
                           transportFeeValue: invoiceData?.transportFeeValue || 0,
                           penaltyFeeValue: invoiceData?.penaltyFeeValue || 0,
-                          paymentDate: convertMomentDateToRFC3339(moment())
+                          paymentDate:
+                            invoiceData?.paymentDate || convertMomentDateToRFC3339(moment())
                         },
                         () => replace("/payment")
                       );
@@ -212,7 +213,8 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                           courseFeeValue: invoiceData?.courseFeeValue || 0,
                           transportFeeValue: invoiceData?.transportFeeValue || 0,
                           penaltyFeeValue: invoiceData?.penaltyFeeValue || 0,
-                          paymentDate: convertMomentDateToRFC3339(moment())
+                          paymentDate:
+                            invoiceData?.paymentDate || convertMomentDateToRFC3339(moment())
                         },
                         () => {
                           setCurrentStep(0);
