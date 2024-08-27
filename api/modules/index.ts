@@ -23,6 +23,8 @@ import classModule from "./class";
 import studentLearningTokenModule from "./student-learning-token";
 import attendanceModule from "./attendance";
 import teacherPaymentModule from "./teacher-payment";
+import instrumentModule from "./instrument";
+import dashboardModule from "./dashboard";
 
 export default {
   ...authModule,
@@ -35,7 +37,9 @@ export default {
   ...classModule,
   ...studentLearningTokenModule,
   ...attendanceModule,
-  ...teacherPaymentModule
+  ...teacherPaymentModule,
+  ...instrumentModule,
+  ...dashboardModule
 };
 
 export const ADMIN_API = {

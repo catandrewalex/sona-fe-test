@@ -2,7 +2,7 @@
 const path = require("path");
 
 /**
- * @type {import('next').NextConfig}
+ * @type {import("next").NextConfig}
  */
 module.exports = () => {
   const env = {
@@ -19,6 +19,7 @@ module.exports = () => {
     distDir: "build",
     swcMinify: false,
     output: "export",
+    transpilePackages: ["@mui/x-charts"],
     images: {
       loader: "custom",
       loaderFile: "./imageLoader.js"

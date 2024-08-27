@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from "axios";
 import { deleteCookie, getCookie } from "@sonamusica-fe/utils/BrowserUtil";
 
 // create new axios intance
@@ -15,7 +15,7 @@ axiosInstance.interceptors.request.use(async (req) => {
     if (req.headers) {
       req.headers.Authorization = `Bearer ${getCookie("SNMC")}`;
     } else {
-      req.headers = { Authorization: `Bearer ${getCookie("SNMC")}` };
+      req.headers = new AxiosHeaders({ Authorization: `Bearer ${getCookie("SNMC")}` });
     }
   }
 
@@ -121,6 +121,7 @@ async function httpResponseHandler(request: Promise<AxiosResponse<any, any>>) {
     return new FailedResponse("Failed to send the request! Please check your internet connection.");
   }
 }
+
 /**
  * Wrapper for axios request call
  */
@@ -255,12 +256,16 @@ export enum Routes {
   PAYMENT = "/enrollmentPayments",
   TEACHER = "/teachers",
   TEACHER_FOR_ATTENDANCE = "/teachersForAttendance",
+  TEACHER_FOR_DASHBOARD = "/teachersForDashboard",
   STUDENT = "/students",
   COURSE = "/courses",
+  INSTRUMENT = "/admin/instruments",
+  INSTRUMENT_FOR_DASHBOARD = "/instrumentsForDashboard",
   CLASS = "/classes",
   STUDENT_ENROLLMENT = "/studentEnrollments",
   ATTENDANCE = "/attendances",
-  TEACHER_SALARY = "/teacherPayments"
+  TEACHER_SALARY = "/teacherPayments",
+  DASHBOARD = "/dashboard"
 }
 
 export default API;

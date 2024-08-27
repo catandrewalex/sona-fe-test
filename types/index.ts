@@ -211,3 +211,37 @@ export interface TeacherPaymentUnpaidListItem {
 }
 
 export type TeacherPaymentPaidListItem = TeacherPaymentUnpaidListItem;
+
+export interface DashboardChartBaseData {
+  label: string;
+  value: number;
+}
+
+export interface DashboardPieChartData {
+  label: string;
+  value: number;
+  percentage?: number;
+}
+
+export interface DashboardTimeRangeFilterData {
+  month: number;
+  year: number;
+}
+
+export interface DashboardOverviewRequestBody {
+  dateRange: {
+    startDate: DashboardTimeRangeFilterData;
+    endDate: DashboardTimeRangeFilterData;
+  };
+}
+
+export interface ExpenseDashboardOverviewRequestBody extends DashboardOverviewRequestBody {
+  teacherIds: number[];
+  instrumentIds: number[];
+}
+
+export interface ExpenseDashboardDetailRequestBody
+  extends Pick<ExpenseDashboardOverviewRequestBody, "teacherIds" | "instrumentIds"> {
+  selectedDate: DashboardTimeRangeFilterData;
+  groupBy: "INSTRUMENT" | "TEACHER";
+}

@@ -18,12 +18,15 @@
     "@mui/material": "^5.13.1",
     "@mui/styles": "5.2.1",
     "@mui/system": "^5.4.1",
+    "@mui/x-charts": "^7.11.0",
     "@mui/x-data-grid": "^6.19.11",
     "@mui/x-date-pickers": "^6.11.0",
+    "@react-spring/web": "^9.7.4",
     "aos": "^2.3.4",
     "apexcharts": "3.33.2",
     "autosuggest-highlight": "3.2.0",
-    "axios": "0.24.0",
+    "axios": "1.6.0",
+    "clsx": "^2.1.1",
     "email-validator": "^2.0.4",
     "jspdf": "^2.5.1",
     "lodash": "4.17.21",
@@ -38,7 +41,6 @@
     "react-icons": "4.2.0",
     "react-quill": "^2.0.0-beta.4",
     "react-responsive": "8.2.0",
-    "react-spring": "9.4.4",
     "sass": "1.43.5",
     "use-debounce": "7.0.1",
     "zustand": "3.6.5"
@@ -71,8 +73,5 @@
     "typescript": "4.5.2",
     "yargs": "17.2.1"
   },
-  "resolutions": {
-    "**/@types/react": "^17.0.21",
-    "**/@types/react-dom": "^17.0.9"
-  }
+  "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
 }

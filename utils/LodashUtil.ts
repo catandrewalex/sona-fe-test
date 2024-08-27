@@ -8,16 +8,18 @@ import { useCallback, useRef } from "react";
  * @see https://stackoverflow.com/questions/59183495/cant-get-lodash-debounce-to-work-properly-executed-multiple-times-reac
  * @param callback the callback function
  * @param delay the delay for the debounce function
+ * @param deps dependencies for useCallback hooks
  * @returns memoized debounce function
  */
 export const useDebouncedCallback = (
   callback: any,
-  delay: number
+  delay: number,
+  deps: any[] = []
 ): _.DebouncedFunc<(...args: any) => any> => {
   const callbackRef = useRef<any>();
   callbackRef.current = callback;
   return useCallback(
     _.debounce((...args) => callbackRef.current(...args), delay),
-    []
+    deps
   );
 };
