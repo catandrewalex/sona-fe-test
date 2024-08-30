@@ -7,13 +7,13 @@ export type RemovePaymentFormRequest = {
 
 export type EditPaymentBalanceFormData = {
   paymentDate: Moment;
-  balanceTopUp: number;
+  balanceBonus: number;
 };
 
 export type EditPaymentBalanceFormRequest = {
   enrollmentPaymentId: number;
   paymentDate: string;
-  balanceTopUp: number;
+  balanceBonus: number;
 };
 
 export type SubmitPaymentBalanceFormRequest = EnrollmentPaymentInvoice & {

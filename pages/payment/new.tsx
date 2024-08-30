@@ -189,6 +189,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                         {
                           studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0,
                           balanceTopUp: invoiceData?.balanceTopUp || 0,
+                          balanceBonus: invoiceData?.balanceBonus || 0,
                           courseFeeValue: invoiceData?.courseFeeValue || 0,
                           transportFeeValue: invoiceData?.transportFeeValue || 0,
                           penaltyFeeValue: invoiceData?.penaltyFeeValue || 0,
@@ -210,6 +211,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                         {
                           studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0,
                           balanceTopUp: invoiceData?.balanceTopUp || 0,
+                          balanceBonus: invoiceData?.balanceBonus || 0,
                           courseFeeValue: invoiceData?.courseFeeValue || 0,
                           transportFeeValue: invoiceData?.transportFeeValue || 0,
                           penaltyFeeValue: invoiceData?.penaltyFeeValue || 0,

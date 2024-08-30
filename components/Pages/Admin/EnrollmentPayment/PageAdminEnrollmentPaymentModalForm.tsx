@@ -59,6 +59,28 @@ const PageAdminEnrollmentPaymentModalForm = ({
     },
     {
       type: "text",
+      name: "balanceTopUp",
+      label: "Balance Top Up",
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
+      inputProps: {
+        type: "number",
+        required: true
+      },
+      validations: [{ name: "required" }, { name: "gte-zero" }]
+    },
+    {
+      type: "text",
+      name: "balanceBonus",
+      label: "Balance Bonus",
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
+      inputProps: {
+        type: "number",
+        required: true
+      },
+      validations: [{ name: "required" }, { name: "gte-zero" }]
+    },
+    {
+      type: "text",
       name: "courseFeeValue",
       label: "Course Fee",
       formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
@@ -94,17 +116,6 @@ const PageAdminEnrollmentPaymentModalForm = ({
       validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
-      type: "text",
-      name: "balanceTopUp",
-      label: "Balance Top Up",
-      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
-      inputProps: {
-        type: "number",
-        required: true
-      },
-      validations: [{ name: "required" }, { name: "gte-zero" }]
-    },
-    {
       type: "date",
       name: "paymentDate",
       label: "Payment Date",
@@ -131,6 +142,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
 
   const defaultUpdateFieldValue: EnrollmentPaymentUpdateFormData = {
     balanceTopUp: 0,
+    balanceBonus: 0,
     courseFeeValue: 0,
     transportFeeValue: 0,
     penaltyFeeValue: 0,
@@ -151,7 +163,14 @@ const PageAdminEnrollmentPaymentModalForm = ({
         },
         fields: defaultUpdateFields,
         submitHandler: async (
-          { courseFeeValue, balanceTopUp, transportFeeValue, paymentDate, penaltyFeeValue },
+          {
+            courseFeeValue,
+            balanceTopUp,
+            balanceBonus,
+            transportFeeValue,
+            paymentDate,
+            penaltyFeeValue
+          },
           error
         ) => {
           if (
@@ -166,6 +185,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
             {
               penaltyFeeValue,
               balanceTopUp,
+              balanceBonus,
               courseFeeValue,
               transportFeeValue,
               paymentDate: convertMomentDateToRFC3339(paymentDate),
@@ -202,6 +222,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
         {
           courseFeeValue,
           balanceTopUp,
+          balanceBonus,
           studentEnrollment,
           paymentDate,
           transportFeeValue,
@@ -222,6 +243,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
             courseFeeValue,
             transportFeeValue,
             balanceTopUp,
+            balanceBonus,
             penaltyFeeValue,
             paymentDate: convertMomentDateToRFC3339(paymentDate),
             studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
@@ -243,6 +265,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
     if (selectedData) {
       updateFormProperties.valueRef.current = {
         balanceTopUp: selectedData.balanceTopUp,
+        balanceBonus: selectedData.balanceBonus,
         transportFeeValue: selectedData.transportFeeValue,
         courseFeeValue: selectedData.courseFeeValue,
         paymentDate: moment(selectedData.paymentDate),

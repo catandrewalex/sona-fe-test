@@ -35,9 +35,14 @@ const PaymentDetail = (data: EnrollmentPayment): JSX.Element => {
     >
       <TableBody>
         <TableRow>
-          <CellTitle width="30%">Balance</CellTitle>
+          <CellTitle width="30%">Balance Top Up</CellTitle>
           <CellSemiColon align="center">:</CellSemiColon>
           <TableCell>{data.balanceTopUp}</TableCell>
+        </TableRow>
+        <TableRow>
+          <CellTitle width="30%">Balance Bonus</CellTitle>
+          <CellSemiColon align="center">:</CellSemiColon>
+          <TableCell>{data.balanceBonus != 0 ? data.balanceBonus : "-"}</TableCell>
         </TableRow>
         <TableRow>
           <CellTitle width="30%">Fee</CellTitle>

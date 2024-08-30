@@ -1,16 +1,17 @@
 import { StudentLearningToken, StudentEnrollment } from "@sonamusica-fe/types";
 
-export type StudentLearningTokenInsertFormData = Pick<
-  StudentLearningToken,
-  "quota" | "courseFeeValue" | "transportFeeValue"
-> & {
+// note that StudentLearningToken Insert/Update FormData uses [course|transport]FeeQuarterValue, instead of [course|transport]FeeValue.
+
+export type StudentLearningTokenInsertFormData = Pick<StudentLearningToken, "quota"> & {
+  courseFeeQuarterValue: number;
+  transportFeeQuarterValue: number;
   studentEnrollment: StudentEnrollment | null;
 };
 
-export type StudentLearningTokenUpdateFormData = Pick<
-  StudentLearningToken,
-  "quota" | "courseFeeValue" | "transportFeeValue"
->;
+export type StudentLearningTokenUpdateFormData = Pick<StudentLearningToken, "quota"> & {
+  courseFeeQuarterValue: number;
+  transportFeeQuarterValue: number;
+};
 
 export type StudentLearningTokenInsertFormRequest = Omit<
   StudentLearningTokenInsertFormData,

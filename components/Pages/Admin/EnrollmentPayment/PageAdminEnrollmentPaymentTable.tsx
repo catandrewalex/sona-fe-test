@@ -94,14 +94,21 @@ const PageAdminEnrollmentPaymentTable = ({
             flex: 2,
             valueGetter: (params) => getFullNameFromStudent(params.row.studentEnrollment.student)
           },
-
           {
             field: "balanceTopUp",
-            headerName: "Balance",
+            headerName: "Balance Top Up",
             width: 75,
             align: "center",
             headerAlign: "center",
             valueGetter: (params) => params.row.balanceTopUp
+          },
+          {
+            field: "balanceBonus",
+            headerName: "Balance Bonus",
+            width: 75,
+            align: "center",
+            headerAlign: "center",
+            valueGetter: (params) => params.row.balanceBonus
           },
           {
             field: "courseFeeValue",
@@ -158,8 +165,8 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "students",
             getOptionLabel: (option) => getFullNameFromStudent(option),
             xs: 6,
-            md: 4,
-            lg: 4,
+            md: 3,
+            lg: 3,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.student.studentId === val.studentId;
@@ -174,8 +181,8 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "teachers",
             getOptionLabel: (option) => getFullNameFromTeacher(option),
             xs: 6,
-            md: 4,
-            lg: 4,
+            md: 3,
+            lg: 3,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.class.teacher.teacherId === val.teacherId;
@@ -189,20 +196,39 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "instrument-grade",
             columnLabel: "Course",
             xs: 6,
-            md: 4,
-            lg: 4,
+            md: 3,
+            lg: 3,
             filterHandler: (data, value) =>
               searchCourseNameByValue(value, data.studentEnrollment.class.course)
           },
-
+          {
+            type: "text-input",
+            field: "balanceTopUp",
+            columnLabel: "Balance Top Up",
+            helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
+            md: 3,
+            lg: 3,
+            filterHandler: (data, value) => advancedNumberFilter(data.balanceTopUp, value.trim())
+          },
+          {
+            type: "text-input",
+            field: "balanceBonus",
+            columnLabel: "Balance Bonus",
+            helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
+            md: 3,
+            lg: 3,
+            filterHandler: (data, value) => advancedNumberFilter(data.balanceBonus, value.trim())
+          },
           {
             type: "text-input",
             field: "courseFeeValue",
             columnLabel: "Course Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             xs: 6,
-            md: 4,
-            lg: 4,
+            md: 3,
+            lg: 3,
             filterHandler: (data, value) => advancedNumberFilter(data.courseFeeValue, value.trim())
           },
           {
@@ -211,8 +237,8 @@ const PageAdminEnrollmentPaymentTable = ({
             columnLabel: "Penalty Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             xs: 6,
-            md: 4,
-            lg: 4,
+            md: 3,
+            lg: 3,
             filterHandler: (data, value) => advancedNumberFilter(data.penaltyFeeValue, value.trim())
           },
           {
@@ -221,8 +247,8 @@ const PageAdminEnrollmentPaymentTable = ({
             columnLabel: "Transport Fee",
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             xs: 6,
-            md: 4,
-            lg: 4,
+            md: 3,
+            lg: 3,
             filterHandler: (data, value) =>
               advancedNumberFilter(data.transportFeeValue, value.trim())
           }

@@ -33,14 +33,14 @@ const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps)
       fields: [
         {
           type: "text",
-          name: "balanceTopUp",
-          label: "Balance Top Up",
+          name: "balanceBonus",
+          label: "Balance Bonus",
           formFieldProps: { lg: 6, md: 6 },
           inputProps: {
             type: "number",
             required: true
           },
-          validations: [{ name: "required" }, { name: "gte-zero" }]
+          validations: [{ name: "required" }]
         },
         {
           type: "date",
@@ -51,10 +51,10 @@ const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps)
           dateProps: { slotProps: { textField: { required: true } } }
         }
       ],
-      submitHandler: async ({ balanceTopUp, paymentDate }, error) => {
-        if (error.balanceTopUp || error.paymentDate) return Promise.reject();
-        const response = await API.EditPaymentTopUpBalance({
-          balanceTopUp,
+      submitHandler: async ({ balanceBonus, paymentDate }, error) => {
+        if (error.balanceBonus || error.paymentDate) return Promise.reject();
+        const response = await API.EditPaymentBalanceBonus({
+          balanceBonus,
           paymentDate: convertMomentDateToRFC3339(paymentDate),
           enrollmentPaymentId: data?.enrollmentPaymentId || 0
         });
@@ -67,14 +67,14 @@ const EditPaymentModalForm = ({ data, onSubmit, onClose }: EditPaymentFormProps)
         }
       }
     },
-    { paymentDate: moment(), balanceTopUp: 0 }
+    { paymentDate: moment(), balanceBonus: 0 }
   );
 
   useEffect(() => {
     if (data) {
       setOpen(true);
       formProperties.valueRef.current = {
-        balanceTopUp: data.balanceTopUp,
+        balanceBonus: data.balanceBonus,
         paymentDate: moment(data.paymentDate)
       };
       formProperties.errorRef.current = {} as Record<keyof EditPaymentBalanceFormData, string>;

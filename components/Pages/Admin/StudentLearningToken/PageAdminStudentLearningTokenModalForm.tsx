@@ -53,24 +53,28 @@ const PageAdminStudentLearningTokenModalForm = ({
     },
     {
       type: "text",
-      name: "courseFeeValue",
-      label: "Course Fee",
+      name: "courseFeeQuarterValue",
+      label: "Course Fee Quarter",
       formFieldProps: { lg: 6, sx: { pt: { xs: "8px !important", sm: "24px !important" } } }, // on "xs", this field is no longer the top-most row, so we need to use the same "pt" as other fields.
       inputProps: {
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+        helperText:
+          "Note that this is a QUARTER value. The inputted value will be multiplied by 4.",
         required: true
       },
       validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
       type: "text",
-      name: "transportFeeValue",
-      label: "Transport Fee",
+      name: "transportFeeQuarterValue",
+      label: "Transport Fee Quarter",
       formFieldProps: { lg: 6, md: 6, sx: selectedData ? {} : { pt: "8px !important" } },
       inputProps: {
         type: "number",
         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+        helperText:
+          "Note that this is a QUARTER value. The inputted value will be multiplied by 4.",
         required: true
       },
       validations: [{ name: "required" }, { name: "gte-zero" }]
@@ -96,8 +100,8 @@ const PageAdminStudentLearningTokenModalForm = ({
     "studentEnrollment" | "lastUpdatedAt" | "createdAt"
   > = {
     quota: 0,
-    courseFeeValue: 0,
-    transportFeeValue: 0
+    courseFeeQuarterValue: 0,
+    transportFeeQuarterValue: 0
   };
 
   const { formProperties: updateFormProperties, formRenderer: updateFormRenderer } =
@@ -108,14 +112,17 @@ const PageAdminStudentLearningTokenModalForm = ({
           onClick: onClose
         },
         fields: defaultUpdateFields,
-        submitHandler: async ({ courseFeeValue, quota, transportFeeValue }, error) => {
-          if (error.courseFeeValue || error.quota || error.transportFeeValue)
+        submitHandler: async (
+          { courseFeeQuarterValue, quota, transportFeeQuarterValue },
+          error
+        ) => {
+          if (error.courseFeeQuarterValue || error.quota || error.transportFeeQuarterValue)
             return Promise.reject();
           const response = await ADMIN_API.UpdateStudentLearningToken([
             {
               quota,
-              courseFeeValue,
-              transportFeeValue,
+              courseFeeQuarterValue,
+              transportFeeQuarterValue,
               studentLearningTokenId: selectedData?.studentLearningTokenId || 0
             }
           ]);
@@ -146,20 +153,20 @@ const PageAdminStudentLearningTokenModalForm = ({
       fields: defaultInsertFields,
       errorResponseMapping,
       submitHandler: async (
-        { courseFeeValue, quota, studentEnrollment, transportFeeValue },
+        { courseFeeQuarterValue, quota, studentEnrollment, transportFeeQuarterValue },
         error
       ) => {
         if (
-          error.courseFeeValue ||
+          error.courseFeeQuarterValue ||
           error.quota ||
-          error.transportFeeValue ||
+          error.transportFeeQuarterValue ||
           error.studentEnrollment
         )
           return Promise.reject();
         const response = await ADMIN_API.InsertStudentLearningToken([
           {
-            courseFeeValue,
-            transportFeeValue,
+            courseFeeQuarterValue,
+            transportFeeQuarterValue,
             quota,
             studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
           }
@@ -180,8 +187,9 @@ const PageAdminStudentLearningTokenModalForm = ({
     if (selectedData) {
       updateFormProperties.valueRef.current = {
         quota: selectedData.quota,
-        transportFeeValue: selectedData.transportFeeValue,
-        courseFeeValue: selectedData.courseFeeValue
+        // we divide these 2 values, as the name indicates: "..QuarterValue". This is BE's API spec
+        transportFeeQuarterValue: selectedData.transportFeeValue / 4,
+        courseFeeQuarterValue: selectedData.courseFeeValue / 4
       };
       updateFormProperties.errorRef.current = {} as Record<
         keyof StudentLearningTokenUpdateFormData,

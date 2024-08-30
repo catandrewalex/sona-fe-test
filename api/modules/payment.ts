@@ -19,7 +19,7 @@ const SearchPayments = ({ startDateTime, endDateTime }: SearchPaymentConfig = {}
   });
 };
 
-const EditPaymentTopUpBalance = (
+const EditPaymentBalanceBonus = (
   data: EditPaymentBalanceFormRequest
 ): Promise<FailedResponse | SuccessResponse<EnrollmentPayment>> => {
   return API.post<EnrollmentPayment>({
@@ -56,7 +56,7 @@ const SubmitPayment = (
 
 export default {
   SearchPayments,
-  EditPaymentTopUpBalance,
+  EditPaymentBalanceBonus,
   GetPaymentInvoice,
   SubmitPayment,
   RemovePayment

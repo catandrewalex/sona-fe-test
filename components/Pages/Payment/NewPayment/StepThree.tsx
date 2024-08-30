@@ -24,6 +24,8 @@ const NewPaymentStepThree = ({
   studentEnrollmentData,
   invoiceData
 }: NewPaymentStepThreeProps): JSX.Element => {
+  const balanceTopUp = invoiceData?.balanceTopUp || 0;
+  const balanceBonus = invoiceData?.balanceBonus || 0;
   const courseFeeValue = invoiceData?.courseFeeValue || 0;
   const transportFeeValue = invoiceData?.transportFeeValue || 0;
   const penaltyFeeValue = invoiceData?.penaltyFeeValue || 0;
@@ -62,6 +64,18 @@ const NewPaymentStepThree = ({
           }
         }}
       >
+        <TableRow>
+          <CellNoBorder>Balance Top Up</CellNoBorder>
+          <CellNoBorder></CellNoBorder>
+          <CellNoBorder sx={{ textAlign: "right" }}>{balanceTopUp + " attendance(s)"}</CellNoBorder>
+        </TableRow>
+        <TableRow>
+          <CellNoBorder>Balance Bonus</CellNoBorder>
+          <CellNoBorder></CellNoBorder>
+          <CellNoBorder sx={{ textAlign: "right" }}>
+            {balanceBonus != 0 ? balanceBonus + " attendance(s)" : "-"}
+          </CellNoBorder>
+        </TableRow>
         <TableRow>
           <CellNoBorder>Course Fee</CellNoBorder>
           <CellNoBorder></CellNoBorder>

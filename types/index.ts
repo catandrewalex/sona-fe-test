@@ -115,6 +115,7 @@ export interface EnrollmentPayment {
   enrollmentPaymentId: number;
   studentEnrollment: StudentEnrollment;
   balanceTopUp: number;
+  balanceBonus: number;
   courseFeeValue: number;
   transportFeeValue: number;
   penaltyFeeValue: number;

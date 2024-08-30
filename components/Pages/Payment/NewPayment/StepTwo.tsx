@@ -51,12 +51,13 @@ const NewPaymentStepTwo = ({
               parsedResponse as EnrollmentPaymentInvoice;
             setInvoiceData({
               balanceTopUp: invoiceData.balanceTopUp,
+              balanceBonus: invoiceData.balanceBonus,
               courseFeeValue: invoiceData.courseFeeValue,
               transportFeeValue: invoiceData.transportFeeValue,
               penaltyFeeValue: invoiceData.penaltyFeeValue,
               lastPaymentDate: invoiceData.lastPaymentDate,
               daysLate: invoiceData.daysLate,
-              paymentDate: invoiceData.paymentDate
+              paymentDate: invoiceData.paymentDate || convertMomentDateToRFC3339(moment())
             });
             setRecalculateInvoice(false);
           } else {
@@ -108,12 +109,26 @@ const NewPaymentStepTwo = ({
     if (data) {
       return [
         {
-          title: "Topup Balance",
+          title: "Balance Top Up",
           value: (
             <StandardTextInput
               value={data.balanceTopUp}
               onChange={(e) =>
                 setInvoiceData({ ...data, balanceTopUp: parseInt(e.target.value || "0") })
+              }
+              type="number"
+              margin="dense"
+              size="small"
+            />
+          )
+        },
+        {
+          title: "Balance Bonus",
+          value: (
+            <StandardTextInput
+              value={data.balanceBonus}
+              onChange={(e) =>
+                setInvoiceData({ ...data, balanceBonus: parseInt(e.target.value || "0") })
               }
               type="number"
               margin="dense"
