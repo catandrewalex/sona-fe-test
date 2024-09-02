@@ -15,7 +15,7 @@ import LoaderSimple from "@sonamusica-fe/components/LoaderSimple";
 import { convertMomentDateToRFC3339 } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { SubmitPaymentBalanceFormRequest } from "@sonamusica-fe/types/form/payment";
+import { SubmitPaymentSafeAttributesFormRequest } from "@sonamusica-fe/types/form/payment";
 
 const steps = ["Select Student", "Create Invoice", "Finalize"];
 
@@ -65,7 +65,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
   };
 
   const submitPayment = useCallback(
-    (data: SubmitPaymentBalanceFormRequest, callback: () => void) => {
+    (data: SubmitPaymentSafeAttributesFormRequest, callback: () => void) => {
       setLoading(true);
       API.SubmitPayment(data)
         .then((response) => {
@@ -193,6 +193,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                           courseFeeValue: invoiceData?.courseFeeValue || 0,
                           transportFeeValue: invoiceData?.transportFeeValue || 0,
                           penaltyFeeValue: invoiceData?.penaltyFeeValue || 0,
+                          discountFeeValue: invoiceData?.discountFeeValue || 0,
                           paymentDate:
                             invoiceData?.paymentDate || convertMomentDateToRFC3339(moment())
                         },
@@ -215,6 +216,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                           courseFeeValue: invoiceData?.courseFeeValue || 0,
                           transportFeeValue: invoiceData?.transportFeeValue || 0,
                           penaltyFeeValue: invoiceData?.penaltyFeeValue || 0,
+                          discountFeeValue: invoiceData?.discountFeeValue || 0,
                           paymentDate:
                             invoiceData?.paymentDate || convertMomentDateToRFC3339(moment())
                         },

@@ -116,6 +116,18 @@ const PageAdminEnrollmentPaymentModalForm = ({
       validations: [{ name: "required" }, { name: "gte-zero" }]
     },
     {
+      type: "text",
+      name: "discountFeeValue",
+      label: "Discount Fee",
+      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
+      inputProps: {
+        required: true,
+        type: "number",
+        startAdornment: <InputAdornment position="start">Rp</InputAdornment>
+      },
+      validations: [{ name: "required" }, { name: "gte-zero" }]
+    },
+    {
       type: "date",
       name: "paymentDate",
       label: "Payment Date",
@@ -146,6 +158,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
     courseFeeValue: 0,
     transportFeeValue: 0,
     penaltyFeeValue: 0,
+    discountFeeValue: 0,
     paymentDate: moment()
   };
 
@@ -168,8 +181,9 @@ const PageAdminEnrollmentPaymentModalForm = ({
             balanceTopUp,
             balanceBonus,
             transportFeeValue,
-            paymentDate,
-            penaltyFeeValue
+            penaltyFeeValue,
+            discountFeeValue,
+            paymentDate
           },
           error
         ) => {
@@ -188,6 +202,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
               balanceBonus,
               courseFeeValue,
               transportFeeValue,
+              discountFeeValue,
               paymentDate: convertMomentDateToRFC3339(paymentDate),
               enrollmentPaymentId: selectedData?.enrollmentPaymentId || 0
             }
@@ -224,9 +239,10 @@ const PageAdminEnrollmentPaymentModalForm = ({
           balanceTopUp,
           balanceBonus,
           studentEnrollment,
-          paymentDate,
           transportFeeValue,
-          penaltyFeeValue
+          penaltyFeeValue,
+          discountFeeValue,
+          paymentDate
         },
         error
       ) => {
@@ -245,6 +261,7 @@ const PageAdminEnrollmentPaymentModalForm = ({
             balanceTopUp,
             balanceBonus,
             penaltyFeeValue,
+            discountFeeValue,
             paymentDate: convertMomentDateToRFC3339(paymentDate),
             studentEnrollmentId: studentEnrollment?.studentEnrollmentId || 0
           }
@@ -268,8 +285,9 @@ const PageAdminEnrollmentPaymentModalForm = ({
         balanceBonus: selectedData.balanceBonus,
         transportFeeValue: selectedData.transportFeeValue,
         courseFeeValue: selectedData.courseFeeValue,
-        paymentDate: moment(selectedData.paymentDate),
-        penaltyFeeValue: selectedData.penaltyFeeValue
+        penaltyFeeValue: selectedData.penaltyFeeValue,
+        discountFeeValue: selectedData.discountFeeValue,
+        paymentDate: moment(selectedData.paymentDate)
       };
       updateFormProperties.errorRef.current = {} as Record<
         keyof EnrollmentPaymentUpdateFormData,

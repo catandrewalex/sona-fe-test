@@ -55,6 +55,7 @@ const NewPaymentStepTwo = ({
               courseFeeValue: invoiceData.courseFeeValue,
               transportFeeValue: invoiceData.transportFeeValue,
               penaltyFeeValue: invoiceData.penaltyFeeValue,
+              discountFeeValue: invoiceData.discountFeeValue,
               lastPaymentDate: invoiceData.lastPaymentDate,
               daysLate: invoiceData.daysLate,
               paymentDate: invoiceData.paymentDate || convertMomentDateToRFC3339(moment())
@@ -197,6 +198,26 @@ const NewPaymentStepTwo = ({
           )
         },
         {
+          title: "Discount Fee",
+          value: (
+            <StandardTextInput
+              value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.discountFeeValue)}
+              onChange={(e) =>
+                setInvoiceData({
+                  ...data,
+                  discountFeeValue: parseInt(
+                    e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
+                  )
+                })
+              }
+              type="text"
+              margin="dense"
+              size="small"
+              startAdornment="Rp"
+            />
+          )
+        },
+        {
           title: "Payment Date",
           value: (
             <StandardDatePicker
@@ -214,7 +235,10 @@ const NewPaymentStepTwo = ({
         {
           title: "Total Payment",
           value: convertNumberToCurrencyString(
-            data.courseFeeValue + data.transportFeeValue + data.penaltyFeeValue
+            data.courseFeeValue +
+              data.transportFeeValue +
+              data.penaltyFeeValue -
+              data.discountFeeValue
           ),
           sx: { fontWeight: "bold", py: 1.5, fontSize: 20 }
         }

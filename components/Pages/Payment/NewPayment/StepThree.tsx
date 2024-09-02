@@ -29,6 +29,7 @@ const NewPaymentStepThree = ({
   const courseFeeValue = invoiceData?.courseFeeValue || 0;
   const transportFeeValue = invoiceData?.transportFeeValue || 0;
   const penaltyFeeValue = invoiceData?.penaltyFeeValue || 0;
+  const discountFeeValue = invoiceData?.discountFeeValue || 0;
   const paymentDate = invoiceData?.paymentDate || "";
 
   return (
@@ -98,6 +99,13 @@ const NewPaymentStepThree = ({
           </CellNoBorder>
         </TableRow>
         <TableRow>
+          <CellNoBorder>Discount</CellNoBorder>
+          <CellNoBorder></CellNoBorder>
+          <CellNoBorder sx={{ textAlign: "right" }}>
+            {convertNumberToCurrencyString(discountFeeValue)}
+          </CellNoBorder>
+        </TableRow>
+        <TableRow>
           <CellNoBorder>Payment Date</CellNoBorder>
           <CellNoBorder></CellNoBorder>
           <CellNoBorder sx={{ textAlign: "right" }}>
@@ -108,7 +116,9 @@ const NewPaymentStepThree = ({
       <Divider sx={{ borderWidth: "3px", my: 3 }} />
       <Typography variant="h6" textAlign="right">
         Total Payment:{" "}
-        {convertNumberToCurrencyString(courseFeeValue + transportFeeValue + penaltyFeeValue)}
+        {convertNumberToCurrencyString(
+          courseFeeValue + transportFeeValue + penaltyFeeValue - discountFeeValue
+        )}
       </Typography>
     </Box>
   );

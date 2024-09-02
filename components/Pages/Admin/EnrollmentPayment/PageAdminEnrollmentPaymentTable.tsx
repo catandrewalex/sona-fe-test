@@ -84,7 +84,7 @@ const PageAdminEnrollmentPaymentTable = ({
           {
             field: "enrollmentPaymentId",
             headerName: "ID",
-            width: 100,
+            width: 80,
             align: "center",
             headerAlign: "center"
           },
@@ -96,7 +96,7 @@ const PageAdminEnrollmentPaymentTable = ({
           },
           {
             field: "balanceTopUp",
-            headerName: "Balance Top Up",
+            headerName: "Top Up Balance",
             width: 75,
             align: "center",
             headerAlign: "center",
@@ -104,7 +104,7 @@ const PageAdminEnrollmentPaymentTable = ({
           },
           {
             field: "balanceBonus",
-            headerName: "Balance Bonus",
+            headerName: "Bonus Balance",
             width: 75,
             align: "center",
             headerAlign: "center",
@@ -120,6 +120,15 @@ const PageAdminEnrollmentPaymentTable = ({
             valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
           },
           {
+            field: "transportFeeValue",
+            headerName: "Transport Fee",
+            width: 140,
+            align: "center",
+            headerAlign: "center",
+            valueGetter: (params) => params.row.transportFeeValue,
+            valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
+          },
+          {
             field: "penaltyFeeValue",
             headerName: "Penalty Fee",
             width: 140,
@@ -129,12 +138,12 @@ const PageAdminEnrollmentPaymentTable = ({
             valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
           },
           {
-            field: "transportFeeValue",
-            headerName: "Transport Fee",
+            field: "discountFeeValue",
+            headerName: "Discount Fee",
             width: 140,
             align: "center",
             headerAlign: "center",
-            valueGetter: (params) => params.row.transportFeeValue,
+            valueGetter: (params) => params.row.discountFeeValue,
             valueFormatter: (params) => `${convertNumberToCurrencyString(params.value)}`
           },
           {
@@ -165,8 +174,8 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "students",
             getOptionLabel: (option) => getFullNameFromStudent(option),
             xs: 6,
-            md: 3,
-            lg: 3,
+            md: 4,
+            lg: 4,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.student.studentId === val.studentId;
@@ -181,8 +190,8 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "teachers",
             getOptionLabel: (option) => getFullNameFromTeacher(option),
             xs: 6,
-            md: 3,
-            lg: 3,
+            md: 4,
+            lg: 4,
             filterHandler: (data, value) => {
               for (const val of value) {
                 const result = data.studentEnrollment.class.teacher.teacherId === val.teacherId;
@@ -196,8 +205,8 @@ const PageAdminEnrollmentPaymentTable = ({
             field: "instrument-grade",
             columnLabel: "Course",
             xs: 6,
-            md: 3,
-            lg: 3,
+            md: 4,
+            lg: 4,
             filterHandler: (data, value) =>
               searchCourseNameByValue(value, data.studentEnrollment.class.course)
           },
@@ -208,7 +217,7 @@ const PageAdminEnrollmentPaymentTable = ({
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             xs: 6,
             md: 3,
-            lg: 3,
+            lg: 2,
             filterHandler: (data, value) => advancedNumberFilter(data.balanceTopUp, value.trim())
           },
           {
@@ -218,7 +227,7 @@ const PageAdminEnrollmentPaymentTable = ({
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             xs: 6,
             md: 3,
-            lg: 3,
+            lg: 2,
             filterHandler: (data, value) => advancedNumberFilter(data.balanceBonus, value.trim())
           },
           {
@@ -228,18 +237,8 @@ const PageAdminEnrollmentPaymentTable = ({
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             xs: 6,
             md: 3,
-            lg: 3,
+            lg: 2,
             filterHandler: (data, value) => advancedNumberFilter(data.courseFeeValue, value.trim())
-          },
-          {
-            type: "text-input",
-            field: "penaltyFeeValue",
-            columnLabel: "Penalty Fee",
-            helperText: "Equality signs can be used (<=700000, 375000, etc.)",
-            xs: 6,
-            md: 3,
-            lg: 3,
-            filterHandler: (data, value) => advancedNumberFilter(data.penaltyFeeValue, value.trim())
           },
           {
             type: "text-input",
@@ -248,9 +247,30 @@ const PageAdminEnrollmentPaymentTable = ({
             helperText: "Equality signs can be used (<=700000, 375000, etc.)",
             xs: 6,
             md: 3,
-            lg: 3,
+            lg: 2,
             filterHandler: (data, value) =>
               advancedNumberFilter(data.transportFeeValue, value.trim())
+          },
+          {
+            type: "text-input",
+            field: "penaltyFeeValue",
+            columnLabel: "Penalty Fee",
+            helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
+            md: 3,
+            lg: 2,
+            filterHandler: (data, value) => advancedNumberFilter(data.penaltyFeeValue, value.trim())
+          },
+          {
+            type: "text-input",
+            field: "discountFeeValue",
+            columnLabel: "Discount Fee",
+            helperText: "Equality signs can be used (<=700000, 375000, etc.)",
+            xs: 6,
+            md: 3,
+            lg: 2,
+            filterHandler: (data, value) =>
+              advancedNumberFilter(data.discountFeeValue, value.trim())
           }
         ]}
       />

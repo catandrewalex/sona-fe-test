@@ -1,8 +1,8 @@
 import { EnrollmentPayment, EnrollmentPaymentInvoice } from "@sonamusica-fe/types";
 import {
-  EditPaymentBalanceFormRequest,
+  EditPaymentSafeAttributesFormRequest,
   RemovePaymentFormRequest,
-  SubmitPaymentBalanceFormRequest
+  SubmitPaymentSafeAttributesFormRequest
 } from "@sonamusica-fe/types/form/payment";
 import API, { FailedResponse, Routes, SuccessResponse } from "api";
 
@@ -19,8 +19,8 @@ const SearchPayments = ({ startDateTime, endDateTime }: SearchPaymentConfig = {}
   });
 };
 
-const EditPaymentBalanceBonus = (
-  data: EditPaymentBalanceFormRequest
+const EditPaymentSafeAttributes = (
+  data: EditPaymentSafeAttributesFormRequest
 ): Promise<FailedResponse | SuccessResponse<EnrollmentPayment>> => {
   return API.post<EnrollmentPayment>({
     url: `${Routes.PAYMENT}/edit`,
@@ -46,7 +46,7 @@ const RemovePayment = ({
 };
 
 const SubmitPayment = (
-  data: SubmitPaymentBalanceFormRequest
+  data: SubmitPaymentSafeAttributesFormRequest
 ): Promise<FailedResponse | SuccessResponse<undefined>> => {
   return API.post<undefined>({
     url: `${Routes.PAYMENT}/submit`,
@@ -56,7 +56,7 @@ const SubmitPayment = (
 
 export default {
   SearchPayments,
-  EditPaymentBalanceBonus,
+  EditPaymentBalanceBonus: EditPaymentSafeAttributes,
   GetPaymentInvoice,
   SubmitPayment,
   RemovePayment

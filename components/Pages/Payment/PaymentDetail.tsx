@@ -1,4 +1,4 @@
-import { Table, TableBody, TableRow, TableCell } from "@mui/material";
+import { Table, TableBody, TableRow, TableCell, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { EnrollmentPayment } from "@sonamusica-fe/types";
 import {
@@ -60,9 +60,32 @@ const PaymentDetail = (data: EnrollmentPayment): JSX.Element => {
           <TableCell>{convertNumberToCurrencyString(data.penaltyFeeValue)}</TableCell>
         </TableRow>
         <TableRow>
+          <CellTitle width="30%">Discount</CellTitle>
+          <CellSemiColon align="center">:</CellSemiColon>
+          <TableCell>{convertNumberToCurrencyString(data.discountFeeValue)}</TableCell>
+        </TableRow>
+        <TableRow>
           <CellTitle width="30%">Teacher</CellTitle>
           <CellSemiColon align="center">:</CellSemiColon>
           <TableCell>{getFullNameFromTeacher(data.studentEnrollment.class.teacher)}</TableCell>
+        </TableRow>
+        <TableRow>
+          <CellTitle width="30%">
+            <Typography fontWeight="bold">TOTAL</Typography>
+          </CellTitle>
+          <CellSemiColon align="center">
+            <Typography fontWeight="bold">:</Typography>
+          </CellSemiColon>
+          <TableCell>
+            <Typography fontWeight="bold">
+              {convertNumberToCurrencyString(
+                data.courseFeeValue +
+                  data.transportFeeValue +
+                  data.penaltyFeeValue -
+                  data.discountFeeValue
+              )}
+            </Typography>
+          </TableCell>
         </TableRow>
       </TableBody>
     </Table>

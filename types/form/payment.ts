@@ -5,18 +5,20 @@ export type RemovePaymentFormRequest = {
   enrollmentPaymentId: number;
 };
 
-export type EditPaymentBalanceFormData = {
+export type EditPaymentSafeAttributesFormData = {
   paymentDate: Moment;
   balanceBonus: number;
+  discountFeeValue: number;
 };
 
-export type EditPaymentBalanceFormRequest = {
+export type EditPaymentSafeAttributesFormRequest = {
   enrollmentPaymentId: number;
   paymentDate: string;
   balanceBonus: number;
+  discountFeeValue: number;
 };
 
-export type SubmitPaymentBalanceFormRequest = EnrollmentPaymentInvoice & {
+export type SubmitPaymentSafeAttributesFormRequest = EnrollmentPaymentInvoice & {
   studentEnrollmentId: number;
   paymentDate: string;
 };

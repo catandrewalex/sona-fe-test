@@ -188,6 +188,13 @@ const SearchResultEnrollmentPayment = ({
           },
           {
             type: "arithmetic",
+            label: "Discount Fee",
+            filterHandle(data, value) {
+              return advancedNumberFilter(data.discountFeeValue, value);
+            }
+          },
+          {
+            type: "arithmetic",
             label: "Top Up Balance",
             filterHandle(data, value) {
               return advancedNumberFilter(data.balanceTopUp, value);
