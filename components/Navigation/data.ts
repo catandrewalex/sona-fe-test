@@ -46,7 +46,11 @@ const data: Array<SidebarSection> = [
   {
     name: "Management",
     userHasAccess: (userType?: UserType): boolean => {
-      return (userType ?? UserType.ANONYMOUS) >= UserType.STAFF;
+      return (
+        userType === UserType.SUPER_ADMIN ||
+        userType === UserType.ADMIN ||
+        userType === UserType.STAFF
+      );
     },
     items: [
       {
@@ -54,7 +58,11 @@ const data: Array<SidebarSection> = [
         text: "Enrollment Payment",
         url: "/payment",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.STAFF;
+          return (
+            userType === UserType.SUPER_ADMIN ||
+            userType === UserType.ADMIN ||
+            userType === UserType.STAFF
+          );
         },
         useSubstringStartsWithForMarkSelected: true
       },
@@ -63,7 +71,11 @@ const data: Array<SidebarSection> = [
         text: "Attendance",
         url: "/attendance",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.STAFF;
+          return (
+            userType === UserType.SUPER_ADMIN ||
+            userType === UserType.ADMIN ||
+            userType === UserType.STAFF
+          );
         },
         useSubstringStartsWithForMarkSelected: true
       },
@@ -72,7 +84,11 @@ const data: Array<SidebarSection> = [
         text: "Teacher Payment",
         url: "/teacher-payment",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.STAFF;
+          return (
+            userType === UserType.SUPER_ADMIN ||
+            userType === UserType.ADMIN ||
+            userType === UserType.STAFF
+          );
         },
         useSubstringStartsWithForMarkSelected: true
       }
@@ -86,7 +102,7 @@ const data: Array<SidebarSection> = [
         text: "Expense",
         url: "/dashboard/expense",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -94,18 +110,18 @@ const data: Array<SidebarSection> = [
         text: "Income",
         url: "/dashboard/expense#",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       }
     ],
     userHasAccess: (userType?: UserType): boolean => {
-      return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+      return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
     }
   },
   {
     name: "CRUD",
     userHasAccess: (userType?: UserType): boolean => {
-      return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+      return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
     },
     items: [
       {
@@ -113,7 +129,7 @@ const data: Array<SidebarSection> = [
         text: "User",
         url: "/admin/user",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -121,7 +137,7 @@ const data: Array<SidebarSection> = [
         text: "Teacher",
         url: "/admin/teacher",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -129,7 +145,7 @@ const data: Array<SidebarSection> = [
         text: "Student",
         url: "/admin/student",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -137,7 +153,7 @@ const data: Array<SidebarSection> = [
         text: "Instrument",
         url: "/admin/instrument",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -145,7 +161,7 @@ const data: Array<SidebarSection> = [
         text: "Grade",
         url: "/admin/grade",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -153,7 +169,7 @@ const data: Array<SidebarSection> = [
         text: "Course",
         url: "/admin/course",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -161,7 +177,7 @@ const data: Array<SidebarSection> = [
         text: "Class",
         url: "/admin/class",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -169,7 +185,7 @@ const data: Array<SidebarSection> = [
         text: "Teacher Special Fee",
         url: "/admin/teacher-special-fee",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -177,7 +193,7 @@ const data: Array<SidebarSection> = [
         text: "Student Learning Token",
         url: "/admin/student-learning-token",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.SUPER_ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -185,7 +201,7 @@ const data: Array<SidebarSection> = [
         text: "Enrollment Payment",
         url: "/admin/enrollment-payment",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.SUPER_ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       },
       {
@@ -193,7 +209,7 @@ const data: Array<SidebarSection> = [
         text: "Attendance",
         url: "/admin/attendance",
         userHasAccess: (userType?: UserType): boolean => {
-          return (userType ?? UserType.ANONYMOUS) >= UserType.SUPER_ADMIN;
+          return userType === UserType.SUPER_ADMIN || userType === UserType.ADMIN;
         }
       }
     ]
