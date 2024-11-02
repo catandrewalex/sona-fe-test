@@ -244,8 +244,18 @@ export interface ExpenseDashboardOverviewRequestBody extends DashboardOverviewRe
   instrumentIds: number[];
 }
 
+export interface IncomeDashboardOverviewRequestBody extends DashboardOverviewRequestBody {
+  instrumentIds: number[];
+}
+
 export interface ExpenseDashboardDetailRequestBody
   extends Pick<ExpenseDashboardOverviewRequestBody, "teacherIds" | "instrumentIds"> {
   selectedDate: DashboardTimeRangeFilterData;
   groupBy: "INSTRUMENT" | "TEACHER";
+}
+
+export interface IncomeDashboardDetailRequestBody
+  extends Pick<IncomeDashboardOverviewRequestBody, "instrumentIds"> {
+  selectedDate: DashboardTimeRangeFilterData;
+  groupBy: "INSTRUMENT";
 }

@@ -92,7 +92,7 @@ const data: Array<SidebarSection> = [
       {
         icon: Savings,
         text: "Income",
-        url: "/dashboard/expense#",
+        url: "/dashboard/income",
         userHasAccess: (userType?: UserType): boolean => {
           return (userType ?? UserType.ANONYMOUS) >= UserType.ADMIN;
         }

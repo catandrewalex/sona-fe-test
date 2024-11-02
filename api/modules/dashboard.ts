@@ -2,7 +2,9 @@ import API, { FailedResponse, Routes, SuccessResponse } from "../index";
 import {
   DashboardChartBaseData,
   ExpenseDashboardDetailRequestBody,
-  ExpenseDashboardOverviewRequestBody
+  ExpenseDashboardOverviewRequestBody,
+  IncomeDashboardDetailRequestBody,
+  IncomeDashboardOverviewRequestBody
 } from "@sonamusica-fe/types";
 
 const GetExpenseOverviewData = (
@@ -11,6 +13,15 @@ const GetExpenseOverviewData = (
   return API.post<DashboardChartBaseData>({
     url: `${Routes.DASHBOARD}/expense/overview`,
     config: { data }
+  });
+};
+
+const GetIncomeOverviewData = (
+  data: IncomeDashboardOverviewRequestBody
+): Promise<FailedResponse | SuccessResponse<DashboardChartBaseData>> => {
+  return API.post<DashboardChartBaseData>({
+    url: `${Routes.DASHBOARD}/income/overview`,
+    config: { data: { ...data, studentIds: [] } }
   });
 };
 
@@ -23,7 +34,18 @@ const GetExpenseDetailData = (
   });
 };
 
+const GetIncomeDetailData = (
+  data: IncomeDashboardDetailRequestBody
+): Promise<FailedResponse | SuccessResponse<DashboardChartBaseData>> => {
+  return API.post<DashboardChartBaseData>({
+    url: `${Routes.DASHBOARD}/income/monthlySummary`,
+    config: { data: { ...data, studentIds: [] } }
+  });
+};
+
 export default {
   GetExpenseOverviewData,
-  GetExpenseDetailData
+  GetIncomeOverviewData,
+  GetExpenseDetailData,
+  GetIncomeDetailData
 };

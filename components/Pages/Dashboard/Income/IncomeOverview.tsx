@@ -1,4 +1,4 @@
-import { DashboardChartBaseData, ExpenseDashboardOverviewRequestBody } from "@sonamusica-fe/types";
+import { DashboardChartBaseData, IncomeDashboardOverviewRequestBody } from "@sonamusica-fe/types";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import LineChart from "@sonamusica-fe/components/Chart/LineChart";
 import { useEffect, useState } from "react";
@@ -8,12 +8,12 @@ import { convertNumberToCurrencyString } from "@sonamusica-fe/utils/StringUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { FailedResponse, ResponseMany } from "../../../../api";
 
-interface ExpenseOverviewProps {
-  data: ExpenseDashboardOverviewRequestBody | undefined;
+interface IncomeOverviewProps {
+  data: IncomeDashboardOverviewRequestBody | undefined;
   ready: boolean;
 }
 
-const ExpenseOverview = ({ data, ready }: ExpenseOverviewProps): JSX.Element => {
+const IncomeOverview = ({ data, ready }: IncomeOverviewProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(data === undefined);
   const [chartData, setChartData] = useState<DashboardChartBaseData[]>([]);
   const apiTransformer = useApiTransformer();
@@ -21,7 +21,7 @@ const ExpenseOverview = ({ data, ready }: ExpenseOverviewProps): JSX.Element => 
   useEffect(() => {
     setLoading(true);
     if (data && ready) {
-      API.GetExpenseOverviewData(data)
+      API.GetIncomeOverviewData(data)
         .then((response) => {
           const parsedResponse = apiTransformer(response, false);
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
@@ -81,4 +81,4 @@ const ExpenseOverview = ({ data, ready }: ExpenseOverviewProps): JSX.Element => 
   );
 };
 
-export default ExpenseOverview;
+export default IncomeOverview;
