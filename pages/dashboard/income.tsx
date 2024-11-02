@@ -22,7 +22,7 @@ const IncomeDashboardPage = (): JSX.Element => {
   }, []);
 
   return (
-    <PageContainer navTitle="Dashboard - Expenses">
+    <PageContainer navTitle="Dashboard - Income">
       <Box sx={{ position: "relative" }}>
         <IncomeFilter onFilterChange={setFilterState} markFirstVisit={markFirstVisit} />
         {filterState && (

@@ -2,7 +2,7 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 import PieChart from "@sonamusica-fe/components/Chart/PieChart";
 import { useEffect, useState } from "react";
 import { DashboardPieChartData, IncomeDashboardOverviewRequestBody } from "@sonamusica-fe/types";
-import { FormattedMonthName } from "@sonamusica-fe/utils/StringUtil";
+import { convertNumberToCurrencyString, FormattedMonthName } from "@sonamusica-fe/utils/StringUtil";
 import { DefaultizedPieValueType, pieArcLabelClasses } from "@mui/x-charts";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { FailedResponse, ResponseMany } from "../../../../../api";
@@ -68,7 +68,8 @@ const IncomeDetailPieChart = ({
                   Omit<DashboardPieChartData, "label"> & {
                     label?: string | undefined;
                   }
-              ) => `${((item.percentage || 0) * 100).toFixed(2)}%`
+              ) => `${((item.percentage || 0) * 100).toFixed(2)}%`,
+              valueFormatter: (v) => (v ? convertNumberToCurrencyString(v.value) : "-")
             }
           ]}
           margin={{ right: loading ? 0 : 250 }}

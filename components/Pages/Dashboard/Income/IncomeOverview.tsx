@@ -56,14 +56,15 @@ const IncomeOverview = ({ data, ready }: IncomeOverviewProps): JSX.Element => {
             : [
                 {
                   label: "Total (Rp)",
-                  min: 500000
+                  min: 0
                 }
               ]
         }
         series={[
           {
             dataKey: "value",
-            valueFormatter: (value) => (value ? convertNumberToCurrencyString(value) : "-")
+            curve: "linear",
+            valueFormatter: (v) => (v ? convertNumberToCurrencyString(v) : "-")
           }
         ]}
         grid={loading ? undefined : { horizontal: true, vertical: true }}
