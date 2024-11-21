@@ -12,7 +12,7 @@ import {
   isValidNumericString
 } from "@sonamusica-fe/utils/StringUtil";
 import SearchFilter from "@sonamusica-fe/components/Search/SearchFilter";
-import { SuccessResponse, FailedResponse, ResponseMany } from "api";
+import { FailedResponse, ResponseMany } from "api";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import { useRouter } from "next/router";
 import { useApp, useUser } from "@sonamusica-fe/providers/AppProvider";
@@ -102,7 +102,7 @@ const SearchResultAttendance = ({
   return (
     <Box sx={{ mt: 1, position: "relative" }}>
       <IconButton
-        sx={{ position: "absolute", top: "10px", left: "-25px" }}
+        sx={{ position: "absolute", top: "10px", left: "-15px" }}
         onClick={backButtonHandler}
         color="error"
       >

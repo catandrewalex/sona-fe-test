@@ -12,7 +12,7 @@ import {
   getFullNameFromTeacher
 } from "@sonamusica-fe/utils/StringUtil";
 import SearchFilter from "@sonamusica-fe/components/Search/SearchFilter";
-import { SuccessResponse, FailedResponse, ResponseMany } from "api";
+import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 import moment from "moment";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
 import PaymentDetail from "@sonamusica-fe/components/Pages/Payment/PaymentDetail";
@@ -106,14 +106,14 @@ const SearchResultEnrollmentPayment = ({
   return (
     <Box sx={{ mt: 1, position: "relative" }}>
       <IconButton
-        sx={{ position: "absolute", top: "10px", left: "-25px" }}
+        sx={{ position: "absolute", top: "10px", left: "-15px" }}
         onClick={backButtonHandler}
         color="error"
       >
         <ArrowBack />
       </IconButton>
       <IconButton
-        sx={{ position: "absolute", top: "50px", left: "-25px" }}
+        sx={{ position: "absolute", top: "50px", left: "-15px" }}
         onClick={addPaymentHandler}
         color="success"
       >
