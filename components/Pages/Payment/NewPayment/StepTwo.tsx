@@ -20,6 +20,10 @@ import {
 import { FailedResponse } from "api";
 import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
+import {
+  PaymentLastDatePerMonth,
+  PaymentLateBaseFeeMultiplierPerDay
+} from "@sonamusica-fe/constant/index";
 
 type NewPaymentStepTwoProps = {
   studentEnrollmentData?: StudentEnrollment;
@@ -112,17 +116,27 @@ const NewPaymentStepTwo = ({
 
   const getLastPaymentDataDisplay = useCallback(
     (data?: EnrollmentPaymentInvoice): FormDataViewerTableConfig[] => {
-      if (data) {
-        const date = data.lastPaymentDate ? moment(data.lastPaymentDate) : undefined;
-        const daysLate = data.daysLate ?? 0;
+      if (data && data.paymentDate && data.lastPaymentDate) {
+        const date = moment(data.paymentDate);
+        const lastPaymentDate = moment(data.lastPaymentDate);
+        const oneMonthAfterLastPaymentDate = lastPaymentDate.clone().add({ month: 1 });
+        const shouldPayDate = moment();
+        shouldPayDate.set({
+          month: oneMonthAfterLastPaymentDate.month(),
+          year: oneMonthAfterLastPaymentDate.year(),
+          date: PaymentLastDatePerMonth
+        });
+        const daysLate = date.startOf("days").diff(shouldPayDate.startOf("days"), "days");
+
+        if (data.daysLate !== daysLate) setInvoiceData({ ...data, daysLate: daysLate });
         return [
-          { title: "Date", value: date ? date.format("DD MMMM YYYY") : "-" },
+          { title: "Date", value: lastPaymentDate ? lastPaymentDate.format("DD MMMM YYYY") : "-" },
           { title: "Days Late", value: daysLate > 0 ? daysLate.toString() : "-" }
         ];
       }
       return [];
     },
-    []
+    [invoiceData?.paymentDate]
   );
 
   const getInvoiceDataDisplay = useCallback(
@@ -203,7 +217,10 @@ const NewPaymentStepTwo = ({
             title: "Penalty Fee",
             value: (
               <StandardTextInput
-                value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.penaltyFeeValue)}
+                value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(
+                  (data?.daysLate && data.daysLate > 0 ? data.daysLate : 0) *
+                    PaymentLateBaseFeeMultiplierPerDay
+                )}
                 onChange={(e) =>
                   setInvoiceData({
                     ...data,
@@ -244,7 +261,7 @@ const NewPaymentStepTwo = ({
             value: (
               <StandardDatePicker
                 format="DD/MM/YYYY"
-                defaultValue={moment(invoiceData?.paymentDate)}
+                defaultValue={moment()}
                 onChange={(e) =>
                   setInvoiceData({
                     ...data,
