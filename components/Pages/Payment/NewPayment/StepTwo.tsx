@@ -27,6 +27,7 @@ type NewPaymentStepTwoProps = {
   setInvoiceData: (data: EnrollmentPaymentInvoice) => void;
   setRecalculateInvoice: (value: boolean) => void;
   recalculateInvoiceData: boolean;
+  setHasError: (hasError: boolean) => void;
 };
 
 const NewPaymentStepTwo = ({
@@ -34,9 +35,12 @@ const NewPaymentStepTwo = ({
   setInvoiceData,
   invoiceData,
   setRecalculateInvoice,
-  recalculateInvoiceData
+  recalculateInvoiceData,
+  setHasError
 }: NewPaymentStepTwoProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [errorCourseFee, setErrorCourseFee] = useState<boolean>(false);
+  const [errorTransportFee, setErrorTransportFee] = useState<boolean>(false);
 
   const { showSnackbar } = useSnack();
   const apiTransformer = useApiTransformer();
@@ -70,6 +74,21 @@ const NewPaymentStepTwo = ({
       setLoading(false);
     }
   }, [studentEnrollmentData]);
+
+  useEffect(() => {
+    if (invoiceData && invoiceData.courseFeeValue % invoiceData.balanceTopUp !== 0) {
+      setErrorCourseFee(true);
+    } else setErrorCourseFee(false);
+
+    if (invoiceData && invoiceData.transportFeeValue % invoiceData.balanceTopUp !== 0) {
+      setErrorTransportFee(true);
+    } else setErrorTransportFee(false);
+  }, [invoiceData]);
+
+  useEffect(() => {
+    if (errorCourseFee || errorTransportFee) setHasError(true);
+    else setHasError(false);
+  }, [errorCourseFee, errorTransportFee, setHasError]);
 
   const getStudentDataDisplay = useCallback((data?: Student): FormDataViewerTableConfig[] => {
     if (data) {
@@ -106,146 +125,154 @@ const NewPaymentStepTwo = ({
     []
   );
 
-  const getInvoiceDataDisplay = useCallback((data?: EnrollmentPaymentInvoice) => {
-    if (data) {
-      return [
-        {
-          title: "Balance Top Up",
-          value: (
-            <StandardTextInput
-              value={data.balanceTopUp}
-              onChange={(e) =>
-                setInvoiceData({ ...data, balanceTopUp: parseInt(e.target.value || "0") })
-              }
-              type="number"
-              margin="dense"
-              size="small"
-            />
-          )
-        },
-        {
-          title: "Balance Bonus",
-          value: (
-            <StandardTextInput
-              value={data.balanceBonus}
-              onChange={(e) =>
-                setInvoiceData({ ...data, balanceBonus: parseInt(e.target.value || "0") })
-              }
-              type="number"
-              margin="dense"
-              size="small"
-            />
-          )
-        },
-        {
-          title: "Course Fee",
-          value: (
-            <StandardTextInput
-              value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.courseFeeValue)}
-              onChange={(e) =>
-                setInvoiceData({
-                  ...data,
-                  courseFeeValue: parseInt(
-                    e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
-                  )
-                })
-              }
-              type="text"
-              margin="dense"
-              size="small"
-              startAdornment="Rp"
-            />
-          )
-        },
-        {
-          title: "Transport Fee",
-          value: (
-            <StandardTextInput
-              value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.transportFeeValue)}
-              onChange={(e) =>
-                setInvoiceData({
-                  ...data,
-                  transportFeeValue: parseInt(
-                    e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
-                  )
-                })
-              }
-              type="text"
-              margin="dense"
-              size="small"
-              startAdornment="Rp"
-            />
-          )
-        },
-        {
-          title: "Penalty Fee",
-          value: (
-            <StandardTextInput
-              value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.penaltyFeeValue)}
-              onChange={(e) =>
-                setInvoiceData({
-                  ...data,
-                  penaltyFeeValue: parseInt(
-                    e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
-                  )
-                })
-              }
-              type="text"
-              margin="dense"
-              size="small"
-              startAdornment="Rp"
-            />
-          )
-        },
-        {
-          title: "Discount Fee",
-          value: (
-            <StandardTextInput
-              value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.discountFeeValue)}
-              onChange={(e) =>
-                setInvoiceData({
-                  ...data,
-                  discountFeeValue: parseInt(
-                    e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
-                  )
-                })
-              }
-              type="text"
-              margin="dense"
-              size="small"
-              startAdornment="Rp"
-            />
-          )
-        },
-        {
-          title: "Payment Date",
-          value: (
-            <StandardDatePicker
-              format="DD/MM/YYYY"
-              defaultValue={moment(invoiceData?.paymentDate)}
-              onChange={(e) =>
-                setInvoiceData({ ...data, paymentDate: convertMomentDateToRFC3339(e || moment()) })
-              }
-              closeOnSelect={true}
-              slotProps={{ textField: { size: "small", margin: "dense" } }}
-              sx={{ width: "100%" }}
-            />
-          )
-        },
-        {
-          title: "Total Payment",
-          value: convertNumberToCurrencyString(
-            data.courseFeeValue +
-              data.transportFeeValue +
-              data.penaltyFeeValue -
-              data.discountFeeValue
-          ),
-          sx: { fontWeight: "bold", py: 1.5, fontSize: 20 }
-        }
-      ];
-    }
-    return [];
-  }, []);
+  const getInvoiceDataDisplay = useCallback(
+    (data?: EnrollmentPaymentInvoice) => {
+      if (data) {
+        return [
+          {
+            title: "Balance Top Up",
+            value: (
+              <StandardTextInput
+                value={data.balanceTopUp}
+                onChange={(e) =>
+                  setInvoiceData({ ...data, balanceTopUp: parseInt(e.target.value || "0") })
+                }
+                type="number"
+                margin="dense"
+                size="small"
+              />
+            )
+          },
+          {
+            title: "Balance Bonus",
+            value: (
+              <StandardTextInput
+                value={data.balanceBonus}
+                onChange={(e) =>
+                  setInvoiceData({ ...data, balanceBonus: parseInt(e.target.value || "0") })
+                }
+                type="number"
+                margin="dense"
+                size="small"
+              />
+            )
+          },
+          {
+            title: "Course Fee",
+            value: (
+              <StandardTextInput
+                value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.courseFeeValue)}
+                onChange={(e) =>
+                  setInvoiceData({
+                    ...data,
+                    courseFeeValue: parseInt(
+                      e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
+                    )
+                  })
+                }
+                type="text"
+                margin="dense"
+                size="small"
+                startAdornment="Rp"
+                errorMsg={errorCourseFee ? "Must be divisible by 'Balance Top Up'" : ""}
+              />
+            )
+          },
+          {
+            title: "Transport Fee",
+            value: (
+              <StandardTextInput
+                value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.transportFeeValue)}
+                onChange={(e) =>
+                  setInvoiceData({
+                    ...data,
+                    transportFeeValue: parseInt(
+                      e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
+                    )
+                  })
+                }
+                type="text"
+                margin="dense"
+                size="small"
+                startAdornment="Rp"
+                errorMsg={errorTransportFee ? "Must be divisible by 'Balance Top Up'" : ""}
+              />
+            )
+          },
+          {
+            title: "Penalty Fee",
+            value: (
+              <StandardTextInput
+                value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.penaltyFeeValue)}
+                onChange={(e) =>
+                  setInvoiceData({
+                    ...data,
+                    penaltyFeeValue: parseInt(
+                      e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
+                    )
+                  })
+                }
+                type="text"
+                margin="dense"
+                size="small"
+                startAdornment="Rp"
+              />
+            )
+          },
+          {
+            title: "Discount Fee",
+            value: (
+              <StandardTextInput
+                value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.discountFeeValue)}
+                onChange={(e) =>
+                  setInvoiceData({
+                    ...data,
+                    discountFeeValue: parseInt(
+                      e.target.value ? removeNonNumericCharacter(e.target.value) : "0"
+                    )
+                  })
+                }
+                type="text"
+                margin="dense"
+                size="small"
+                startAdornment="Rp"
+              />
+            )
+          },
+          {
+            title: "Payment Date",
+            value: (
+              <StandardDatePicker
+                format="DD/MM/YYYY"
+                defaultValue={moment(invoiceData?.paymentDate)}
+                onChange={(e) =>
+                  setInvoiceData({
+                    ...data,
+                    paymentDate: convertMomentDateToRFC3339(e || moment())
+                  })
+                }
+                closeOnSelect={true}
+                slotProps={{ textField: { size: "small", margin: "dense" } }}
+                sx={{ width: "100%" }}
+              />
+            )
+          },
+          {
+            title: "Total Payment",
+            value: convertNumberToCurrencyString(
+              data.courseFeeValue +
+                data.transportFeeValue +
+                data.penaltyFeeValue -
+                data.discountFeeValue
+            ),
+            sx: { fontWeight: "bold", py: 1.5, fontSize: 20 }
+          }
+        ];
+      }
+      return [];
+    },
+    [errorTransportFee, errorCourseFee]
+  );
 
   if (loading) return <LoaderSimple />;
 

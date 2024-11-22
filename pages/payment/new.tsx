@@ -1,6 +1,6 @@
 import PageContainer from "@sonamusica-fe/components/PageContainer";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FailedResponse } from "api";
 import { useRouter } from "next/router";
 import SearchIcon from "@mui/icons-material/Search";
@@ -21,6 +21,7 @@ const steps = ["Select Student", "Create Invoice", "Finalize"];
 
 const NewEnrollmentPaymentPage = (): JSX.Element => {
   const { replace } = useRouter();
+  const [hasError, setHasError] = useState(false);
   const [studentEnrollment, setStudentEnrollment] = useState<StudentEnrollment>();
   const [invoiceData, setInvoiceData] = useState<EnrollmentPaymentInvoice>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,6 +32,10 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
   const { push } = useRouter();
   const { showDialog } = useAlertDialog();
   const { showSnackbar } = useSnack();
+
+  useEffect(() => {
+    setHasError(false);
+  }, [currentStep]);
 
   const onSearchEnrollmentPaymentClick = useCallback(() => {
     showDialog(
@@ -105,6 +110,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
             invoiceData={invoiceData}
             setRecalculateInvoice={setRecalculateInvoice}
             recalculateInvoiceData={recalculateInvoice}
+            setHasError={setHasError}
           />
         );
       }
@@ -170,6 +176,7 @@ const NewEnrollmentPaymentPage = (): JSX.Element => {
                   variant="outlined"
                   onClick={nextStep}
                   disabled={
+                    hasError ||
                     (currentStep === 0 && studentEnrollment === undefined) ||
                     (currentStep === 1 && invoiceData === undefined) ||
                     loading
