@@ -83,6 +83,7 @@ export type FormField<T> =
 
 export interface FormConfig<T> {
   fields: Array<FormField<T>>;
+  formSpacing?: FormSpacingType;
   submitContainerProps?: Omit<SubmitButtonContainerProps, "children">;
   submitButtonProps?: Omit<SubmitButtonProps, "children">;
   cancelButtonProps?: Omit<SubmitButtonProps, "children">;
@@ -91,7 +92,18 @@ export interface FormConfig<T> {
   errorResponseMapping?: Partial<Record<keyof T, string>>;
   testIdContext?: string;
   disableUseOfDefaultFormConfig?: boolean;
+  disableLoading?: boolean;
 }
+
+export enum FormSpacingType {
+  NORMAL = "NORMAL",
+  COMPACT = "COMPACT"
+}
+
+const formSpacingValues = {
+  NORMAL: { columnSpacing: 3, rowSpacing: 3 },
+  COMPACT: { columnSpacing: 2, rowSpacing: 0.5 }
+};
 
 export interface FormProperties<T> {
   valueRef: React.MutableRefObject<T>;
@@ -111,10 +123,16 @@ const useFormRenderer = <T extends unknown>(
     const [loading, setLoading] = useState<boolean>(false);
     const { showDialog } = useAlertDialog();
 
+    const { columnSpacing, rowSpacing } = formSpacingValues[config?.formSpacing ?? "NORMAL"];
+
     return (
       <Form
+        rowSpacing={rowSpacing}
+        columnSpacing={columnSpacing}
         onSubmit={(e) => {
-          setLoading(true);
+          if (!config.disableLoading) {
+            setLoading(true);
+          }
 
           config
             .submitHandler(valueRef.current, errorRef.current)

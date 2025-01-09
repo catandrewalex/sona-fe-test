@@ -1,3 +1,4 @@
+import AddIcon from "@mui/icons-material/Add";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
@@ -79,6 +80,7 @@ const SearchAttendance = (): JSX.Element => {
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
@@ -156,6 +158,19 @@ const SearchAttendance = (): JSX.Element => {
           )}
         </CardContent>
       </Card>
+      <Button
+        sx={{ mt: 1 }}
+        startIcon={<AddIcon />}
+        size="small"
+        onClick={() =>
+          push({
+            pathname: "/attendance/batch"
+          })
+        }
+        variant="text"
+      >
+        <small>Add Attendance in Batch</small>
+      </Button>
     </Box>
   );
 };

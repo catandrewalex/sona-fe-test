@@ -1,5 +1,6 @@
 import { Attendance } from "@sonamusica-fe/types";
 import {
+  AddAttendanceBatchFormRequest,
   AddAttendanceFormRequest,
   EditAttendanceFormRequest
 } from "@sonamusica-fe/types/form/attendance";
@@ -32,6 +33,15 @@ const AddAttendance = (
   });
 };
 
+const AddAttendanceBatch = (
+  data: AddAttendanceBatchFormRequest[]
+): Promise<FailedResponse | SuccessResponse<string>> => {
+  return API.post<string>({
+    url: `${Routes.ATTENDANCE}/batch`,
+    config: { data: { data } }
+  });
+};
+
 const EditAttendance = (
   id: number,
   data: EditAttendanceFormRequest
@@ -51,6 +61,7 @@ const RemoveAttendance = (id: number): Promise<FailedResponse | SuccessResponse<
 export default {
   GetAttendanceByClass,
   AddAttendance,
+  AddAttendanceBatch,
   EditAttendance,
   RemoveAttendance
 };

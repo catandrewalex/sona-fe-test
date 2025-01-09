@@ -1,4 +1,4 @@
-import { Course, Student, Teacher, User, UserDetail } from "@sonamusica-fe/types";
+import { Class, Course, Student, Teacher, User, UserDetail } from "@sonamusica-fe/types";
 import { Moment } from "moment";
 
 const currencyFormatter = new Intl.NumberFormat("id", {
@@ -105,6 +105,16 @@ export const getFullNameFromTeacher = (teacher?: Teacher): string => {
 
 export const getFullNameFromStudent = (student?: Student): string => {
   return student ? getFullNameFromUser(student.user) : "";
+};
+
+export const getFullClassName = (_class?: Class): string => {
+  if (!_class) return "";
+
+  const students = _class.students.map((student) => getFullNameFromStudent(student));
+
+  return `#${_class.classId} ${getCourseName(_class.course)}; ${getFullNameFromTeacher(
+    _class.teacher
+  )} - [${students.join(", ")}]`;
 };
 
 export const getCourseName = (course?: Course): string => {

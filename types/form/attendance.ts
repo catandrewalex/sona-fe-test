@@ -1,4 +1,4 @@
-import { Attendance, Teacher } from "@sonamusica-fe/types";
+import { Attendance, Class, Teacher } from "@sonamusica-fe/types";
 import { Moment } from "moment";
 
 export type AddAttendanceFormData = Pick<
@@ -23,4 +23,23 @@ export type EditAttendanceFormRequest = AddAttendanceFormRequest;
 
 export type AttendanceDeleteRequest = {
   attendanceId: number;
+};
+
+// Add Attendance Batch
+export type AddAttendanceBatchFormData = Pick<
+  Attendance,
+  "usedStudentTokenQuota" | "duration" | "note"
+> & {
+  class: Class | null;
+  date: Moment;
+  teacher: Teacher | null;
+};
+
+export type AddAttendanceBatchFormRequest = Pick<
+  Attendance,
+  "usedStudentTokenQuota" | "duration" | "note"
+> & {
+  classId: number;
+  date: string;
+  teacherId: number;
 };
