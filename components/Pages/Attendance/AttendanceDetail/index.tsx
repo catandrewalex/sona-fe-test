@@ -1,11 +1,11 @@
 import { Add } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, FormControlLabel, Switch, Typography } from "@mui/material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import AttendanceDetailTabContainer from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTabContainer";
 import FormDataViewerTable from "@sonamusica-fe/components/Table/FormDataViewerTable";
 import AttendanceModalForm from "@sonamusica-fe/components/Pages/Attendance/AttendanceModalForm";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { Attendance, Class, Teacher, User, UserTeachingInfo } from "@sonamusica-fe/types";
+import { Attendance, Class, Teacher } from "@sonamusica-fe/types";
 import {
   convertNumberToCurrencyString,
   getCourseName,
@@ -28,6 +28,12 @@ const AttendanceDetailContainer = ({
   const [teacherOptions, setTeacherOptions] = useState<Teacher[]>([]);
   // we increment this counter to force render on AttendanceDetailTabContainer, whenever the AttendanceForm is submitted (both add & edit)
   const [forceRenderCounter, forceRender] = useReducer((prev) => prev + 1, 0);
+
+  const [isDisplayForSharing, setisDisplayForSharing] = useState<boolean>(false);
+
+  const parentFriendlyHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setisDisplayForSharing(event.target.checked);
+  }, []);
 
   const { query } = useRouter();
 
@@ -118,6 +124,12 @@ const AttendanceDetailContainer = ({
           >
             Add Attendance
           </Button>
+          <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+            <FormControlLabel
+              control={<Switch checked={isDisplayForSharing} onChange={parentFriendlyHandler} />}
+              label="Sharing-friendly View"
+            />
+          </Box>
         </Box>
       </Box>
       {classData.students.length > 0 && (
@@ -129,6 +141,7 @@ const AttendanceDetailContainer = ({
           openForm={openForm}
           preSelectedStudentId={preSelectedStudentId}
           forceRenderCounter={forceRenderCounter}
+          isDisplayForSharing={isDisplayForSharing}
         />
       )}
       {classData.students.length === 0 && (

@@ -22,6 +22,7 @@ type AttendanceDetailTabContainerProps = {
   openForm: (data: Attendance) => void;
   preSelectedStudentId: number;
   forceRenderCounter: number;
+  isDisplayForSharing?: boolean;
 };
 
 const RESULT_PER_PAGE = 12;
@@ -37,7 +38,8 @@ const AttendanceDetailTabContainer = ({
   isUserHasWriteAccess,
   openForm,
   preSelectedStudentId,
-  forceRenderCounter
+  forceRenderCounter,
+  isDisplayForSharing
 }: AttendanceDetailTabContainerProps): JSX.Element => {
   const { showSnackbar } = useSnack();
   const [currentStudentId, setCurrentStudentId] = useState<number>(
@@ -127,9 +129,15 @@ const AttendanceDetailTabContainer = ({
         {studentsData.map((student) => (
           <TabPanel key={student.studentId} value={student.studentId + ""}>
             {studentIdToSLTDisplay[student.studentId] &&
-              studentIdToSLTDisplay[student.studentId].map((data) => (
+              (isDisplayForSharing
+                ? [studentIdToSLTDisplay[student.studentId][0]]
+                : studentIdToSLTDisplay[student.studentId]
+              ).map((data) => (
                 <Box key={data.studentLearningTokenId}>
-                  <Typography component="span" sx={{ mr: 0.25 }}>
+                  <Typography
+                    component="span"
+                    sx={{ mr: 0.25, opacity: isDisplayForSharing ? 0.2 : 1 }}
+                  >
                     <small>#{data.studentLearningTokenId}</small>
                   </Typography>
                   <Typography fontSize={16} component="span" sx={{ mr: 0.25, ml: 0.25 }}>
@@ -152,12 +160,16 @@ const AttendanceDetailTabContainer = ({
                   <Typography fontSize={16} component="span" sx={{ mr: 0.5, ml: 0.5 }}>
                     |
                   </Typography>
-                  <Typography component="span" sx={{ mx: 1 }}>
-                    <small>Active: {moment(data.createdAt).format("DD MMMM YYYY")}</small>
-                  </Typography>
-                  <Typography fontSize={16} component="span" sx={{ mr: 0.5, ml: 0.5 }}>
-                    |
-                  </Typography>
+                  {!isDisplayForSharing ? (
+                    <>
+                      <Typography component="span" sx={{ mx: 1 }}>
+                        <small>Active: {moment(data.createdAt).format("DD MMMM YYYY")}</small>
+                      </Typography>
+                      <Typography fontSize={16} component="span" sx={{ mr: 0.5, ml: 0.5 }}>
+                        |
+                      </Typography>
+                    </>
+                  ) : null}
                   <Typography component="span" sx={{ ml: 1 }}>
                     <small>
                       ({convertNumberToCurrencyString(data.courseFeeValue)} (Course) +{" "}
@@ -193,6 +205,7 @@ const AttendanceDetailTabContainer = ({
                   isUserHasWriteAccess={isUserHasWriteAccess}
                   openForm={openForm}
                   onDelete={onDelete}
+                  isDisplayForSharing={isDisplayForSharing}
                 />
               )}
             </TableContainer>

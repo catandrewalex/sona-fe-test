@@ -7,10 +7,10 @@ import {
   Table,
   TableBody,
   TableCell,
+  tableCellClasses,
   TableHead,
   TableRow,
-  Typography,
-  tableCellClasses
+  Typography
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
@@ -32,6 +32,7 @@ type AttendanceDetailTableViewProps = {
   isUserHasWriteAccess: boolean;
   openForm: (data: Attendance) => void;
   onDelete: () => void;
+  isDisplayForSharing?: boolean;
 };
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -47,7 +48,8 @@ const AttendanceDetailTableView = ({
   teacherId,
   isUserHasWriteAccess,
   openForm,
-  onDelete
+  onDelete,
+  isDisplayForSharing
 }: AttendanceDetailTableViewProps): JSX.Element => {
   const { showDialog } = useAlertDialog();
   const [selectedAttendance, setSelectedAttendance] = useState<Attendance>();
@@ -122,14 +124,18 @@ const AttendanceDetailTableView = ({
       <Table stickyHeader sx={{ "& .MuiTableCell-root": { py: 1.5 } }}>
         <TableHead>
           <TableRow>
-            {isUserHasWriteAccess && <StyledTableCell sx={{ maxWidth: 64 }}></StyledTableCell>}
-            <StyledTableCell sx={{ maxWidth: 64 }}>Is Paid</StyledTableCell>
+            {isUserHasWriteAccess && !isDisplayForSharing && (
+              <>
+                <StyledTableCell sx={{ maxWidth: 64 }}></StyledTableCell>
+                <StyledTableCell sx={{ maxWidth: 64 }}>Is Paid</StyledTableCell>
+              </>
+            )}
             <StyledTableCell sx={{ maxWidth: 200 }}>Date</StyledTableCell>
             <StyledTableCell sx={{ maxWidth: 200 }}>Duration (minutes)</StyledTableCell>
             <StyledTableCell sx={{ maxWidth: 100 }}>Used Quota</StyledTableCell>
             <StyledTableCell>Notes</StyledTableCell>
             <StyledTableCell>Teacher Substitute</StyledTableCell>
-            <StyledTableCell>Token Detail</StyledTableCell>
+            {!isDisplayForSharing && <StyledTableCell>Token Detail</StyledTableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -137,47 +143,49 @@ const AttendanceDetailTableView = ({
             <TableRow
               hover
               key={item.attendanceId}
-              className={item.isPaid ? "" : "attendance-unpaid-row"}
+              className={item.isPaid || isDisplayForSharing ? "" : "attendance-unpaid-row"}
             >
-              {isUserHasWriteAccess && (
-                <StyledTableCell>
-                  <Tooltip
-                    content={
-                      item.isPaid
-                        ? "De-register this attendance from the teacher payment to edit/delete"
-                        : ""
-                    }
-                  >
-                    <>
-                      <IconButton
-                        disabled={item.isPaid ? true : false}
-                        onClick={() => openForm(item)}
-                        color="secondary"
-                      >
-                        <Edit />
-                      </IconButton>
-                      <IconButton
-                        disabled={item.isPaid ? true : false}
-                        onClick={() => handleDelete(item)}
-                        color="error"
-                      >
-                        <Delete />
-                      </IconButton>
-                    </>
-                  </Tooltip>
-                </StyledTableCell>
+              {isUserHasWriteAccess && !isDisplayForSharing && (
+                <>
+                  <StyledTableCell>
+                    <Tooltip
+                      content={
+                        item.isPaid
+                          ? "De-register this attendance from the teacher payment to edit/delete"
+                          : ""
+                      }
+                    >
+                      <>
+                        <IconButton
+                          disabled={item.isPaid}
+                          onClick={() => openForm(item)}
+                          color="secondary"
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton
+                          disabled={item.isPaid}
+                          onClick={() => handleDelete(item)}
+                          color="error"
+                        >
+                          <Delete />
+                        </IconButton>
+                      </>
+                    </Tooltip>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <Typography
+                      align="center"
+                      color={(theme) =>
+                        item.isPaid ? theme.palette.success.main : theme.palette.error.main
+                      }
+                      fontWeight="bold"
+                    >
+                      {item.isPaid ? "Yes" : "No"}
+                    </Typography>
+                  </StyledTableCell>
+                </>
               )}
-              <StyledTableCell>
-                <Typography
-                  align="center"
-                  color={(theme) =>
-                    item.isPaid ? theme.palette.success.main : theme.palette.error.main
-                  }
-                  fontWeight="bold"
-                >
-                  {item.isPaid ? "Yes" : "No"}
-                </Typography>
-              </StyledTableCell>
               <StyledTableCell sx={{ textAlign: "center", maxWidth: 200 }}>
                 {moment(item.date).format("DD MMMM YYYY HH:mm")}
               </StyledTableCell>
@@ -191,11 +199,13 @@ const AttendanceDetailTableView = ({
               <StyledTableCell sx={{ textAlign: "center" }}>
                 {item.teacher.teacherId !== teacherId ? getFullNameFromTeacher(item.teacher) : "-"}
               </StyledTableCell>
-              <StyledTableCell>
-                <Button color="primary" onClick={() => onClickViewTokenDetail(item)}>
-                  View #{item.studentLearningToken.studentLearningTokenId}
-                </Button>
-              </StyledTableCell>
+              {!isDisplayForSharing && (
+                <StyledTableCell>
+                  <Button color="primary" onClick={() => onClickViewTokenDetail(item)}>
+                    View #{item.studentLearningToken.studentLearningTokenId}
+                  </Button>
+                </StyledTableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
