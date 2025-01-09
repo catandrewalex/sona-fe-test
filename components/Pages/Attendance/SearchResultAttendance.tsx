@@ -1,5 +1,5 @@
 import { Class, Course, SearchClassConfig, Student, Teacher } from "@sonamusica-fe/types";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Box, Button, Divider, IconButton, Typography } from "@mui/material";
 import { ArrowBack, Visibility } from "@mui/icons-material";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
@@ -99,6 +99,10 @@ const SearchResultAttendance = ({
     setCourseData(courses);
   }, [data]);
 
+  const calculateIsViewDetailBtnDisabled = useCallback((currData: Class): boolean => {
+    return currData.students.length === 0 || currData.isDeactivated;
+  }, []);
+
   return (
     <Box sx={{ mt: 1, position: "relative" }}>
       <IconButton
@@ -165,7 +169,7 @@ const SearchResultAttendance = ({
           data={displayData}
           getDataActions={(currData) => (
             <Button
-              disabled={currData.students.length === 0}
+              disabled={calculateIsViewDetailBtnDisabled(currData)}
               onClick={() => {
                 push("/attendance/" + currData.classId);
                 startLoading();

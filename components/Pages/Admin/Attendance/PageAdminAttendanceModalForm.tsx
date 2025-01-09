@@ -11,10 +11,10 @@ import {
 } from "@sonamusica-fe/types/form/admin/attendance";
 import {
   convertMomentDateToRFC3339,
-  convertNumberToCurrencyString,
   getCourseName,
   getFullNameFromStudent,
-  getFullNameFromTeacher
+  getFullNameFromTeacher,
+  getFullStudentLearningTokenName
 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
 import moment from "moment";
@@ -99,10 +99,7 @@ const PageAdminAttendanceModalForm = ({
       inputProps: { required: true },
       selectProps: {
         options: studentLearningTokenData,
-        getOptionLabel: (option) =>
-          `Fee: ${convertNumberToCurrencyString(
-            option.courseFeeValue
-          )} | Transport: ${convertNumberToCurrencyString(option.transportFeeValue)}`
+        getOptionLabel: (option) => getFullStudentLearningTokenName(option)
       },
       validations: [{ name: "required" }]
     },

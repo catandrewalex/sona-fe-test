@@ -1,4 +1,13 @@
-import { Class, Course, Student, Teacher, User, UserDetail } from "@sonamusica-fe/types";
+import {
+  Class,
+  Course,
+  Student,
+  StudentLearningToken,
+  Teacher,
+  User,
+  UserDetail
+} from "@sonamusica-fe/types";
+import moment from "moment";
 import { Moment } from "moment";
 
 const currencyFormatter = new Intl.NumberFormat("id", {
@@ -119,6 +128,26 @@ export const getFullClassName = (_class?: Class): string => {
 
 export const getCourseName = (course?: Course): string => {
   return course ? `${course.instrument.name} - ${course.grade.name}` : "";
+};
+
+export const getFullStudentLearningTokenName = (token?: StudentLearningToken): string => {
+  if (!token) return "";
+
+  const tokenDateInfo = `Crt: ${moment(token.createdAt).format("DD MMMM YYYY")} \
+  ┊ Updt: ${moment(token.lastUpdatedAt).format("DD MMMM YYYY")}`;
+
+  const tokenDetail = `\
+  #${token.studentLearningTokenId} \
+  Course: ${convertNumberToCurrencyString(token.courseFeeValue)} \
+  ┊ Transport: ${convertNumberToCurrencyString(token.transportFeeValue)} \
+  ┊ Quota: ${token.quota} ┊ ${tokenDateInfo}`;
+
+  const studentTeacherName = `\
+  Student: ${token.studentEnrollment.student.user.username} \
+  ┊ Teacher: ${token.studentEnrollment.class.teacher?.user.username ?? ""}`;
+
+  return `${tokenDetail} ⟶ ${studentTeacherName} \
+  ⟶ ${getCourseName(token.studentEnrollment.class.course)}`;
 };
 
 export const searchFullNameByValue = (value: string, user?: User): boolean => {
