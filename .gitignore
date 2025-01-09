@@ -46,4 +46,5 @@ tests/videos
 .idea
 
 .space
-temp
+temp/
+temp_cache/
