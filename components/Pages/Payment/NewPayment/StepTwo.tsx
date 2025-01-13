@@ -18,12 +18,30 @@ import {
   removeNonNumericCharacter
 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse } from "api";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   PaymentLastDatePerMonth,
   PaymentLateBaseFeeMultiplierPerDay
 } from "@sonamusica-fe/constant/index";
+
+const calculateDaysLate = (paymentDate: Moment, lastPaymentDate: Moment): number => {
+  const oneMonthAfterLastPaymentDate = lastPaymentDate.clone().add({ month: 1 });
+  const shouldPayDate = moment();
+  shouldPayDate.set({
+    month: oneMonthAfterLastPaymentDate.month(),
+    year: oneMonthAfterLastPaymentDate.year(),
+    date: PaymentLastDatePerMonth
+  });
+
+  const daysLate = paymentDate.startOf("days").diff(shouldPayDate.startOf("days"), "days");
+
+  return daysLate;
+};
+
+const calculatePenalty = (daysLate: number): number => {
+  return daysLate * PaymentLateBaseFeeMultiplierPerDay;
+};
 
 type NewPaymentStepTwoProps = {
   studentEnrollmentData?: StudentEnrollment;
@@ -116,19 +134,9 @@ const NewPaymentStepTwo = ({
 
   const getLastPaymentDataDisplay = useCallback(
     (data?: EnrollmentPaymentInvoice): FormDataViewerTableConfig[] => {
-      if (data && data.paymentDate && data.lastPaymentDate) {
-        const date = moment(data.paymentDate);
-        const lastPaymentDate = moment(data.lastPaymentDate);
-        const oneMonthAfterLastPaymentDate = lastPaymentDate.clone().add({ month: 1 });
-        const shouldPayDate = moment();
-        shouldPayDate.set({
-          month: oneMonthAfterLastPaymentDate.month(),
-          year: oneMonthAfterLastPaymentDate.year(),
-          date: PaymentLastDatePerMonth
-        });
-        const daysLate = date.startOf("days").diff(shouldPayDate.startOf("days"), "days");
-
-        if (data.daysLate !== daysLate) setInvoiceData({ ...data, daysLate: daysLate });
+      if (data) {
+        const lastPaymentDate = data.lastPaymentDate ? moment(data.lastPaymentDate) : undefined;
+        const daysLate = data.daysLate ?? 0;
         return [
           { title: "Date", value: lastPaymentDate ? lastPaymentDate.format("DD MMMM YYYY") : "-" },
           { title: "Days Late", value: daysLate > 0 ? daysLate.toString() : "-" }
@@ -217,10 +225,7 @@ const NewPaymentStepTwo = ({
             title: "Penalty Fee",
             value: (
               <StandardTextInput
-                value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(
-                  (data?.daysLate && data.daysLate > 0 ? data.daysLate : 0) *
-                    PaymentLateBaseFeeMultiplierPerDay
-                )}
+                value={convertNumberToCurrencyStringWithoutPrefixAndSuffix(data.penaltyFeeValue)}
                 onChange={(e) =>
                   setInvoiceData({
                     ...data,
@@ -262,12 +267,21 @@ const NewPaymentStepTwo = ({
               <StandardDatePicker
                 format="DD/MM/YYYY"
                 defaultValue={moment()}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const paymentDate = e || moment();
+                  const paymentDateStr = convertMomentDateToRFC3339(paymentDate);
+                  const lastPaymentDate = moment(data?.lastPaymentDate);
+
+                  const daysLate = calculateDaysLate(paymentDate, lastPaymentDate);
+                  const penalty = calculatePenalty(daysLate);
+
                   setInvoiceData({
                     ...data,
-                    paymentDate: convertMomentDateToRFC3339(e || moment())
-                  })
-                }
+                    paymentDate: paymentDateStr,
+                    daysLate: daysLate,
+                    penaltyFeeValue: penalty
+                  });
+                }}
                 closeOnSelect={true}
                 slotProps={{ textField: { size: "small", margin: "dense" } }}
                 sx={{ width: "100%" }}
