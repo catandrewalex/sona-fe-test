@@ -266,7 +266,7 @@ const NewPaymentStepTwo = ({
             value: (
               <StandardDatePicker
                 format="DD/MM/YYYY"
-                defaultValue={moment()}
+                defaultValue={data.paymentDate ? moment(data.paymentDate) : moment()}
                 onChange={(e) => {
                   const paymentDate = e || moment();
                   const paymentDateStr = convertMomentDateToRFC3339(paymentDate);
