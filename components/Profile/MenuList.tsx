@@ -42,14 +42,17 @@ const MenuList = ({ anchorEl, onClose, onLogout, open }: MenuListProps): JSX.Ele
       case UserType.ANONYMOUS:
         privilegeString = "Guest";
         break;
-      case UserType.ADMIN:
-        privilegeString = "Admin";
-        break;
       case UserType.MEMBER:
         privilegeString = "Member";
         break;
       case UserType.STAFF:
         privilegeString = "Staff";
+        break;
+      case UserType.ADMIN:
+        privilegeString = "Admin";
+        break;
+      case UserType.SUPER_ADMIN:
+        privilegeString = "Super Admin";
         break;
     }
   }
