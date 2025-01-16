@@ -145,10 +145,9 @@ export interface Attendance {
   isPaid: boolean;
 }
 
-// PaginationResult is backend's direct output
-export interface PaginationResult {
+export interface PaginationState {
   totalPages: number;
-  totalResults: number;
+  totalItems: number;
   currentPage: number;
 }
 
