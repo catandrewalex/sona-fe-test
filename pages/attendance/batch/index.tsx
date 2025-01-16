@@ -49,7 +49,20 @@ const AttendanceBatchPage = (): JSX.Element => {
   const handleAddAttendance = useCallback((attendanceBatchFormData: AddAttendanceBatchFormData) => {
     if (!attendanceBatchFormData.class || !attendanceBatchFormData.teacher) return;
 
-    setAttendanceBatchFormDataList((prev) => [...prev, attendanceBatchFormData]);
+    setAttendanceBatchFormDataList((prev) => {
+      const isExist =
+        prev.length > 0 &&
+        prev.findIndex(
+          (val) =>
+            val.class?.classId === attendanceBatchFormData.class?.classId &&
+            val.date.diff(attendanceBatchFormData.date) === 0
+        ) != -1;
+      if (!isExist) {
+        return [...prev, attendanceBatchFormData];
+      } else {
+        return prev;
+      }
+    });
   }, []);
 
   const handleRemoveAttendance = useCallback((index: number) => {
