@@ -61,7 +61,7 @@ const SubmitButton = ({
         color={color}
         disabled={loading || disabled}
         data-testid={`${testIdContext}-${regular ? "Button" : "SubmitButton"}`}
-        sx={merge({}, sx, { fontSize: "1rem", m: 0 })}
+        sx={merge({}, { fontSize: "1rem", m: 0 }, sx)}
       >
         {loading ? (
           <CircularProgress
