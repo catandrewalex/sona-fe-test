@@ -152,7 +152,7 @@ const updateFields: FormFieldType<UserUpdateFormData>[] = insertFields.filter(
 updateFields.push({
   type: "switch",
   name: "isActive",
-  label: "Active?",
+  label: "Active",
   formFieldProps: { sx: { pt: { xs: "8px !important", sm: "30px !important" } } },
   validations: [{ name: "required" }]
 });

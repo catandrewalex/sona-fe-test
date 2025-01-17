@@ -2,7 +2,7 @@ import React from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { SxProps } from "@mui/system";
 
-import { IconButton, Modal as MuiModal, Paper, Typography, Box } from "@mui/material";
+import { IconButton, Modal as MuiModal, Paper, Typography, Box, Theme } from "@mui/material";
 
 /**
  * Chart Container prop types.
@@ -34,7 +34,7 @@ export type ModalProps = {
   iconBtnRight?: number;
   disableEscape?: boolean;
   testIdContext?: string;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 };
 
 /**

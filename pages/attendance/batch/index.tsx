@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { Class, Teacher } from "@sonamusica-fe/types";
 import { MemoizedAttendanceBatchForm } from "@sonamusica-fe/components/Pages/Attendance/AttendanceBatch/AttendanceBatchForm";
 import { AttendanceBatchTable } from "@sonamusica-fe/components/Pages/Attendance/AttendanceBatch/AttendanceBatchTable";
@@ -12,10 +12,11 @@ import {
 } from "@sonamusica-fe/types/form/attendance";
 import { convertMomentDateToRFC3339 } from "@sonamusica-fe/utils/StringUtil";
 import PageContainer from "@sonamusica-fe/components/PageContainer";
+import { SmallCancelAndSubmitButtons } from "@sonamusica-fe/components/Form/SmallCancelAndSubmitButtons";
 
 const AttendanceBatchPage = (): JSX.Element => {
   const { showSnackbar } = useSnack();
-  // const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [attendanceBatchFormDataList, setAttendanceBatchFormDataList] = useState<
     AddAttendanceBatchFormData[]
@@ -69,7 +70,7 @@ const AttendanceBatchPage = (): JSX.Element => {
     setAttendanceBatchFormDataList((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const handleClearAll = useCallback(() => {
+  const handleRemoveAll = useCallback(() => {
     setAttendanceBatchFormDataList([]);
   }, []);
 
@@ -78,6 +79,8 @@ const AttendanceBatchPage = (): JSX.Element => {
       showSnackbar("Please add at least one attendance record", "error");
       return;
     }
+
+    setLoading(true);
 
     // convert to AddAttendanceBatchFormRequest, while filtering invalid records.
     const attendancesBatchFormRequests = attendanceBatchFormDataList.flatMap(
@@ -99,13 +102,14 @@ const AttendanceBatchPage = (): JSX.Element => {
     );
 
     const response = await API.AddAttendanceBatch(attendancesBatchFormRequests);
+    setLoading(false);
     const parsedResponse = apiTransformer(response, true);
     if (Object.getPrototypeOf(parsedResponse) === FailedResponse.prototype) {
       return parsedResponse as FailedResponse;
     } else {
-      handleClearAll();
+      handleRemoveAll();
     }
-  }, [showSnackbar, attendanceBatchFormDataList, handleClearAll]);
+  }, [showSnackbar, attendanceBatchFormDataList, handleRemoveAll, setLoading]);
 
   return (
     <PageContainer navTitle="Manage Attendance">
@@ -125,14 +129,14 @@ const AttendanceBatchPage = (): JSX.Element => {
           onRemove={handleRemoveAttendance}
         />
 
-        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
-          <Button variant="contained" color="error" onClick={handleClearAll}>
-            Remove All
-          </Button>
-          <Button variant="contained" color="primary" onClick={handleSubmitBatch}>
-            Submit Batch
-          </Button>
-        </Box>
+        <SmallCancelAndSubmitButtons
+          loading={loading}
+          cancelButtonText="Remove All"
+          cancelButtonDisabled={loading}
+          cancelButtonOnClick={handleRemoveAll}
+          submitButtonText="Submit Batch"
+          submitButtonOnClick={handleSubmitBatch}
+        ></SmallCancelAndSubmitButtons>
       </Box>
     </PageContainer>
   );

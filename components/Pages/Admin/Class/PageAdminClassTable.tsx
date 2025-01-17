@@ -137,6 +137,14 @@ const PageAdminClassTable = ({
                 align: "center",
                 headerAlign: "center",
                 valueGetter: (params) => params.row.course.defaultDurationMinute
+              },
+              {
+                field: "autoOweAttendanceToken",
+                headerName: "Auto Owe Token",
+                type: "boolean",
+                width: 125,
+                align: "center",
+                headerAlign: "center"
               }
             ];
           }, [data, openModal, setSelectedData, setSelectedStudentDetail, openModalStudentDetail])}

@@ -14,11 +14,12 @@ export type ClassInsertFormRequest = {
 } & Pick<ClassInsertFormData, "transportFee">;
 
 export type ClassUpdateFormData = ClassInsertFormData & {
+  autoOweAttendanceToken: boolean;
   isActive: boolean;
 };
 
 export type ClassUpdateFormRequest = ClassInsertFormRequest &
-  Pick<Class, "isDeactivated" | "classId">;
+  Pick<Class, "isDeactivated" | "autoOweAttendanceToken" | "classId">;
 
 export type ClassDeleteRequest = {
   classId: number;

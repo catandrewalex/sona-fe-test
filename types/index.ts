@@ -77,6 +77,7 @@ export interface Class {
   course: Course;
   transportFee: number;
   teacherSpecialFee?: number;
+  autoOweAttendanceToken: boolean;
   isDeactivated: boolean;
 }
 
@@ -150,6 +151,15 @@ export interface PaginationState {
   totalItems: number;
   currentPage: number;
 }
+
+export type EditClassConfigRequest = Pick<Class, "classId"> & {
+  autoOweAttendanceToken?: boolean;
+  isDeactivated?: boolean;
+};
+
+export type EditClassCourseRequest = Pick<Class, "classId"> & {
+  courseId: number;
+};
 
 export interface SearchClassConfig {
   studentId?: number;

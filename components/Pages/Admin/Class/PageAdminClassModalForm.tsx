@@ -93,8 +93,15 @@ const PageAdminClassModalForm = ({
     {
       type: "switch",
       name: "isActive",
-      label: "Active?",
-      formFieldProps: { lg: 4, sx: { pt: "8px !important" } },
+      label: "Active",
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
+      validations: [{ name: "required" }]
+    },
+    {
+      type: "switch",
+      name: "autoOweAttendanceToken",
+      label: "Auto Owe Token",
+      formFieldProps: { lg: 6, sx: { pt: "8px !important" } },
       validations: [{ name: "required" }]
     }
   ];
@@ -108,6 +115,7 @@ const PageAdminClassModalForm = ({
 
   const defaultUpdateFieldValue: ClassUpdateFormData = {
     ...defaultInsertFieldValue,
+    autoOweAttendanceToken: true,
     isActive: true
   };
 
@@ -120,12 +128,16 @@ const PageAdminClassModalForm = ({
         },
         fields: defaultUpdateFields,
         errorResponseMapping,
-        submitHandler: async ({ course, isActive, students, teacher, transportFee }, error) => {
+        submitHandler: async (
+          { course, autoOweAttendanceToken, isActive, students, teacher, transportFee },
+          error
+        ) => {
           if (
             error.course ||
             error.teacher ||
             error.students ||
             error.transportFee ||
+            error.autoOweAttendanceToken ||
             error.isActive
           )
             return Promise.reject();
@@ -136,6 +148,7 @@ const PageAdminClassModalForm = ({
               studentIds: students.map((student) => student.studentId),
               teacherId: teacher?.teacherId || 0,
               transportFee: transportFee,
+              autoOweAttendanceToken: autoOweAttendanceToken,
               isDeactivated: !isActive,
               classId: selectedData?.classId || 0
             }
@@ -197,6 +210,7 @@ const PageAdminClassModalForm = ({
         teacher: selectedData.teacher || null,
         students: selectedData.students,
         transportFee: selectedData.transportFee,
+        autoOweAttendanceToken: selectedData.autoOweAttendanceToken,
         isActive: !selectedData.isDeactivated
       };
       updateFormProperties.errorRef.current = {} as Record<keyof ClassUpdateFormData, string>;

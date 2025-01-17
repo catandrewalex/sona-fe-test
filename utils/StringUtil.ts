@@ -148,12 +148,19 @@ export const getFullStudentLearningTokenName = (token?: StudentLearningToken): s
   ┊ Transport: ${convertNumberToCurrencyString(token.transportFeeValue)} \
   ┊ Quota: ${token.quota} ┊ ${tokenDateInfo}`;
 
-  const studentTeacherName = `\
-  Student: ${token.studentEnrollment.student.user.username} \
-  ┊ Teacher: ${token.studentEnrollment.class.teacher?.user.username ?? ""}`;
+  let studentTeacherName = "";
+  let courseName = "";
+  if (token.studentEnrollment) {
+    studentTeacherName = `\
+    Student: ${token.studentEnrollment.student.user.username} \
+    ┊ Teacher: ${token.studentEnrollment.class.teacher?.user.username ?? ""}`;
 
-  return `${tokenDetail} ⟶ ${studentTeacherName} \
-  ⟶ ${getCourseName(token.studentEnrollment.class.course)}`;
+    courseName = getCourseName(token.studentEnrollment.class.course);
+  }
+
+  const builder = [tokenDetail, studentTeacherName, courseName].filter((val) => val.length > 0);
+
+  return builder.join(" ⟶ ");
 };
 
 export const searchFullNameByValue = (value: string, user?: User): boolean => {

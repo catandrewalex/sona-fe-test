@@ -59,6 +59,15 @@ const data: Array<SidebarSection> = [
         useSubstringStartsWithForMarkSelected: true
       },
       {
+        icon: Groups,
+        text: "Class",
+        url: "/class",
+        userHasAccess: (userType?: UserType): boolean => {
+          return (userType ?? UserType.ANONYMOUS) >= UserType.STAFF;
+        },
+        useSubstringStartsWithForMarkSelected: true
+      },
+      {
         icon: PeopleAlt,
         text: "Attendance",
         url: "/attendance",
