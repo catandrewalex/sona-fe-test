@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { SxProps } from "@mui/system";
 import { ValidationConfig } from "@sonamusica-fe/utils/ValidationUtil";
 
-import { FormControlLabel, FormGroup, Switch as MuiSwitch } from "@mui/material";
+import { FormControlLabel, FormGroup, Switch as MuiSwitch, Theme } from "@mui/material";
 
 export interface SwitchProps<T> extends MuiSwitchProps {
   labelPlacement?: "end" | "start" | "top" | "bottom";
-  labelSx?: SxProps;
+  labelSx?: SxProps<Theme>;
   validations?: Array<ValidationConfig<T>>;
   field: keyof T;
   label: string;

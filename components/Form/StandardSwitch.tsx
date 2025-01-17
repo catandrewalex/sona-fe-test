@@ -2,12 +2,12 @@ import { SwitchProps } from "@mui/material/Switch";
 import React from "react";
 import { SxProps } from "@mui/system";
 
-import { FormControlLabel, FormGroup, Switch } from "@mui/material";
+import { FormControlLabel, FormGroup, Switch, Theme } from "@mui/material";
 
 interface StandardSwitchProps extends SwitchProps {
   label?: string;
   labelPlacement?: "end" | "start" | "top" | "bottom";
-  labelSx?: SxProps;
+  labelSx?: SxProps<Theme>;
 }
 
 const StandardSwitch = ({
