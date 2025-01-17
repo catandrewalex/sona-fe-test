@@ -48,3 +48,6 @@ tests/videos
 .space
 temp/
 temp_cache/
+
+# AI generated asset: input (prompt) and output (HTML) used by the AI, while I was brainstorming with the AI.
+ai-interim-assets/
