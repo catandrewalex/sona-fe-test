@@ -182,6 +182,9 @@ const SearchResultAttendance = ({
               View Detail
             </Button>
           )}
+          getDataActionsTooltip={(currData) =>
+            currData.isDeactivated ? "Activate this class to modify its attendance" : ""
+          }
           getDataContent={AttendanceResultDetail}
           getDataKey={(data) => data.classId}
           getDataTitle={(data) => (

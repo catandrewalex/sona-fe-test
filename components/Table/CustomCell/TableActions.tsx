@@ -24,7 +24,7 @@ const createTableActions = ({
     width: 75,
     cellClassName: "actions",
     getActions: (params) => [
-      <Tooltip content={editDisableMessage || ""} key={"edit-" + params.id}>
+      <Tooltip title={editDisableMessage || ""} key={"edit-" + params.id}>
         <GridActionsCellItem
           data-testid={"EditIcon-" + params.id}
           dense
@@ -36,7 +36,7 @@ const createTableActions = ({
           disabled={editHandler === undefined}
         />
       </Tooltip>,
-      <Tooltip content={deleteDisableMessage || ""} key={"delete-" + params.id}>
+      <Tooltip title={deleteDisableMessage || ""} key={"delete-" + params.id}>
         <GridActionsCellItem
           dense
           data-testid={"DeleteIcon-" + params.id}

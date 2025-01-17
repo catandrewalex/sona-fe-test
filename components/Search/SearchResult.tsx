@@ -1,6 +1,7 @@
 import { Masonry } from "@mui/lab";
 import { Box, Card, CardActions, CardContent, CardHeader } from "@mui/material";
 import ErrorDataGridEmpty from "@sonamusica-fe/components/Error/ErrorDataGridEmpty";
+import Tooltip from "@sonamusica-fe/components/Tooltip";
 import React, { useEffect } from "react";
 
 type SearchResultProps<T> = {
@@ -10,6 +11,7 @@ type SearchResultProps<T> = {
   getDataTitle: (data: T) => JSX.Element | string;
   getDataSubTitle?: (data: T) => string;
   getDataActions?: (data: T) => JSX.Element | JSX.Element[];
+  getDataActionsTooltip?: (data: T) => string;
   onCardClick?: (data: T) => void;
 };
 
@@ -19,6 +21,7 @@ const SearchResult = <T extends unknown>({
   getDataKey,
   getDataTitle,
   getDataActions,
+  getDataActionsTooltip = (_data) => "",
   getDataSubTitle,
   onCardClick
 }: SearchResultProps<T>): JSX.Element => {
@@ -37,7 +40,12 @@ const SearchResult = <T extends unknown>({
         subheaderTypographyProps={{ variant: "caption" }}
       />
       <CardContent sx={{ py: 1, "&:last-child": { pb: 1 } }}>{getDataContent(item)}</CardContent>
-      {getDataActions && <CardActions>{getDataActions(item)}</CardActions>}
+
+      {getDataActions && (
+        <Tooltip title={getDataActionsTooltip(item)}>
+          <CardActions>{getDataActions(item)}</CardActions>
+        </Tooltip>
+      )}
     </Card>
   ));
 

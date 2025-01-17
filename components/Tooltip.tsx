@@ -1,8 +1,8 @@
-import { Tooltip as MuiTooltip } from "@mui/material";
+import { Tooltip as MuiTooltip, TooltipProps as MuiTooltipProps } from "@mui/material";
 import React from "react";
 
 type TooltipProps = {
-  content: string | JSX.Element | JSX.Element[];
+  title: string | JSX.Element | JSX.Element[];
   placement?:
     | "bottom-end"
     | "bottom-start"
@@ -17,11 +17,16 @@ type TooltipProps = {
     | "top-start"
     | "top";
   children: JSX.Element;
-};
+} & MuiTooltipProps;
 
-const Tooltip = ({ content, placement = "bottom", children }: TooltipProps): JSX.Element => {
+const Tooltip = ({
+  title,
+  placement = "bottom",
+  children,
+  ...props
+}: TooltipProps): JSX.Element => {
   return (
-    <MuiTooltip title={content} arrow placement={placement}>
+    <MuiTooltip {...props} title={title} arrow placement={placement}>
       <span>{children}</span>
     </MuiTooltip>
   );

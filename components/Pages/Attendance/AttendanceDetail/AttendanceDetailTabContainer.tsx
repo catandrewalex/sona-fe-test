@@ -56,7 +56,7 @@ const AttendanceDetailTabContainer = ({
 
   const {
     data: attendanceData,
-    paginationResult,
+    paginationState,
     error: errorAttendance,
     isLoading: loading,
     refetch: refetchAttendance
@@ -78,7 +78,7 @@ const AttendanceDetailTabContainer = ({
   //   Thus, we subscribe to "forceRenderCounter"
   useEffect(() => {
     if (forceRenderCounter > 0) {
-      refetchAttendance(currentStudentId, paginationResult.currentPage);
+      refetchAttendance(currentStudentId, paginationState.currentPage);
       refetchStudentLearningToken();
     }
   }, [forceRenderCounter]);
@@ -87,9 +87,9 @@ const AttendanceDetailTabContainer = ({
     (_e, newValue) => {
       const newStudentId = parseInt(newValue);
       setCurrentStudentId(newStudentId);
-      refetchAttendance(currentStudentId, paginationResult.currentPage);
+      refetchAttendance(currentStudentId, paginationState.currentPage);
     },
-    [currentStudentId, paginationResult.currentPage]
+    [currentStudentId, paginationState.currentPage]
   );
 
   const handlePageChange = useCallback(
@@ -100,9 +100,9 @@ const AttendanceDetailTabContainer = ({
   );
 
   const onDelete = useCallback(() => {
-    refetchAttendance(currentStudentId, paginationResult.currentPage);
+    refetchAttendance(currentStudentId, paginationState.currentPage);
     refetchStudentLearningToken();
-  }, [currentStudentId, paginationResult.currentPage]);
+  }, [currentStudentId, paginationState.currentPage]);
 
   const studentIdToSLTDisplay: Record<number, StudentLearningTokenDisplay[]> = {};
   if (studentLearningTokenData) {
@@ -213,8 +213,8 @@ const AttendanceDetailTabContainer = ({
         ))}
       </TabContext>
       <Pagination
-        count={paginationResult.totalPages}
-        page={paginationResult.currentPage}
+        count={paginationState.totalPages}
+        page={paginationState.currentPage}
         onChange={handlePageChange}
       />
     </Box>

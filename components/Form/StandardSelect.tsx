@@ -84,7 +84,9 @@ const StandardSelect = <
                 <span
                   data-testid={`${testIdContext}-StandardSelectOption`}
                   key={label + index}
-                  style={{ fontWeight: part.highlight ? 700 : 400 }}
+                  style={{
+                    backgroundColor: part.highlight ? "rgb(254, 240, 13)" : ""
+                  }}
                 >
                   {part.text}
                 </span>

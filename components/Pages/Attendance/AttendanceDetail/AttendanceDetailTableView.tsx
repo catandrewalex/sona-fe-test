@@ -149,7 +149,7 @@ const AttendanceDetailTableView = ({
                 <>
                   <StyledTableCell>
                     <Tooltip
-                      content={
+                      title={
                         item.isPaid
                           ? "De-register this attendance from the teacher payment to edit/delete"
                           : ""

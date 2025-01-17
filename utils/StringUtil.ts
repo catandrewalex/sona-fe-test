@@ -105,29 +105,35 @@ export const getFullNameFromUser = (user?: User): string => {
 export const getFullNameFromUserDetail = (userDetail?: UserDetail): string => {
   return userDetail
     ? `${userDetail.firstName}${userDetail.lastName ? " " + userDetail.lastName : ""}`
-    : "";
+    : "<anonymous>";
 };
 
 export const getFullNameFromTeacher = (teacher?: Teacher): string => {
-  return teacher ? getFullNameFromUser(teacher.user) : "";
+  return teacher ? getFullNameFromUser(teacher.user) : "No Teacher";
 };
 
 export const getFullNameFromStudent = (student?: Student): string => {
-  return student ? getFullNameFromUser(student.user) : "";
+  return student ? getFullNameFromUser(student.user) : "No Student";
 };
 
 export const getFullClassName = (_class?: Class): string => {
-  if (!_class) return "";
+  if (!_class) return "No Class";
 
-  const students = _class.students.map((student) => getFullNameFromStudent(student));
+  return `${getMinimalClassName(_class)} (${getCourseName(_class.course)})`;
+};
 
-  return `#${_class.classId} ${getCourseName(_class.course)}; ${getFullNameFromTeacher(
-    _class.teacher
-  )} - [${students.join(", ")}]`;
+export const getMinimalClassName = (_class?: Class): string => {
+  if (!_class) return "No Class";
+
+  const students =
+    _class.students.map((student) => getFullNameFromStudent(student)) ?? "No Student";
+
+  return `#${_class.classId} \
+  ${getFullNameFromTeacher(_class.teacher)} - [${students.join(", ")}]`;
 };
 
 export const getCourseName = (course?: Course): string => {
-  return course ? `${course.instrument.name} - ${course.grade.name}` : "";
+  return course ? `${course.instrument.name} - ${course.grade.name}` : "No Course";
 };
 
 export const getFullStudentLearningTokenName = (token?: StudentLearningToken): string => {
