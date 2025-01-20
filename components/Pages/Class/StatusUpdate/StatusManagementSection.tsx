@@ -32,7 +32,7 @@ interface StatusManagementSectionProps {
 // TODO: replace these AI-generated components with our FE components
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 1fr",
+  gridTemplateColumns: "1fr 1fr 1fr",
   gap: theme.spacing(2),
   marginBottom: theme.spacing(2),
   [theme.breakpoints.down("sm")]: {
@@ -66,7 +66,8 @@ export const StatusManagementSection = ({
   const [autoOweTokenChanges, setAutoOweTokenChanges] = useState<StatusChangeMap>(new Map());
 
   const [searchState, setSearchState] = useState<SearchState>({
-    teacherStudentName: "",
+    teacherName: "",
+    studentName: "",
     courseName: ""
   });
 
@@ -90,15 +91,16 @@ export const StatusManagementSection = ({
         .toLowerCase();
       const courseName = getCourseName(cls.course).toLowerCase();
 
-      const teacherStudentNameMatch =
-        !searchState.teacherStudentName ||
-        teacherName.includes(searchState.teacherStudentName) ||
-        studentNames.includes(searchState.teacherStudentName);
+      const teacherNameMatch =
+        !searchState.teacherName || teacherName.includes(searchState.teacherName);
+
+      const studentNameMatch =
+        !searchState.studentName || studentNames.includes(searchState.studentName);
 
       const courseNameMatch =
         !searchState.courseName || courseName.includes(searchState.courseName);
 
-      return teacherStudentNameMatch && courseNameMatch;
+      return teacherNameMatch && studentNameMatch && courseNameMatch;
     });
   }, [classData, searchState]);
 
@@ -224,13 +226,28 @@ export const StatusManagementSection = ({
       <SearchContainer>
         <TextField
           fullWidth
-          placeholder="Search by teacher or student name..."
-          value={searchState.teacherStudentName}
+          placeholder="Search by teacher name..."
+          value={searchState.teacherName}
           onChange={useCallback(
             (e) => {
               setSearchState((prev) => ({
                 ...prev,
-                teacherStudentName: e.target.value
+                teacherName: e.target.value
+              }));
+              resetPagination();
+            },
+            [resetPagination]
+          )}
+        />
+        <TextField
+          fullWidth
+          placeholder="Search by student name..."
+          value={searchState.studentName}
+          onChange={useCallback(
+            (e) => {
+              setSearchState((prev) => ({
+                ...prev,
+                studentName: e.target.value
               }));
               resetPagination();
             },

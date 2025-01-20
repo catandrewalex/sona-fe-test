@@ -13,7 +13,8 @@ export interface CourseChange {
 }
 
 export interface SearchState {
-  teacherStudentName: string;
+  teacherName: string;
+  studentName: string;
   courseName: string;
 }
 

@@ -40,7 +40,7 @@ const UpdateContainer = styled(Box)(({ theme }) => ({
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 1fr",
+  gridTemplateColumns: "1fr 1fr 1fr",
   gap: theme.spacing(1.5),
   marginBottom: theme.spacing(2),
   [theme.breakpoints.down("sm")]: {
@@ -78,7 +78,8 @@ export const CourseUpdateSection = ({
   const [selectedClass, setSelectedClass] = useState<Class>();
 
   const [searchState, setSearchState] = useState<SearchState>({
-    teacherStudentName: "",
+    teacherName: "",
+    studentName: "",
     courseName: ""
   });
 
@@ -98,15 +99,16 @@ export const CourseUpdateSection = ({
         .toLowerCase();
       const courseName = getCourseName(cls.course).toLowerCase();
 
-      const teacherStudentNameMatch =
-        !searchState.teacherStudentName ||
-        teacherName.includes(searchState.teacherStudentName) ||
-        studentNames.includes(searchState.teacherStudentName);
+      const teacherNameMatch =
+        !searchState.teacherName || teacherName.includes(searchState.teacherName);
+
+      const studentNameMatch =
+        !searchState.studentName || studentNames.includes(searchState.studentName);
 
       const courseNameMatch =
         !searchState.courseName || courseName.includes(searchState.courseName);
 
-      return teacherStudentNameMatch && courseNameMatch;
+      return teacherNameMatch && studentNameMatch && courseNameMatch;
     });
   }, [classData, searchState]);
 
@@ -148,7 +150,7 @@ export const CourseUpdateSection = ({
 
   const handleCourseRemove = useCallback((classId: number) => {
     setCourseChanges((prev) => {
-      if (prev.keys().find((val) => val === classId) != -1) {
+      if (Array.from(prev.keys()).find((val) => val === classId) != -1) {
         const newMap = new Map(prev);
         newMap.delete(classId);
         return newMap;
@@ -202,12 +204,27 @@ export const CourseUpdateSection = ({
         <TextField
           fullWidth
           placeholder="Search by teacher or student name..."
-          value={searchState.teacherStudentName}
+          value={searchState.teacherName}
           onChange={useCallback(
             (e) => {
               setSearchState((prev) => ({
                 ...prev,
-                teacherStudentName: e.target.value
+                teacherName: e.target.value
+              }));
+              resetPagination();
+            },
+            [resetPagination]
+          )}
+        />
+        <TextField
+          fullWidth
+          placeholder="Search by teacher or student name..."
+          value={searchState.studentName}
+          onChange={useCallback(
+            (e) => {
+              setSearchState((prev) => ({
+                ...prev,
+                studentName: e.target.value
               }));
               resetPagination();
             },

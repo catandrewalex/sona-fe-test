@@ -125,11 +125,12 @@ export const getFullClassName = (_class?: Class): string => {
 export const getMinimalClassName = (_class?: Class): string => {
   if (!_class) return "No Class";
 
-  const students =
-    _class.students.map((student) => getFullNameFromStudent(student)) ?? "No Student";
+  const studentsNames = _class.students
+    ? _class.students.map((student) => getFullNameFromStudent(student))
+    : [];
 
   return `#${_class.classId} \
-  ${getFullNameFromTeacher(_class.teacher)} - [${students.join(", ")}]`;
+  ${getFullNameFromTeacher(_class.teacher)} - [${studentsNames.join(", ")}]`;
 };
 
 export const getCourseName = (course?: Course): string => {

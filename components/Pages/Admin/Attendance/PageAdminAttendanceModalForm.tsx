@@ -11,7 +11,7 @@ import {
 } from "@sonamusica-fe/types/form/admin/attendance";
 import {
   convertMomentDateToRFC3339,
-  getCourseName,
+  getFullClassName,
   getFullNameFromStudent,
   getFullNameFromTeacher,
   getFullStudentLearningTokenName
@@ -86,8 +86,7 @@ const PageAdminAttendanceModalForm = ({
       inputProps: { required: true },
       selectProps: {
         options: classData,
-        getOptionLabel: (option) =>
-          `${getCourseName(option.course)} by ${getFullNameFromTeacher(option.teacher)}`
+        getOptionLabel: (option) => getFullClassName(option)
       },
       validations: [{ name: "required" }]
     },
