@@ -80,17 +80,19 @@ const StandardSelect = <
 
           return (
             <li {...props}>
-              {parts.map((part, index) => (
-                <span
-                  data-testid={`${testIdContext}-StandardSelectOption`}
-                  key={label + index}
-                  style={{
-                    backgroundColor: part.highlight ? "rgb(254, 240, 13)" : ""
-                  }}
-                >
-                  {part.text}
-                </span>
-              ))}
+              <div>
+                {parts.map((part, index) => (
+                  <span
+                    data-testid={`${testIdContext}-StandardSelectOption`}
+                    key={label + index}
+                    style={{
+                      backgroundColor: part.highlight ? "rgb(254, 240, 13)" : ""
+                    }}
+                  >
+                    {part.text}
+                  </span>
+                ))}
+              </div>
             </li>
           );
         }}

@@ -311,7 +311,7 @@ export const CourseUpdateSection = ({
       <SmallCancelAndSubmitButtons
         loading={loading}
         cancelButtonText="Clear Changes"
-        cancelButtonDisabled={loading || courseChanges.size === 0}
+        cancelButtonDisabled={courseChanges.size === 0}
         cancelButtonOnClick={clearChanges}
         submitButtonText="Submit Changes"
         submitButtonDisabled={courseChanges.size === 0}

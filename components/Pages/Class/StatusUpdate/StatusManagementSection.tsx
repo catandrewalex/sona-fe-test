@@ -311,9 +311,7 @@ export const StatusManagementSection = ({
       <SmallCancelAndSubmitButtons
         loading={loading}
         cancelButtonText="Clear Changes"
-        cancelButtonDisabled={
-          loading || (statusChanges.size === 0 && autoOweTokenChanges.size === 0)
-        }
+        cancelButtonDisabled={statusChanges.size === 0 && autoOweTokenChanges.size === 0}
         cancelButtonOnClick={clearChanges}
         submitButtonText="Submit Changes"
         submitButtonDisabled={statusChanges.size === 0 && autoOweTokenChanges.size === 0}

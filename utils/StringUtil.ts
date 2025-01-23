@@ -3,6 +3,7 @@ import {
   Course,
   Student,
   StudentLearningToken,
+  StudentLearningTokenDisplay,
   Teacher,
   User,
   UserDetail
@@ -140,14 +141,7 @@ export const getCourseName = (course?: Course): string => {
 export const getFullStudentLearningTokenName = (token?: StudentLearningToken): string => {
   if (!token) return "";
 
-  const tokenDateInfo = `Crt: ${moment(token.createdAt).format("DD MMMM YYYY")} \
-  ┊ Updt: ${moment(token.lastUpdatedAt).format("DD MMMM YYYY")}`;
-
-  const tokenDetail = `\
-  #${token.studentLearningTokenId} \
-  Course: ${convertNumberToCurrencyString(token.courseFeeValue)} \
-  ┊ Transport: ${convertNumberToCurrencyString(token.transportFeeValue)} \
-  ┊ Quota: ${token.quota} ┊ ${tokenDateInfo}`;
+  const tokenDetail = getMinimalStudentLearningTokenName(token);
 
   let studentTeacherName = "";
   let courseName = "";
@@ -162,6 +156,21 @@ export const getFullStudentLearningTokenName = (token?: StudentLearningToken): s
   const builder = [tokenDetail, studentTeacherName, courseName].filter((val) => val.length > 0);
 
   return builder.join(" ⟶ ");
+};
+
+export const getMinimalStudentLearningTokenName = (token?: StudentLearningTokenDisplay): string => {
+  if (!token) return "";
+
+  const tokenDateInfo = `Crt: ${moment(token.createdAt).format("DD MMMM YYYY")} \
+  ┊ Updt: ${moment(token.lastUpdatedAt).format("DD MMMM YYYY")}`;
+
+  const tokenDetail = `\
+  #${token.studentLearningTokenId} \
+  Course: ${convertNumberToCurrencyString(token.courseFeeValue)} \
+  ┊ Transport: ${convertNumberToCurrencyString(token.transportFeeValue)} \
+  ┊ Quota: ${token.quota} ┊ ${tokenDateInfo}`;
+
+  return tokenDetail;
 };
 
 export const searchFullNameByValue = (value: string, user?: User): boolean => {

@@ -9,6 +9,7 @@ import { Attendance, Class, Teacher } from "@sonamusica-fe/types";
 import {
   convertNumberToCurrencyString,
   getCourseName,
+  getFullNameFromStudent,
   getFullNameFromTeacher
 } from "@sonamusica-fe/utils/StringUtil";
 import { FailedResponse, ResponseMany } from "api";
@@ -31,7 +32,7 @@ const AttendanceDetailContainer = ({
 
   const [isDisplayForSharing, setisDisplayForSharing] = useState<boolean>(false);
 
-  const parentFriendlyHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const isDisplayForSharingHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setisDisplayForSharing(event.target.checked);
   }, []);
 
@@ -86,9 +87,12 @@ const AttendanceDetailContainer = ({
 
   let feesDisplayString = "";
   if (classData.teacherSpecialFee) {
-    feesDisplayString = `${teacherSpecialFeeDisplayString} (Special Fee) + ${transportFeeDisplayString} (Transport)`;
+    feesDisplayString = `${teacherSpecialFeeDisplayString} (Special Fee)`;
   } else {
-    feesDisplayString = `${courseFeeDisplayString} (Course) + ${transportFeeDisplayString} (Transport)`;
+    feesDisplayString = `${courseFeeDisplayString} (Course)`;
+  }
+  if (classData.transportFee) {
+    feesDisplayString += ` ${transportFeeDisplayString} (Transport)`;
   }
 
   return (
@@ -107,7 +111,11 @@ const AttendanceDetailContainer = ({
             data={[
               { title: "Course", value: courseDisplayString },
               { title: "Fees", value: feesDisplayString },
-              { title: "Teacher", value: getFullNameFromTeacher(classData.teacher) }
+              { title: "Teacher", value: getFullNameFromTeacher(classData.teacher) },
+              {
+                title: "Student(s)",
+                value: classData.students.map(getFullNameFromStudent).join(", ")
+              }
             ]}
             CellValueComponent={Typography}
             cellValueComponentProps={{ variant: "h5", fontSize: 16 }}
@@ -121,12 +129,21 @@ const AttendanceDetailContainer = ({
             fullWidth
             variant="outlined"
             color="info"
+            sx={{ opacity: isDisplayForSharing ? 0.05 : 1.0 }}
           >
             Add Attendance
           </Button>
-          <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            mt={2}
+            sx={{ opacity: isDisplayForSharing ? 0.05 : 1.0 }}
+          >
             <FormControlLabel
-              control={<Switch checked={isDisplayForSharing} onChange={parentFriendlyHandler} />}
+              control={
+                <Switch checked={isDisplayForSharing} onChange={isDisplayForSharingHandler} />
+              }
               label="Sharing-friendly View"
             />
           </Box>

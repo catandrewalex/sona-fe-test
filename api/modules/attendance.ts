@@ -2,6 +2,7 @@ import { Attendance } from "@sonamusica-fe/types";
 import {
   AddAttendanceBatchFormRequest,
   AddAttendanceFormRequest,
+  AssignAttendanceTokenFormRequest,
   EditAttendanceFormRequest
 } from "@sonamusica-fe/types/form/attendance";
 
@@ -42,6 +43,16 @@ const AddAttendanceBatch = (
   });
 };
 
+const AssignAttendanceToken = (
+  id: number,
+  data: AssignAttendanceTokenFormRequest
+): Promise<FailedResponse | SuccessResponse<string>> => {
+  return API.post<string>({
+    url: `${Routes.ATTENDANCE}/${id}/assignToken`,
+    config: { data }
+  });
+};
+
 const EditAttendance = (
   id: number,
   data: EditAttendanceFormRequest
@@ -62,6 +73,7 @@ export default {
   GetAttendanceByClass,
   AddAttendance,
   AddAttendanceBatch,
+  AssignAttendanceToken,
   EditAttendance,
   RemoveAttendance
 };

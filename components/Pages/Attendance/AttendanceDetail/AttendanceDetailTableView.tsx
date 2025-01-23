@@ -14,24 +14,23 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useAlertDialog } from "@sonamusica-fe/providers/AlertDialogProvider";
-import { Attendance } from "@sonamusica-fe/types";
-import {
-  convertNumberToCurrencyString,
-  getFullNameFromTeacher
-} from "@sonamusica-fe/utils/StringUtil";
+import { Attendance, StudentWithStudentLearningTokensDisplay } from "@sonamusica-fe/types";
+import { getFullNameFromTeacher } from "@sonamusica-fe/utils/StringUtil";
 import moment from "moment";
 import React, { useState } from "react";
 import FormDataViewerTable from "@sonamusica-fe/components/Table/FormDataViewerTable";
 import { FailedResponse } from "api";
 import Tooltip from "@sonamusica-fe/components/Tooltip";
 import useModalRenderer from "@sonamusica-fe/components/Modal/ModalRenderer";
+import AttendanceDetailTokenView from "@sonamusica-fe/components/Pages/Attendance/AttendanceDetail/AttendanceDetailTokenView";
 
 type AttendanceDetailTableViewProps = {
   data: Attendance[];
+  studentsWithTokens: StudentWithStudentLearningTokensDisplay[];
   teacherId: number;
   isUserHasWriteAccess: boolean;
   openForm: (data: Attendance) => void;
-  onDelete: () => void;
+  refetchAllData: () => void;
   isDisplayForSharing?: boolean;
 };
 
@@ -43,17 +42,39 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   }
 }));
 
+function getAttendanceRowClassName(
+  isPaid: boolean,
+  hasToken: boolean,
+  isDisplayForSharing?: boolean
+): string {
+  if (isDisplayForSharing) {
+    return "";
+  }
+  if (!hasToken) {
+    return "attendance-no-token-row";
+  }
+  if (!isPaid) {
+    return "attendance-unpaid-row";
+  }
+  return "";
+}
+
 const AttendanceDetailTableView = ({
   data,
+  studentsWithTokens,
   teacherId,
   isUserHasWriteAccess,
   openForm,
-  onDelete,
+  refetchAllData,
   isDisplayForSharing
 }: AttendanceDetailTableViewProps): JSX.Element => {
   const { showDialog } = useAlertDialog();
   const [selectedAttendance, setSelectedAttendance] = useState<Attendance>();
-  const { openModal: openModalTokenDetail, ModalRenderer } = useModalRenderer({
+  const {
+    openModal: openModalTokenDetail,
+    closeModal: closeModalTokenDetail,
+    ModalRenderer
+  } = useModalRenderer({
     onClose: () => setSelectedAttendance(undefined),
     closeIcon: true,
     minWidth: "30vw",
@@ -107,7 +128,7 @@ const AttendanceDetailTableView = ({
           const parsedResponse = apiTransformer(response, true);
 
           if (Object.getPrototypeOf(parsedResponse) !== FailedResponse.prototype) {
-            onDelete();
+            refetchAllData();
           }
         });
       }
@@ -143,7 +164,11 @@ const AttendanceDetailTableView = ({
             <TableRow
               hover
               key={item.attendanceId}
-              className={item.isPaid || isDisplayForSharing ? "" : "attendance-unpaid-row"}
+              className={getAttendanceRowClassName(
+                item.isPaid,
+                item.studentLearningToken.studentLearningTokenId !== 0,
+                isDisplayForSharing
+              )}
             >
               {isUserHasWriteAccess && !isDisplayForSharing && (
                 <>
@@ -201,9 +226,23 @@ const AttendanceDetailTableView = ({
               </StyledTableCell>
               {!isDisplayForSharing && (
                 <StyledTableCell>
-                  <Button color="primary" onClick={() => onClickViewTokenDetail(item)}>
-                    View #{item.studentLearningToken.studentLearningTokenId}
-                  </Button>
+                  {item.studentLearningToken.studentLearningTokenId ? (
+                    <Button color="primary" onClick={() => onClickViewTokenDetail(item)}>
+                      View #{item.studentLearningToken.studentLearningTokenId}
+                    </Button>
+                  ) : (
+                    <Tooltip
+                      title={!isUserHasWriteAccess ? "Contact admin to assign the token" : ""}
+                    >
+                      <Button
+                        color="error"
+                        disabled={!isUserHasWriteAccess}
+                        onClick={() => onClickViewTokenDetail(item)}
+                      >
+                        Assign
+                      </Button>
+                    </Tooltip>
+                  )}
                 </StyledTableCell>
               )}
             </TableRow>
@@ -213,52 +252,17 @@ const AttendanceDetailTableView = ({
 
       {selectedAttendance && (
         <ModalRenderer>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            Token #{selectedAttendance.studentLearningToken.studentLearningTokenId} Detail
-          </Typography>
-          <FormDataViewerTable
-            tableProps={{ size: "small", sx: { mt: 1 } }}
-            tableRowProps={{
-              sx: {
-                "& .MuiTableCell-root:first-child": {
-                  width: "160px",
-                  pl: 0
-                }
-              }
-            }}
-            data={[
-              {
-                title: "Remaining Quota",
-                value: selectedAttendance.studentLearningToken.quota.toString()
-              },
-              {
-                title: "Active",
-                value: moment(selectedAttendance.studentLearningToken.createdAt).format(
-                  "DD MMMM YYYY HH:mm"
-                )
-              },
-              {
-                title: "Last Updated",
-                value: moment(selectedAttendance.studentLearningToken.lastUpdatedAt).format(
-                  "DD MMMM YYYY HH:mm"
-                )
-              },
-              {
-                title: "Course Fee",
-                value: convertNumberToCurrencyString(
-                  selectedAttendance.studentLearningToken.courseFeeValue
-                )
-              },
-              {
-                title: "Transport Fee",
-                value: convertNumberToCurrencyString(
-                  selectedAttendance.studentLearningToken.transportFeeValue
-                )
-              }
-            ]}
-            CellValueComponent={Typography}
-            cellValueComponentProps={{ variant: "h5", fontSize: 16 }}
-          />
+          <AttendanceDetailTokenView
+            selectedAttendance={selectedAttendance}
+            studentLearningTokenOptions={
+              studentsWithTokens.find(
+                (val) => val.studentId === selectedAttendance.student.studentId
+              )?.studentLearningTokens
+            }
+            isUserHasWriteAccess={isUserHasWriteAccess}
+            refetchAllData={refetchAllData}
+            onCancel={closeModalTokenDetail}
+          ></AttendanceDetailTokenView>
         </ModalRenderer>
       )}
     </>

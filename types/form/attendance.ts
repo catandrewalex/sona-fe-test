@@ -43,3 +43,7 @@ export type AddAttendanceBatchFormRequest = Pick<
   date: string;
   teacherId: number;
 };
+
+export interface AssignAttendanceTokenFormRequest {
+  studentLearningTokenId: number;
+}

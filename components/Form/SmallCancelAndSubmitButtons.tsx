@@ -25,7 +25,7 @@ export const SmallCancelAndSubmitButtons = ({
         variant="contained"
         color="error"
         submitText={cancelButtonText}
-        disabled={cancelButtonDisabled}
+        disabled={loading || cancelButtonDisabled}
         size="small"
         sx={{ fontSize: "0.875rem" }}
         regular

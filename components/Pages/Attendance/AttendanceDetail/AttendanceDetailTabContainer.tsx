@@ -31,6 +31,15 @@ function isIdExistOnStudents(id: number, students: Student[]): boolean {
   return students.findIndex((student) => student.studentId === id) !== -1;
 }
 
+function getSLTCourseDisplay(courseFeeValue: number, transportFeeValue: number): string {
+  const helper = [`${convertNumberToCurrencyString(courseFeeValue)} (Course)`];
+  if (transportFeeValue) {
+    helper.push(`${convertNumberToCurrencyString(transportFeeValue)} (Transport)`);
+  }
+
+  return helper.join(" + ");
+}
+
 const AttendanceDetailTabContainer = ({
   studentsData,
   classId,
@@ -62,6 +71,19 @@ const AttendanceDetailTabContainer = ({
     refetch: refetchAttendance
   } = useAttendanceFetch(classId, currentStudentId, RESULT_PER_PAGE);
 
+  const refetchAllData = useCallback(() => {
+    refetchAttendance(currentStudentId, paginationState.currentPage);
+    refetchStudentLearningToken();
+  }, [currentStudentId, paginationState.currentPage]);
+
+  // everytime an attendance is edited/submitted, we must update the (1) attendance table, (2) displayed student's SLT remaining quota.
+  //   Thus, we subscribe to "forceRenderCounter"
+  useEffect(() => {
+    if (forceRenderCounter > 0) {
+      refetchAllData();
+    }
+  }, [forceRenderCounter, refetchAllData]);
+
   useEffect(() => {
     if (errorAttendance) {
       showSnackbar(errorAttendance, "error");
@@ -73,15 +95,6 @@ const AttendanceDetailTabContainer = ({
       showSnackbar(errorStudentLearningToken, "error");
     }
   }, [errorStudentLearningToken, showSnackbar]);
-
-  // everytime an attendance is edited/submitted, we must update the (1) attendance table, (2) displayed student's SLT remaining quota.
-  //   Thus, we subscribe to "forceRenderCounter"
-  useEffect(() => {
-    if (forceRenderCounter > 0) {
-      refetchAttendance(currentStudentId, paginationState.currentPage);
-      refetchStudentLearningToken();
-    }
-  }, [forceRenderCounter]);
 
   const handleTabChange = useCallback(
     (_e, newValue) => {
@@ -98,11 +111,6 @@ const AttendanceDetailTabContainer = ({
     },
     [currentStudentId]
   );
-
-  const onDelete = useCallback(() => {
-    refetchAttendance(currentStudentId, paginationState.currentPage);
-    refetchStudentLearningToken();
-  }, [currentStudentId, paginationState.currentPage]);
 
   const studentIdToSLTDisplay: Record<number, StudentLearningTokenDisplay[]> = {};
   if (studentLearningTokenData) {
@@ -130,7 +138,9 @@ const AttendanceDetailTabContainer = ({
           <TabPanel key={student.studentId} value={student.studentId + ""}>
             {studentIdToSLTDisplay[student.studentId] &&
               (isDisplayForSharing
-                ? [studentIdToSLTDisplay[student.studentId][0]]
+                ? studentIdToSLTDisplay[student.studentId].filter(
+                    (val, idx) => val.quota != 0 || idx === 0
+                  )
                 : studentIdToSLTDisplay[student.studentId]
               ).map((data) => (
                 <Box key={data.studentLearningTokenId}>
@@ -172,8 +182,7 @@ const AttendanceDetailTabContainer = ({
                   ) : null}
                   <Typography component="span" sx={{ ml: 1 }}>
                     <small>
-                      ({convertNumberToCurrencyString(data.courseFeeValue)} (Course) +{" "}
-                      {convertNumberToCurrencyString(data.transportFeeValue)} (Transport))
+                      {getSLTCourseDisplay(data.courseFeeValue, data.transportFeeValue)}
                     </small>
                   </Typography>
                 </Box>
@@ -201,10 +210,11 @@ const AttendanceDetailTabContainer = ({
               ) : (
                 <AttendanceDetailTableView
                   data={attendanceData}
+                  studentsWithTokens={studentLearningTokenData}
                   teacherId={teacherId}
                   isUserHasWriteAccess={isUserHasWriteAccess}
                   openForm={openForm}
-                  onDelete={onDelete}
+                  refetchAllData={refetchAllData}
                   isDisplayForSharing={isDisplayForSharing}
                 />
               )}
