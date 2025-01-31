@@ -100,7 +100,7 @@ const TeacherPaymentItemDetails = ({
       cellClassName: "editable-cell",
       valueGetter(params) {
         if (params.row.paidCourseFeeValue === undefined)
-          return params.row.grossCourseFeeValue * params.row.courseFeeSharingPercentage;
+          return Math.round(params.row.grossCourseFeeValue * params.row.courseFeeSharingPercentage);
         return params.value;
       },
       valueFormatter(params) {
@@ -157,7 +157,9 @@ const TeacherPaymentItemDetails = ({
       cellClassName: "editable-cell",
       valueGetter(params) {
         if (params.row.paidTransportFeeValue === undefined)
-          return params.row.grossTransportFeeValue * params.row.transportFeeSharingPercentage;
+          return Math.round(
+            params.row.grossTransportFeeValue * params.row.transportFeeSharingPercentage
+          );
         return params.value;
       },
       valueFormatter(params) {

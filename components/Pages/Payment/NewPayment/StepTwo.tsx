@@ -40,6 +40,9 @@ const calculateDaysLate = (paymentDate: Moment, lastPaymentDate: Moment): number
 };
 
 const calculatePenalty = (daysLate: number): number => {
+  if (daysLate <= 0) {
+    return 0;
+  }
   return daysLate * PaymentLateBaseFeeMultiplierPerDay;
 };
 
