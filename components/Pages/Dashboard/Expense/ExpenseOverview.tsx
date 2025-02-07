@@ -6,7 +6,7 @@ import { Box, Divider, Typography } from "@mui/material";
 import { DatasetType } from "@mui/x-charts/internals";
 import { convertNumberToCurrencyString } from "@sonamusica-fe/utils/StringUtil";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import { FailedResponse, ResponseMany } from "../../../../api";
+import { FailedResponse, ResponseMany } from "api";
 
 interface ExpenseOverviewProps {
   data: ExpenseDashboardOverviewRequestBody | undefined;

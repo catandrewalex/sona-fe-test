@@ -15,7 +15,7 @@ import {
   convertMomentDateToRFC3339,
   getFullNameFromTeacher
 } from "@sonamusica-fe/utils/StringUtil";
-import { FailedResponse } from "../../../api";
+import { FailedResponse } from "api";
 import moment from "moment";
 import React, { useEffect, useMemo } from "react";
 

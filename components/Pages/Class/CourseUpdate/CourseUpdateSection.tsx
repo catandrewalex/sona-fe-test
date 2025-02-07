@@ -192,18 +192,12 @@ export const CourseUpdateSection = ({
     setLoading(false);
   }, [showSnackbar, courseChanges, clearChanges]);
 
-  const getDisplayName = (cls?: Class): string => {
-    if (!cls) return "No class selected";
-
-    return getMinimalClassName(cls);
-  };
-
   return (
     <>
       <SearchContainer>
         <TextField
           fullWidth
-          placeholder="Search by teacher or student name..."
+          placeholder="Search by teacher name..."
           value={searchState.teacherName}
           onChange={useCallback(
             (e) => {
@@ -218,7 +212,7 @@ export const CourseUpdateSection = ({
         />
         <TextField
           fullWidth
-          placeholder="Search by teacher or student name..."
+          placeholder="Search by student name..."
           value={searchState.studentName}
           onChange={useCallback(
             (e) => {

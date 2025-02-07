@@ -5,7 +5,7 @@ import { DashboardPieChartData, IncomeDashboardOverviewRequestBody } from "@sona
 import { convertNumberToCurrencyString, FormattedMonthName } from "@sonamusica-fe/utils/StringUtil";
 import { DefaultizedPieValueType, pieArcLabelClasses } from "@mui/x-charts";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
-import { FailedResponse, ResponseMany } from "../../../../../api";
+import { FailedResponse, ResponseMany } from "api";
 import { Typography } from "@mui/material";
 
 interface IncomeDetailPieChartProps {

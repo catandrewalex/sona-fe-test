@@ -34,7 +34,7 @@ const HomeMenuStaffAbove = (): JSX.Element => {
         </CardActions>
       </Card>
 
-      <Card elevation={4} sx={{ mt: 4, pl: 2, pb: 2 }}>
+      <Card elevation={4} sx={{ mt: 2, pl: 2, pb: 2 }}>
         <CardHeader title="Attendance" />
         <CardContent>
           <Typography>
@@ -54,7 +54,7 @@ const HomeMenuStaffAbove = (): JSX.Element => {
         </CardActions>
       </Card>
 
-      <Card elevation={4} sx={{ mt: 4, mb: 8, pl: 2, pb: 2 }}>
+      <Card elevation={4} sx={{ mt: 2, pl: 2, pb: 2 }}>
         <CardHeader title="Teacher Payment" />
         <CardContent>
           <Typography>

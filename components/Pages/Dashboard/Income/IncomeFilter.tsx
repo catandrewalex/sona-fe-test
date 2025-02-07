@@ -8,7 +8,7 @@ import { Moment } from "moment";
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import API, { useApiTransformer } from "@sonamusica-fe/api";
 import { useSnack } from "@sonamusica-fe/providers/SnackProvider";
-import { FailedResponse, ResponseMany, SuccessResponse } from "../../../../api";
+import { FailedResponse, ResponseMany, SuccessResponse } from "api";
 
 const defaultPickerProps: DatePickerProps<Moment> & { required?: boolean } = {
   required: true,

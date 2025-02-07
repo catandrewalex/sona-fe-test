@@ -10,9 +10,9 @@ import {
   getFullNameFromStudent
 } from "@sonamusica-fe/utils/StringUtil";
 import React, { useCallback, useEffect, useState } from "react";
-import useAttendanceFetch from "../useAttendanceFetch";
 import useStudentLearningTokenDisplayFetch from "@sonamusica-fe/components/Pages/Attendance/useStudentLearningTokenDisplayFetch";
 import moment from "moment";
+import useAttendanceFetch from "@sonamusica-fe/components/Pages/Attendance/useAttendanceFetch";
 
 type AttendanceDetailTabContainerProps = {
   studentsData: Student[];
@@ -60,6 +60,7 @@ const AttendanceDetailTabContainer = ({
   const {
     data: studentLearningTokenData,
     error: errorStudentLearningToken,
+    isLoading: sltLoading,
     refetch: refetchStudentLearningToken
   } = useStudentLearningTokenDisplayFetch(classId);
 
@@ -67,7 +68,7 @@ const AttendanceDetailTabContainer = ({
     data: attendanceData,
     paginationState,
     error: errorAttendance,
-    isLoading: loading,
+    isLoading: attendanceLoading,
     refetch: refetchAttendance
   } = useAttendanceFetch(classId, currentStudentId, RESULT_PER_PAGE);
 
@@ -136,7 +137,8 @@ const AttendanceDetailTabContainer = ({
         </Box>
         {studentsData.map((student) => (
           <TabPanel key={student.studentId} value={student.studentId + ""}>
-            {studentIdToSLTDisplay[student.studentId] &&
+            {!sltLoading &&
+              studentIdToSLTDisplay[student.studentId] &&
               (isDisplayForSharing
                 ? studentIdToSLTDisplay[student.studentId].filter(
                     (val, idx) => val.quota != 0 || idx === 0
@@ -188,7 +190,7 @@ const AttendanceDetailTabContainer = ({
                 </Box>
               ))}
 
-            {!loading && !studentIdToSLTDisplay[student.studentId] && (
+            {!sltLoading && !studentIdToSLTDisplay[student.studentId] && (
               <>
                 <Typography
                   component="span"
@@ -205,7 +207,7 @@ const AttendanceDetailTabContainer = ({
 
             {/* TODO(FerdiantJoshua): set this TableContainer, not to have excess width on lots of column & small screens */}
             <TableContainer sx={{ mt: 2, height: "calc(100vh - 405px)" }}>
-              {loading ? (
+              {sltLoading || attendanceLoading ? (
                 <LoaderSimple />
               ) : (
                 <AttendanceDetailTableView

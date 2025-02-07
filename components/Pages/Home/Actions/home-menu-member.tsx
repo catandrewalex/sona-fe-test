@@ -75,7 +75,7 @@ const HomeMenuMember = (): JSX.Element => {
               <Card
                 elevation={4}
                 // we need extra margin top, if students card (above) exists
-                sx={userTeachingInfo.isStudent ? { mt: 4, pl: 2, pb: 2 } : { pl: 2, pb: 2 }}
+                sx={userTeachingInfo.isStudent ? { mt: 2, pl: 2, pb: 2 } : { pl: 2, pb: 2 }}
               >
                 <CardHeader title="Students Attendance" />
                 <CardContent>
