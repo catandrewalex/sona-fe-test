@@ -221,6 +221,8 @@ export interface TeacherPaymentUnpaidListItem {
   teacherId: number;
   user: User;
   totalAttendances: number;
+  totalAttendancesWithoutToken: number;
+  classesNeedTokenAssignment: Class[];
 }
 
 export type TeacherPaymentPaidListItem = TeacherPaymentUnpaidListItem;
