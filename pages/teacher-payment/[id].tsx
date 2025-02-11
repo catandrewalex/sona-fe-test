@@ -99,10 +99,12 @@ const TeacherPaymentDetailPage = (): JSX.Element => {
               for (const attendance of studentLearningToken.attendances) {
                 tempSubmitData[attendance.attendanceId.toString()] = {
                   attendanceId: attendance.attendanceId,
-                  paidCourseFeeValue:
-                    attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
-                  paidTransportFeeValue:
+                  paidCourseFeeValue: Math.round(
+                    attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage
+                  ),
+                  paidTransportFeeValue: Math.round(
                     attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage
+                  )
                 };
                 grossGrandTotalTemp +=
                   attendance.grossTransportFeeValue + attendance.grossCourseFeeValue;

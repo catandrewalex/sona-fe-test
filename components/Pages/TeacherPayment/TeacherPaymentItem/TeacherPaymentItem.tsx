@@ -84,10 +84,12 @@ const TeacherPaymentItem = React.memo(
           tempSubmitData[attendance.attendanceId.toString()] = {
             ...tempSubmitData[attendance.attendanceId.toString()],
             attendanceId: attendance.attendanceId,
-            paidCourseFeeValue:
-              attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage,
-            paidTransportFeeValue:
-              attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage,
+            paidCourseFeeValue: Math.round(
+              attendance.grossCourseFeeValue * attendance.courseFeeSharingPercentage
+            ),
+            paidTransportFeeValue: Math.round(
+              attendance.grossTransportFeeValue * attendance.transportFeeSharingPercentage
+            ),
             grossCourseFeeValue: attendance.grossCourseFeeValue,
             grossTransportFeeValue: attendance.grossTransportFeeValue
           };

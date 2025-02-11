@@ -231,10 +231,14 @@ const TeacherPaymentItemDetails = ({
               isEdit ? updatedRow.teacherPaymentId : updatedRow.attendanceId,
               updatedRow.paidCourseFeeValue
                 ? updatedRow.paidCourseFeeValue
-                : updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage,
+                : Math.round(
+                    updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage
+                  ),
               updatedRow.paidTransportFeeValue
                 ? updatedRow.paidTransportFeeValue
-                : updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage
+                : Math.round(
+                    updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage
+                  )
             );
           };
 
@@ -271,8 +275,9 @@ const TeacherPaymentItemDetails = ({
                   "warning"
                 );
               }
-              updatedRow.paidCourseFeeValue =
-                (updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage) / 100;
+              updatedRow.paidCourseFeeValue = Math.round(
+                (updatedRow.grossCourseFeeValue * updatedRow.courseFeeSharingPercentage) / 100
+              );
               updatedRow.courseFeeSharingPercentage = updatedRow.courseFeeSharingPercentage / 100;
               invokeHandleSubmit();
               return updatedRow;
@@ -291,9 +296,9 @@ const TeacherPaymentItemDetails = ({
                   "warning"
                 );
               }
-              updatedRow.paidTransportFeeValue =
-                (updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage) /
-                100;
+              updatedRow.paidTransportFeeValue = Math.round(
+                (updatedRow.grossTransportFeeValue * updatedRow.transportFeeSharingPercentage) / 100
+              );
               updatedRow.transportFeeSharingPercentage =
                 updatedRow.transportFeeSharingPercentage / 100;
               invokeHandleSubmit();
